@@ -1,0 +1,9 @@
+# Generic miner settings for each miner
+
+# Claymore (ETH-SC)
+
+# Claymore (ETH-PASC)
+
+# Claymore (ETH-DCR)
+
+# Claymore (ETH-LBRY)

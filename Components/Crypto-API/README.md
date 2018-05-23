@@ -1,0 +1,1 @@
+This project is home to a suite of API wrappers relevant to cryptocurrency, specifically exchanges and mining pool sites. The API is organized by those two categories and includes a generic API for both. In the future this readme will offer a comprehensive description of the intricacies of the generic APIs.

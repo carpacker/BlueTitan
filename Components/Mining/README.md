@@ -1,0 +1,1 @@
+This github is home to all relevant scripts and information for the mining system in use by X llc. It currently contains files necessary for the following functionalities: algorithmic mining, mining profitability automation & tracking, rig state management and other miscellaneous functions. More to come for the home page in the near future.

@@ -1,0 +1,148 @@
+#: kivy 1.8
+#: import ScreenManager kivy.uix.screenmanager.ScreenManager
+#: import Screen kivy.uix.screenmanager.ScreenManager
+#: import kivy kivy
+
+ScreenManager:
+    id: screen_manager
+    MenuScreen:
+        id: menu_screen
+        name: 'Main Menu'
+        manager: 'screen_manager'
+    MiningScreen:
+        id: mining_screen
+        name: 'Miner Tracker'
+        manager: 'screen_manager'
+    CoinScreen:
+        id: coin_screen
+        name: 'Coinmarketcap'
+        manager: 'screen_manager'
+    PortfolioScreen:
+        id: portfolio_screen
+        name: 'Portfolio Management'
+        manager: 'screen_manager'
+        
+<MenuScreen>     
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Main Menu'
+            font_size: 50
+        Button:
+            text: 'Miner Tracker'
+            font_size: 30
+            on_release: app.root.current = 'Miner Tracker'
+        Button:
+            text: 'Portfolio Management'
+            font_size: 30
+            on_release: app.root.current = 'Portfolio Management'
+        Button:
+            text: 'Coinmarketcap'
+            font_size: 30
+            on_release: app.root.current = 'Coinmarketcap'
+        
+<MiningScreen>
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: .05
+            orientation: 'horizontal'
+            Button:
+                text: '[<--]'
+                size_hint_x:.2
+                font_size: 20
+                on_release: app.root.current = 'Main Menu'
+            Label:
+                text: '???'
+                size_hint_x: .5
+                font_size: 20
+            Label:
+                text: 'temporary'
+                size_hint_x: .3
+                font_size: 20
+        GridLayout:
+            cols: 3
+            rows: 8
+            cols_default_width: .1
+            row_default_height: .125
+            Label:
+                id: coin_one
+                text: 'Test'
+            Label:
+                id: price_one
+                text: 'Test'
+            Label:
+                text: 'Test'
+            Label:
+                text: 'Test'
+
+
+<CoinScreen>
+    BoxLayout:
+        orientation: 'vertical' 
+        BoxLayout:
+            size_hint_y: .05
+            orientation: 'horizontal'
+            Button:
+                text: '<--'
+                size_hint_x:.2
+                font_size: 20
+                on_release: app.root.current = 'Main Menu'
+            Label:
+                text: 'CSV Converter'
+                size_hint_x: .5
+                font_size: 20
+            Label:
+                text: 'temporary'
+                size_hint_x: .3
+                font_size: 20
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Test'
+            Label:
+                text: 'Test'
+
+
+<PortfolioScreen>
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: .05
+            orientation: 'horizontal'
+            Button:
+                text: '<--'
+                size_hint_x:.2
+                font_size: 20
+                on_release: app.root.current = 'Main Menu'
+            Label:
+                text: 'CSV Converter'
+                size_hint_x: .5
+                font_size: 20
+            Label:
+                text: 'temporary'
+                size_hint_x: .3
+                font_size: 20
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: 'Test'
+            Label:
+                text: 'Test'
+
+        
+<SomethingWidget>:
+    orientation: 'vertical'
+    Button:
+        id: button1
+        x: 10
+        y: 10
+        width: 1
+        text: '???'
+    Button:
+        id: button2
+        size_hint_x: .1
+        size_hint_y: .2
+        height: 10
+        width: 10
+        text: '????'
