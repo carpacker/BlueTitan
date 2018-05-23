@@ -4,9 +4,6 @@ import os
 import sqlite3
 import time
 
-base_path = os.path.abspath(__file__)
-print(os.path.relpath(__file__, "BlueTitan"))
-
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
 # Internal-Imports
@@ -46,10 +43,12 @@ def disconnect(connect):
     connect.close()
 
 # FUNCTION: generalQuery
-# INPUT: todo
+# INPUT: cursor - *
+#        query  - string
 # OUTPUT: varying
 # DESCRIPTION:
-#   Performs a generalized query over a cursor
+#   Performs a general query over a cursor. Input will be a string that represents an 
+#    SQL operation.
 def generalQuery(cursor, query):
     cursor.execute(query)
     return cursor.fetchall()
@@ -351,5 +350,6 @@ class GenDatabaseLibrary(object):
         result = cursor.fetchall()
         return result
 
+# If called independently, these are the tests.
 if __name__ == "__main__":
     GenDatabaseLibrary.storeEntry(("", "", 0, 0), "IntendedFAE", "ArbitrageDatabase")

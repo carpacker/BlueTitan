@@ -6,9 +6,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
-print(os.path.abspath(__file__))
-import sys
-sys.path.append()
  
 import API
 from API import Exchange_API

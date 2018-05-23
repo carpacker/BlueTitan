@@ -1,1 +1,0 @@
-Skeleton for application that manages and initializes workspaces using autohotkeys

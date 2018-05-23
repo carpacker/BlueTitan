@@ -7,7 +7,7 @@ of the systems. There is also a suite of functions outside of any class definiti
 general purpose functions, used in many places because of their general application. 
 
 '''
-# ll
+
 #                                       Imports
 
 import sys
@@ -64,7 +64,7 @@ def btcValue(asset, quantity, exchange=None):
             value = float(price) * quantity
             return value
 
-# FUNCTION:
+# FUNCTION: calculateOrderFee
 # INPUT: exchange  - string
 #        btc_value - float
 # OUTPUT: float
@@ -81,7 +81,7 @@ def calculateOrderFee(exchange, btc_value):
 #        buy_price  - float
 # OUTPUT: float
 # DESCRIPTION:
-#  Calculate the profit ratio of an arbitrage event.
+#  Calculate the profit ratio of a trade event.
 def calculatePR(sell_price, buy_price):
     return 100 * (sell_price - buy_price) / sell_price
 
@@ -91,7 +91,7 @@ def calculatePR(sell_price, buy_price):
 #        quantity   - float
 # OUTPUT: float
 # DESCRIPTION:
-#  Calculate the raw profit of an arbitrage event.
+#  Calculate the raw profit of a trade event.
 def calculateProfit(sell_price, buy_price, quantity):
     profit_off = sell_price - buy_price
     profit = quantity * profit_off
@@ -156,7 +156,7 @@ def determinePrecision(value):
 # INPUT: exchange - string
 # OUTPUT: float
 # DESCRIPTION:
-#   Used to output fee for passed in exchange
+#   Used to output fee for passed in exchange.
 def getFee(exchange):
     if exchange == 'bittrex':
         fee = .0025

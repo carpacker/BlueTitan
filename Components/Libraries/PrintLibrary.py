@@ -1,26 +1,17 @@
 # External Imports
 import time
 
-# TODO -
-#   Could add dynamically increasing print statement... adding or removing '-' to fulfill requirement
-#   Print orderbook
-
 # CLASS: PrintLibrary
 # DESCRPTION:
 #   Used to help with debugging. More comprehensive description to come.
 class PrintLibrary():
 
-    # FUNCTION: delimiter
-    def delimiter():
-        print("- - - - - - - - - - - - - - - - - - - - -")
-    
-    def miniDelimiter():
-        print ("  *---------------------------*  ")
-
-            
     # FUNCTON: displayDictionary
-    # INPUT: var_tuple -  tuple of (key,value)
-    #        header    -  string (OPTIONAL)
+    # INPUT: var_dict -  tuple of (key,value)
+    #        header   -  string (OPTIONAL)
+    # OUTPUT: N/A
+    # DESCRIPTION:
+    #   Takes a dictionary and prints each key/value pairing of the dictionary.
     def displayDictionary(var_dict, header=""):
         if header != "":
             print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
@@ -32,11 +23,20 @@ class PrintLibrary():
             print("  " + str(key) + " - " + str(value))  
 
     # FUNCTION: displayOrderbook
+    # INPUT:
+    # OUTPUT:
+    # DESCRIPTION:
+    #   Takes input tuples representing an order book (bids and asks) of an exchange and constructs a series of print
+    #    statements to display them in a visually cohesive manner.
     def displayOrderbook():
         pass
         
     # FUNCTION: displayVariable
-    # INPUT:
+    # INPUT: value
+    #        func_name
+    # OUTPUT: N/A
+    # DESCRIPTION:
+    #   Prints a single variable (string, int, ...). Cannot display tuples, lists or dictionaries.
     def displayVariable(value, func_name=None):
         print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
         # Different cases for tuple, list, float (?)
@@ -49,6 +49,9 @@ class PrintLibrary():
     # FUNCTON: displayVariables
     # INPUT: var_tuple -  list or tuple
     #        header    -  string (OPTIONAL)
+    # OUTPUT: N/A
+    # DESCRIPTION:
+    #   Takes a list or tuple, itereates through and prints each element.
     def displayVariables(var_tuple, header=""):
         if header != "":
             print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
@@ -61,19 +64,10 @@ class PrintLibrary():
             ticker += 1
             print("  " + str(ticker) + " - " + str(value))  
 
-    def displayKeyVariables(var_tuple, header=""):
-        if header != "":
-            print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
-            print(" * " + str(header))
-            print("  ___________")
-        else :
-            print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
-        for key,value in var_tuple:
-            print("  " + str(key) + " - " + str(value))  
 
     # FUNCTION: header
     # DESCRIPTION:
-    #   Displays a header for testing
+    #   Displays a header for testing.
     def header(message):
         print("|- - - - - - - - - - - - - - - - - - - - - - " + message + " - - - - - - - - - - - - - - - - - - - - - -|")
 
@@ -85,8 +79,8 @@ class PrintLibrary():
     #        message    - string
     #        func_name  - string (OPTIONAL)
     # DESCRIPTION:
-    #   TODO
-    def sleep(time, message, func_name=None):
+    #   Custom sleep statement that prints out a message.
+    def sleep(time, message="", func_name=None):
         pass 
 
     # probably rework this...
@@ -95,7 +89,19 @@ class PrintLibrary():
         stage += 1
         return stage
 
-# Filler script to test out dynamic print-sizing, kept separate from main print library 
+    def delimiter():
+        print("- - - - - - - - - - - - - - - - - - - - -")
+    
+    def miniDelimiter():
+        print ("  *---------------------------*  ")
+
+
+# CLASS: DynamicPrinter
+# DESCRIPTION:
+#   Used by the PrintLibrary to create dynamically sized prints for the sake of readability. 
+#    There is a required input of a maximum length that a print statement is allowed. The 
+#    program then adapts inputs such that the print statements produce a cohesive output 
+#    irrespective of the unpredictable sizing of given inputs.
 class DynamicPrinter():
     size = 40
     # Figure out a way to append '-' based on input string size
