@@ -116,7 +116,7 @@ def getNetworkStats():
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#	Returns hash rate of your miners
+#	Returns the hashrates of the miners for the address.
 def getHashrates():
 	json_var = requests.request('GET', 'https://api.ethermine.org/servers/history').json()
 	print(json_var)
@@ -131,7 +131,7 @@ def getHashrates():
 		"api" : 'ethermine',
 		"time" : time,
 		"hashrate" : hashrate,
-		"serfer" : server
+		"server" : server
 		}
 	else:
 		ret_dict ={
@@ -146,7 +146,7 @@ def getHashrates():
 # INPUT: miner - string
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#	
+#	Returns the history of statistics for a given miner.
 def getMinerHistory(miner):
 	url = 'https://api.ethermine.org/miner/' + miner + '/history'
 	json_var = requests.request('GET', url).json()
@@ -188,7 +188,7 @@ def getMinerHistory(miner):
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#	Returns list of payouts from Ethermine
+#	Returns list of payouts from Ethermine.
 def getMinerPayouts(miner):
 	url = 'https://api.ethermine.org/miner/' + miner + '/payouts'
 	json_var = requests.request('GET', url).json()
@@ -256,7 +256,7 @@ def getMinerRounds(miner):
 # INPUT: miner - string
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#	Returns the current settings for the address
+#	Returns the current settings for the address.
 def getMinerSettings(miner):
 	url = 'https://api.ethermine.org/miner/' + miner + '/settings'
 	json_var = requests.request('GET', url).json()
@@ -291,7 +291,7 @@ def getMinerSettings(miner):
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#	
+#	TODO
 def getMinerStatistics():
 	json_var = requests.request('GET', 'https://api.ethermine.org/networkStats').json()
 	print(json_var)
@@ -319,7 +319,7 @@ def getMinerStatistics():
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#	
+#	TODO
 def getWorkStatisticsAll():
 	json_var = requests.request('GET', 'https://api.ethermine.org/networkStats').json()
 	print(json_var)
@@ -391,10 +391,10 @@ def getWorkerStatistics():
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#   TODO
+#   
 def getWorkerMonitor():
-json_var = requests.request('GET', 'https://api.ethermine.org/networkStats').json()
-print(json_var)
+    json_var = requests.request('GET', 'https://api.ethermine.org/networkStats').json()
+    print(json_var)
     if json_var["status"] == "OK":
         json_var2 = json_var["data"]
         time = json_var2["time"]

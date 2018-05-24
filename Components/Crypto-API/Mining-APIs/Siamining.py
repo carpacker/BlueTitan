@@ -1,3 +1,9 @@
+# Internal-Imports
+import Ethermine
+import Siamining
+from PrintLibrary import PrintLibrary
+
+# Base Url
 # https://siamining.com/api/
 
 def getNetworkInfo():
