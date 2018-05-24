@@ -1,9 +1,7 @@
-#  bittrexAPI.py
-
+# External-Imports
 import sys
 sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage')
 
-# External-Imports
 import requests
 import hmac
 import hashlib

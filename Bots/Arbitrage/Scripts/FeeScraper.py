@@ -55,6 +55,5 @@ class FeeScraper(object):
 		return fee
 
 
-
 if __name__ == '__main__':
 	FeeScraper.grabFeesPage('binance', 'ETH')
