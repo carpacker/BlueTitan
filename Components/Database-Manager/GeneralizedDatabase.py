@@ -9,6 +9,7 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 import Helpers
+import ArbitrageDatabaseLib
 
 # FUNCTION: commitWrite
 # INPUT: connect - SQL connection

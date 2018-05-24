@@ -25,7 +25,7 @@ from collections import defaultdict
 
 # Internal-Imports
 from API import ExchangeAPI
-from DatabaseManager import ArbitrageDatabase
+from GeneralizedDatabase import GenDatabaseLibrary
 
 #                                    General Helpers
 
@@ -182,6 +182,19 @@ def inverseExchange(exchange):
     if exchange == "bittrex":
         return "binance"
 
+# TODO
+def getMinTrade(exchanges, pairing):
+    ret_dict = {}
+    missing = []
+    for ex in exchanges:
+        dict1 = ExchangeAPI.getInfoPairing(ex,pairing)
+        if dict1["success"]:
+            ret_dict[ex] = dict1["MinTradeSize"]
+        else:
+            missing.append(ex)
+    ret_dict["missing_exchanges"] = missing
+    return ret_dict
+
 # FUNCTION: quoteAsset
 # INPUT:  quantity - float
 #         price    - float
@@ -226,6 +239,30 @@ def quoteValue(asset, quantity, exchange=None):
             price = ExchangeAPI.getPrice("coinmarketcap", pairing)
             value = quantity / float(price)
             return value
+
+# TODO
+def mutalAssets(exchange_list):
+    num = len(exchange_list)
+    connect, cursor = ArbitrageDatabase.connect() 
+    curr_list = defaultdict(int)
+    mutual_list = []
+    i = 1
+    for ex in exchange_list:
+        if i == 1:
+            ex_currs = GenDatabaseLibrary.getCurrencies(cursor,exchange)
+            for curr in ex_currs:
+                curr_list[curr] = 1
+        else:
+            ex_currs = GenDatabaseLibrary.getCurrencies(cursor,exchange)
+            for curr in ex_currs:
+                expected_total = i-1
+                if curr_list[curr] == expected_total:
+                    curr_list += 1
+        i += 1
+    for k,v in curr_list.items():
+        if v == i:
+            mutual_list.append(k)
+    return mutual_list
 
 # FUNCTION: pairingStr
 # INPUT: quote - string
