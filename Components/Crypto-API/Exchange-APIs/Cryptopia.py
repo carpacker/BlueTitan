@@ -1,6 +1,4 @@
-# cryptopiaAPI.py
-# WORK IN PROGRESS, CURRENTLY DEPRECATED DUE TO ERRORS ON CRYPTOPIA'S SIDE
-
+# External Imports
 import json
 import requests
 import hmac
@@ -9,7 +7,13 @@ import hashlib
 import base64
 from requests.compat import quote_plus
 
+# Internal Imports
 from secret_keys import cryptopia_public_key, cryptopia_private_key
+
+################################################ NOTICE ################################################
+# Currently deprecated due to errors that could not be resolved on Cryptopia's side                    #
+# All work on the file will be put off to a later date                                                 #
+########################################################################################################
 
 # PUBLIC
 def getCurrencies():

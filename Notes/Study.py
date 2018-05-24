@@ -1,15 +1,6 @@
-# POLONIEX API
-# TODO
-# WORK IN PROGRESS (MARCH 4TH)
+# Study this code
 
-
-import urllib
-import urllib2
-import json
-import time
-import hmac,hashlib
-
-# TAKEN FROM INTERNET: CHANGE THIS
+# Poloniex [taken online]
 def createTimeStamp(datestr, format="%Y-%m-%d %H:%M:%S"):
     return time.mktime(time.strptime(datestr, format))
 
@@ -57,20 +48,6 @@ class poloniex:
             ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/tradingApi', post_data, headers))
             jsonRet = json.loads(ret.read())
             return self.post_process(jsonRet)
-
-
-    def returnTicker(self):
-        return self.api_query("returnTicker")
-
-    def return24Volume(self):
-        return self.api_query("return24Volume")
-
-    def returnOrderBook (self, currencyPair):
-        return self.api_query("returnOrderBook", {'currencyPair': currencyPair})
-
-    def returnMarketTradeHistory (self, currencyPair):
-        return self.api_query("returnMarketTradeHistory", {'currencyPair': currencyPair})
-
 
     # Returns all of your balances.
     # Outputs: 

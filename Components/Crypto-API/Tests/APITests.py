@@ -1,24 +1,66 @@
+# External-Imports
+import time
 import sys
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Exchange_APIs')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Main')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Main')
 
+# Internal-Imports
+from PrintLibrary import PrintLibrary
 from API import ExchangeAPI
 import Bittrex
+import Binance
+import CoinMarketCap
+import Cryptopia
+import Gdax
+import Kucoin
+import Poloniex
+
+###################################################################################################
+# Each function contains a series of tests for the respective exchange. There is also a test for  #
+#  the generic calls to each exchange. This testing suite is a bit long and parts may be commented#
+#  out for convenience. For instance, it may not make sense to test sells or buys over and over   #
+###################################################################################################
+
+# TESTERS: Binance
+def BinanceTesters():
+    PrintLibrary.header("Binance Tests")
+
+# TESTERS: Bittrex
+def BittrexTesters():
+    PrintLibrary.header("Bittrex Tests")
+
+# TESTERS: CoinMarketCap
+def CoinMarketCapTesters():
+    PrintLibrary.header("CoinMarketCap Tests")
+
+# TESTERS: Cryptopia
+# * DEPRECATED
+def CryptopiaTesters():
+	pass
+
+# TESTERS: Gdax
+def GdaxTesters():
+    PrintLibrary.header("Gdax Tests")
+
+# TESTERS: Kucoin
+def KucoinTesters():
+    PrintLibrary.header("Kucoin Tests")
+
+# TESTERS: Poloniex
+def PoloniexTesters():
+    PrintLibrary.header("Poloniex Tests")
+
+# TESTERS: Generic
+def GenericTesters():
+    PrintLibrary.header("Generic Tests")
+    
 
 if __name__ == "__main__": 
-	# ExchangeAPI.sellLimit("binance", "BTC-KMD", 5, 0.000444)
-	# ExchangeAPI.sellLimitAbs("bittrex", "BTC-KMD", 5, 0.00048, .5)
-	print(ExchangeAPI.getDepositHistoryAsset("binance", "ETH", 0))
-	print(ExchangeAPI.getDeposit("binance", "ETH", 2.0))
-	print(ExchangeAPI.getDeposit("binance", "ETH", 1.1))
-	print(ExchangeAPI.checkDeposit("binance", "ETH", 2.0, 0))
-
-	# SellLimit/BuyLimit tests for Binanace
-
-	# MIN ORDER / NOTIONAL
-	print(ExchangeAPI.buyLimit('binance'))
-	print(ExchangeAPI.sellLimit('binance'))
-
-	# LOT SIZE
-	print(ExchangeAPI.buyLimit('binance'))
-	print(ExchangeAPI.sellLimit('binance'))
+    BinanceTesters()
+    BittrexTesters()
+    CoinMarketCapTesters()
+    CryptopiaTesters()
+    GdaxTesters()
+    KucoinTesters()
+    PoloniexTesters()
+    GenericTesters()
