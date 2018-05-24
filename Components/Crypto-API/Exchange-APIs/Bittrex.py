@@ -1,11 +1,19 @@
 # External-Imports
-import sys
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage')
-
-import requests
-import hmac
 import hashlib
+import hmac
+import json
 import time
+import requests
+import sys
+
+# Windows path
+sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
+
+# Linux path
+# sys.path.append()
+
+# Internal-Imports
+from PrintLibrary import PrintLibrary
 
 # Key Imports
 #from secret_keys import bittrex_public_key, bittrex_private_key

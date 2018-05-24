@@ -1,12 +1,18 @@
-import sys
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Libraries')
-
-# Imports
-import json
-import requests
-import hmac
-import time
+# External-Imports
 import hashlib
+import hmac
+import json
+import time
+import requests
+import sys
+
+# Windows path
+sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
+
+# Linux path
+# sys.path.append()
+
+# Internal-Imports
 from PrintLibrary import PrintLibrary
 
 # Secret Keys
@@ -18,7 +24,7 @@ V1_URL = "https://api.binance.com/api/v1/"
 V3_URL = "https://api.binance.com/api/v3/"
 WAPI_URL = "https://api.binance.com/wapi/v3/"
 
-# ---------------------------------------- PUBLIC CALLS ----------------------------------------
+######################################## PUBLIC CALLS #############################################
 # FUNCTION: checkServerTime
 # INPUT: N/A
 # OUTPUT: JSON

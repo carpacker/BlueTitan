@@ -1,15 +1,4 @@
-# POLONIEX API
-# TODO
-# WORK IN PROGRESS (MARCH 4TH)
 
-
-import urllib
-import urllib2
-import json
-import time
-import hmac,hashlib
-
-# TAKEN FROM INTERNET: CHANGE THIS
 def createTimeStamp(datestr, format="%Y-%m-%d %H:%M:%S"):
     return time.mktime(time.strptime(datestr, format))
 
