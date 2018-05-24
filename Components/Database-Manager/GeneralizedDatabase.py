@@ -66,7 +66,7 @@ def generalQuery(cursor, query):
 #   In order to initialize our databases with ease, base information about each (number of columns,
 #    typing and names) are stored in a dictionary which is accessed by the database library.
 
-trades_info = {'initialize' : ''}
+trades_info = {'initialize' : ArbitrageDatabaseLib.initializeTrades}
 
 arbitrage_tables = {'trades' : trades_info}
 assetMetrics_tables = {}

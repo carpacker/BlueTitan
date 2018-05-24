@@ -17,6 +17,42 @@ import Helpers
 from API import ExchangeAPI
 from FeeScraper import FeeScraper
 import Arbitrage
+#                                       Tables
+#  
+#   ArbitrageTrades : [Time_stamp, Uuid, Symbol, Total_quantity, Total_btc, Executed_qauntity
+#                       Buy_exchange, Sell_exchange, Avg_buy_rate, Avg_sell_rate, Profit_ratio,
+#                       Profit]
+#       Each entry is a single MarketArbitrage trade
+TRADE_TABLE_NAME = "ArbitrageTrades"
+
+#   MFailureTrades : []
+#   LFailureTrades : []
+#       Table of failed trades, to be used by other processing systems
+MFAILURETRADES_TABLE_NAME = "MFailureTrades"
+LFAILURESTRADES_TABLE_NAME = "LFailureTrades"
+
+#   AccountBalances : []
+#       Balances for each asset & exchange
+ACCOUNT_BALANCES_NAME = "AccountBalances"
+
+#   IntendedFAE : []
+#       TODO
+FAE_NAME = "IntendedFAE"
+
+#  BalancingHistory : []
+#       todo
+BALANCING_HISTORY_NAME = "BalancingHistory"
+
+#   AssetInformation : []
+#       Provides information for a specific asset on a specific exchange
+ASSET_INFO_NAME = "AssetInformation"
+
+#   Errors : []
+#       Database of errors that have occured during the arbitrage process
+ERROR_TABLE_NAME = "Errors"
+
+table_names = ["ArbitrageTrades", "FailureTrades", "AccountBalances", "IntendedFAE", "BalancingHistory",
+                "AssetInformation"]
 
 # FUNCTION: create_table
 # INPUT: cursor       - *
@@ -290,6 +326,20 @@ def initializeAssetInfo(assets, exchanges):
     disconnect(connect)
     return errors
 
+# TODO
+def initializeErrors():
+    connect, cursor = ArbitrageDatabase.connect()
+    timestamp = Helpers.createTimestamp()
+    # Error values: error (text), code(text), type(text)
+    input_tuple = ("N/A", "", "initialization")
+    table_name = ArbitrageDatabase.ERROR_TABLE_NAME
+    table_names = listTables(cursor)
+    checkTableNameExists(cursor, table_name, table_names)
+    createTable(cursor, table_name, timestamp, *input_tuple)
+    disconnect(connect)
+
+############################################################################################################
+
 # FUNCTION: getPairings
 # INPUT: exchange - string
 # OUTPUT: list of strings [pairing_one, ...]
@@ -318,18 +368,6 @@ def getWithdrawalFee(asset, exchange, type_value = ""):
         fee = Helpers.btcValue(asset, fee, exchange)
     disconnect(connect)
     return fee
-
-# TODO
-def initializeErrors():
-    connect, cursor = ArbitrageDatabase.connect()
-    timestamp = Helpers.createTimestamp()
-    # Error values: error (text), code(text), type(text)
-    input_tuple = ("N/A", "", "initialization")
-    table_name = ArbitrageDatabase.ERROR_TABLE_NAME
-    table_names = listTables(cursor)
-    checkTableNameExists(cursor, table_name, table_names)
-    createTable(cursor, table_name, timestamp, *input_tuple)
-    disconnect(connect)
 
 # FUNCTION: getBalance
 # INPUT: exchange - string
@@ -397,266 +435,3 @@ def getAllBalances(exchanges):
     balance_dict["ALL"]["total_value_usd"] = total_value_usd
     balance_dict["ALL"]["total_value_btc"] = total_value_btc
     return balance_dict
-
-# CLASS: ArbitrageDatabase
-class ArbitrageDatabase(object):
-
-    #                                       Tables
-    #  
-    #   ArbitrageTrades : [Time_stamp, Uuid, Symbol, Total_quantity, Total_btc, Executed_qauntity
-    #                       Buy_exchange, Sell_exchange, Avg_buy_rate, Avg_sell_rate, Profit_ratio,
-    #                       Profit]
-    #       Each entry is a single MarketArbitrage trade
-    TRADE_TABLE_NAME = "ArbitrageTrades"
-    
-    #   MFailureTrades : []
-    #   LFailureTrades : []
-    #       Table of failed trades, to be used by other processing systems
-    MFAILURETRADES_TABLE_NAME = "MFailureTrades"
-    LFAILURESTRADES_TABLE_NAME = "LFailureTrades"
-
-    #   AccountBalances : []
-    #       Balances for each asset & exchange
-    ACCOUNT_BALANCES_NAME = "AccountBalances"
-
-    #   IntendedFAE : []
-    #       TODO
-    FAE_NAME = "IntendedFAE"
-
-    #  BalancingHistory : []
-    #       todo
-    BALANCING_HISTORY_NAME = "BalancingHistory"
-
-    #   AssetInformation : []
-    #       Provides information for a specific asset on a specific exchange
-    ASSET_INFO_NAME = "AssetInformation"
-
-    #   Errors : []
-    #       Database of errors that have occured during the arbitrage process
-    ERROR_TABLE_NAME = "Errors"
-
-    # To be deprecated
-    METRICS_TABLE_NAME = "Metrics"
-    METRICSFAILURES_TABLE_NAME = "FailureMetrics"
-    METRICSASSET_TABLE_NAME = "AssetMetrics"
-    METRICSFAILURESASSET_TABLE_NAME = "AssetFailureMetrics"
-    POLLING_TABLE_NAME = "RuntimePolling"
-
-    table_names = ["ArbitrageTrades", "FailureTrades", "AccountBalances", "IntendedFAE", "BalancingHistory",
-                    "AssetInformation"]
-
-
-
-
-    # --------------------------------------- TRADE FUNCTIONS ---------------------------------------
-    # F: Insertion
-    #       [trade_values]
-    def insertTrade(cursor, Time_stamp, uuid, Symbol, Total_quantity, Total_btc, Executed_quantity, Buy_exchange, Sell_exchange, Avg_buy_rate, Avg_sell_rate, Profit_ratio, Profit, table_name="ArbitrageTrades"):
-        sql_s = "INSERT INTO %s(Time_stamp,Uuid,Symbol,Total_quantity,Total_btc,Executed_quantity,Buy_exchange,Sell_exchange,Avg_buy_rate,Avg_sell_rate,Profit_ratio,Profit) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)" % table_name
-        PrintLibrary.displayKeyVariables((("uuid", uuid),
-                                            ("Symbol", Symbol),
-                                            ("Total Quantity", Total_quantity),
-                                            ("BTC Value", Total_btc)))
-        cursor.execute(sql_s,(Time_stamp,uuid,Symbol,Total_quantity,Total_btc,Executed_quantity,Buy_exchange,Sell_exchange,Avg_buy_rate,Avg_sell_rate,Profit_ratio, Profit))
-
-
-    # F: Deletion
-    #       [trade_values_1, trade_values_2, ... CUTOFF]
-    #       *restricted by period of time
-    def deleteTradesTimeframe(cursor,days,table_name=TRADE_TABLE_NAME):
-        one_day = 60*60*24 # seconds
-        time = int(time.time() * 1000)
-        cutoff = time - (one_day*days)
-        sql_s = 'DELETE FROM %s WHERE Time_stamp < %s' % cutoff
-        cursor.execute(sql_s)
-
-    # F: Insertion
-    #       [failure_values]
-    def insertMAFailure(cursor, Time_stamp, uuid, Symbol, Total_quantity, Total_btc, Buy_exchange, Sell_exchange, Avg_buy_rate, Avg_sell_rate,
-                        Profit_ratio, Profit, Failed_exchange, Stage, Consecutive_fails, table_name="FailureTrades"):
-        sql_s = "INSERT INTO %s(Time_stamp,Uuid,Symbol,Total_quantity,Total_btc,Buy_exchange,Sell_exchange,Avg_buy_rate,Avg_sell_rate,Profit_ratio,Profit,Failed_exchange,Stage,Consecutive_fails) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)" % table_name
-        cursor.execute(sql_s,(Time_stamp,uuid,Symbol,Total_quantity,Total_btc,Buy_exchange,Sell_exchange,Avg_buy_rate,Avg_sell_rate,Profit_ratio,Profit,Failed_exchange,Stage,Consecutive_fails))
-    
-    def insertLAFailure():
-        pass
-
-    # F: Retrieval
-    #       [failure_values]
-    def getFailure(cursor, id_val, table_name=FAILURETRADES_TABLE_NAME):
-        sql_s = "SELECT FROM %s WHERE id = ?" % table_name
-        cursor.execute(sql_s,(id_var,))
-        cols = cursor.fetchall()
-        print(cols)
-        return cols
-
-    # F: Retrieval 
-    #       [trade_values_1, trade_values_2, ... CUTOFF]
-    #       *restricted by period of time
-    def getFailureTimeframe(cursor, days, table_name=FAILURETRADES_TABLE_NAME):
-        one_day = 60*60*24 # seconds
-        time = int(time.time() * 1000)
-        cutoff = time - (one_day*days)
-        sql_s = 'SELECT FROM %s WHERE Time < %s' % cutoff
-        cursor.execute(sql_s)
-        cols = cursor.fetchall()
-        print(cols)
-        return cols
-
-    # F: Deletion
-    #       [trade_values_1, trade_values_2, ... CUTOFF]
-    #       *restricted by period of time
-    def deleteFailuresTimeframe(cursor, days, table_name=TRADE_TABLE_NAME):
-        one_day = 60*60*24 # seconds
-        time = int(time.time() * 1000)
-        cutoff = time - (one_day*days)
-        sql_s = 'DELETE FROM %s WHERE Time < %s' % cutoff
-        cursor.execute(sql_s)
-
-    # ---------------------------------- TRANSFER ---------------------------------
-    # FUNCTION: insertTransfer
-    # DESCRIPTION:
-    #   Insert a balancing transfer into its database
-
-    # TODO, ADD UUID
-    def insertTransfer(cursor, time_stamp, transfer_time, buy_exchange, asset, amount, sell_exchange, base_t_asset,
-                        base_btc_value, total_btc, fee_btc, buy_withdraw_id, sell_withdraw_id):
-        sql_s = "INSERT INTO %s (Time_stamp, Transfer_time, Buy_exchange, Asset, Amount, Sell_exchange, Base_t_asset, Base_btc_value, Total_btc, Fee_btc, Buy_withdraw_id, Sell_withdraw_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)" % table_name
-        cursor.execute(sql_s,(time_stamp, transfer_time, buy_exchange, asset, amount, sell_exchange, base_t_asset,
-                        base_btc_value, total_btc, fee_btc, buy_withdraw_id, sell_withdraw_id))
-
-    # FUNCTION: getTransfer
-    # DESCRIPTION:
-    #   Get a specific transfer using an id as the reference key.
-
-    # TODO, FIX THIS
-    def getTransfer(cursor, id_value, table_name=BALANCING_HISTORY_NAME):
-        sql_s = "SELECT FROM %s WHERE id = ?" % table_name
-        cursor.execute(sql_s,(id_val,))
-        cols = cursor.fetchall()
-        return cols[0]
-
-    # FUNCTION: getTransfers
-    # DESCRIPTION:
-    #   Gets a list of transfers after a specified date.
-    def getTransfers(cursor, Time_stamp, table_name=BALANCING_HISTORY_NAME):
-        sql_s = "SELECT FROM %s WHERE Time_stamp > ?" % table_name
-        cursor.execute(sql_s,(Time_stamp,))
-        cols = cursor.fetchall() # list of tuples 
-        return cols
-
-    # ------------------------- ASSET INFORMATION -------------------------
-
-    # FUNCTION: insertAssetInformation
-    def insertAssetInformation(cursor, asset, exchange, address, withdrawal_tag, withdrawal_fee, usd_fee, table_name=ASSET_INFO_NAME):
-        sql_s = "INSERT INTO %s VALUES (?,?,?,?,?,?)" % table_name
-        cursor.execute(sql_s,(asset, exchange, address, withdrawal_tag, withdrawal_fee, usd_fee))
-
-    # FUNCTION: insertDepositAddress
-    def insertDepositAddress(cursor, asset, exchange, address, table_name=ASSET_INFO_NAME):
-        sql_s = "INSERT INTO %s VALUES (?,?,?)" % table_name
-        cursor.execute(sql_s,(asset,exchange,address))
-
-    # FUNCTION: updateDepositAddress
-    def updateDepositAddress(cursor, asset, exchange, address, table_name=ASSET_INFO_NAME):
-        sql_s = "UPDATE %s SET Address = ? WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s,(address,exchange,asset))
-
-    # FUNCTION: getDepositAddress
-    def getDepositAddress(cursor, asset, exchange, table_name=ASSET_INFO_NAME):
-        sql_s = "SELECT * FROM %s WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s,(exchange,asset,))
-        cols = cursor.fetchall()
-        PrintLibrary.displayVariables(cols, "Deposit Addresses?")
-        return cols[0][2]
-
-    # FUNCTION: updateWithdrawalFee
-    def updateWithdrawalFee(cursor, asset, exchange, fee, table_name=ASSET_INFO_NAME):
-        sql_s = "UPDATE %s SET Withdrawal_fee = ? WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (fee,exchange,asset))
-
-    # FUNCTION: getWithdrawalFee
-    def getWithdrawalFee(cursor, asset, exchange, table_name=ASSET_INFO_NAME):
-        sql_s = "SELECT * FROM %s WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s,(exchange,asset,))
-        cols = cursor.fetchall()
-        return cols[0][4]
-
-    # FUNCTION: getWithdrawalTag
-    def getWithdrawalTag(cursor, asset, exchange, table_name=ASSET_INFO_NAME):
-        sql_s = "SELECT * FROM %s WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s,(exchange,asset,))
-        cols = cursor.fetchall()
-        return cols[0][3]
-
-    # FUNCTION: updateWithdrawalTag
-    def updateWithdrawalTag(cursor, asset, exchange, table_name=ASSET_INFO_NAME):
-        sql_s = "UPDATE %s SET Withdrawal_tag = ? WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (fee,exchange,asset))
-
-    # ------------------------- BALANCE HELPER FUNCTIONS ---------------------------
-
-    # FUNCTION: insertBalance
-    def insertBalance(cursor, exchange, asset, amount, btc_value, usd_value, table_name=ACCOUNT_BALANCES_NAME):
-        sql_s = "INSERT INTO %s(Exchange,Asset,Amount,Btc_value,Usd_value) VALUES (?,?,?,?,?)" % table_name
-        cursor.execute(sql_s,(exchange,asset,amount,btc_value,usd_value))
-
-    # FUNCTION: updateBalance
-    def updateBalance(cursor, exchange, asset, amount, btc_value, usd_value, table_name=ACCOUNT_BALANCES_NAME):
-        sql_s = "UPDATE %s SET Amount = ?, Btc_value = ?, Usd_value = ? WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (amount,exchange,asset,btc_value,usd_value))
-
-    # FUNCTION: getBalanceAll
-    def getBalanceAll(cursor, asset, exchange, table_name=ACCOUNT_BALANCES_NAME):
-        sql_s = "SELECT Amount, Btc_value, Usd_value FROM %s WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (exchange, asset,))
-        balance_rows = cursor.fetchall()
-        row = balance_rows[0][0] if len(balance_rows) else 0
-        return row # this should be amount
-
-    # FUNCTION: getBalanceAsset
-    #   Retrieves specifically the asset denominated quantity
-    def getBalanceAsset(cursor, asset, exchange, table_name=ACCOUNT_BALANCES_NAME):
-        sql_s = "SELECT Amount FROM %s WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (exchange, asset,))
-        balance_rows = cursor.fetchall()
-        row = balance_rows[0][0] if len(balance_rows) else 0
-        return row # this should be amount
-
-    # FUNCTION: getBalanceBTCVal
-    #   Retrieves the btc value of the quantity available of given asset
-    def getBalanceBTCVal(cursor, asset, exchange, table_name=ACCOUNT_BALANCES_NAME):
-        sql_s = "SELECT Btc_value FROM %s WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (exchange, asset,))
-        balance_rows = cursor.fetchall()
-        row = balance_rows[0][0] if len(balance_rows) else 0
-        return row # this should be amount
-
-    # FUNCTION: getBalanceUSDVal
-    #   Retrieves the btc value of the quantity available of given asset
-    def getBalanceUSDVal(cursor, asset, exchange, table_name=ACCOUNT_BALANCES_NAME):
-        sql_s = "SELECT Usd_value FROM %s WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (exchange, asset,))
-        balance_rows = cursor.fetchall()
-        row = balance_rows[0][0] if len(balance_rows) else 0
-        return row # this should be amount
-
-    # FUNCTION: insertFAE
-    def insertFAE(cursor, asset, exchange, proportion_as, proportion_ex, table_name=FAE_NAME):
-        sql_s = "INSERT INTO %s(Exchange,Asset,Proportion_as,Proportion_ex) VALUES (?,?,?,?)" % table_name
-        cursor.execute(sql_s,(exchange, asset, proportion_as, proportion_ex))
-
-    # FUNCTION: updateFAEProportions
-    # Do both of the below
-    def updateFAEProportions():
-        pass
-
-    # FUNCTION: updateFAEExchangeProportion
-    def updateFAEExchangeProportion(cursor, asset, exchange, proportion, table_name=FAE_NAME):
-        sql_s = "UPDATE %s SET Proportion_ex = ? WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (proportion, exchange, asset))
-
-    # FUNCTION: updateFAEAccountProportion
-    def updateFAEAccountProportion(cursor, asset, exchange, proportion, table_name=FAE_NAME):
-        sql_s = "UPDATE %s SET Proportion_as = ? WHERE Exchange = ? AND Asset = ?" % table_name
-        cursor.execute(sql_s, (proportion, exchange, asset))
-
