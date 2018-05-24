@@ -256,3 +256,22 @@ def storeFAE(asset, exchange, proportion_as, proportion_ex):
         success_dict = ArbitrageDatabase.deleteBalance(cursor, exchange, asset)
         disconnect(connect)
         return success_dict
+
+
+
+# From printlibrary, possibly deprecating
+# FUNCTION: displayKeyVariables
+# INPUT: dict  - dictionary
+#        header - string (OPTIONAL)
+# OUTPUT: N/A
+# DESCRIPTION:
+#   Takes a dictionary and prints each key/value pairing of the dictionary.
+def displayKeyVariables(dict, header=""):
+    if header != "":
+        print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
+        print(" * " + str(header))
+        print("  ___________")
+    else :
+        print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
+    for key,value in dict:
+        print("  " + str(key) + " - " + str(value))  

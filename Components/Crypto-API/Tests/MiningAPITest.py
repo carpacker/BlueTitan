@@ -1,12 +1,18 @@
-# MiningAPI tests
+# External-Imports
 import sys
-sys.append()
+sys.path.append("U:/Directory/Projects/BlueTitan/Components/Libraries")
+sys.path.append("U:/Directory/Projects/BlueTitan/Components/Crypto-API/Mining-APIs")
 
+# Internal-Imports
 import Ethermine
+from PrintLibrary import PrintLibrary
 
-# Tests for Ethermine
+# TESTERS: ethermine
+# DESCRIPTION:
+#	Tests each ethermine call individually and prints the results. Each result has a header for
+#	 what function is being tested.
 def ethermineTests():
-	print(Ethermine.getPoolStats())
+	PrintLibrary.displayDictionary(Ethermine.getPoolStats(), "getPoolStats")
 	time.sleep(5)
 	print(Ethermine.getNetworkStats())
 	time.sleep(5)
