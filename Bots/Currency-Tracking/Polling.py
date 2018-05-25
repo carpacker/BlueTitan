@@ -97,7 +97,6 @@ class Polling(object):
             ticker += 1
 
 
-
     def getOrders(self, exchange, pairing, ask_list, bid_list):
         time.sleep(1)
 

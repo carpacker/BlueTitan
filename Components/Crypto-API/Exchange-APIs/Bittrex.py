@@ -233,6 +233,7 @@ def getPriceUSD(pairing):
     price_btc = getTicker("USDT-BTC")
     price_usd = price_btc * price_symb
     return price_usd
+
 # ---------------------------------------- ORDER CALLS ----------------------------------------
 # /market/%
 

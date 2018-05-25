@@ -56,8 +56,8 @@ def getCurrencies():
         }
         ret_dict[currency] = nested_dict
     ret_dict2 = {
-    "success" : True,
-    "currencies" : ret_dict
+        "success" : True,
+        "currencies" : ret_dict
     }
     return ret_dict2
 
@@ -126,12 +126,12 @@ def getInfoPairings(pairings):
             minPrice = float(filters[0]["minPrice"])
             inner_pair = pair_list[dictionary["symbol"]]
             inner_dict = {
-            "pairing" : inner_pair,
-            "min_trade_size" : MinTradeSize,
-            "max_quantity" : maxQty,
-            "min_quantity" : minQty,
-            "max_price" : maxPrice,
-            "min_price" : minPrice
+                "pairing" : inner_pair,
+                "min_trade_size" : MinTradeSize,
+                "max_quantity" : maxQty,
+                "min_quantity" : minQty,
+                "max_price" : maxPrice,
+                "min_price" : minPrice
             }
             ret_dict[inner_pair] = inner_dict
     ret_dict["success"] = True
@@ -496,11 +496,11 @@ def getBalance(asset):
             locked = float(bal["locked"])
 
             ret_dict = {
-            "success" : True,
-            "currency" : asset,
-            "total_balance" : total,
-            "available_balance" : free,
-            "locked_balance" : locked
+                "success" : True,
+                "currency" : asset,
+                "total_balance" : total,
+                "available_balance" : free,
+                "locked_balance" : locked
             }
             return ret_dict
 
