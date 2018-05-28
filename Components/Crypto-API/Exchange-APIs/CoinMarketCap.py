@@ -1,12 +1,18 @@
 # External-Imports
 import json
 import requests
+import sys
+
+# Windows path
+sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
+
+# Linux path
+# sys.path.append()
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 
 base_url = 'https://api.coinmarketcap.com/v1/ticker/'
-
 
 ######################################## COINMARKETCAP #############################################
 #   BASE CALLS
@@ -25,8 +31,9 @@ base_url = 'https://api.coinmarketcap.com/v1/ticker/'
 # DESCRIPTION:
 #   Returns global data from coinmarketcap.
 def getGlobal():
-    req = requests.request('GET', 'https://api.coinmarketcap.com/v1/global/').json()
-    return req
+    json_var = requests.request('GET', 'https://api.coinmarketcap.com/v1/global/').json()
+    # TODO: json standardization stuff here
+    return json_var
 
 # FUNCTION: getTicker
 # INPUT: start (optional) - int
@@ -40,12 +47,13 @@ def getTicker(start=None, limit=None):
     return json_var
 
 # FUNCTION: getTicker
-# INPUT: start (optional) - int
+# INPUT: asset            - string
+#        start (optional) - int
 #        limit (optional) - int
 # OUTPUT: dictionary
 # DESCRIPTION:
 #   Get ticker data for a specific asset
-def getTickerId(asset):
+def getTickerId(asset, start=None, limit=None):
     asset_id = convertId(asset)
     url = base_url + asset_id
     json_var = requests.request('GET', url).json()

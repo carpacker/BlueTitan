@@ -45,7 +45,7 @@ def BinanceTesters():
     PrintLibrary.header("Market Calls")
 
     PrintLibrary.header("Order Calls")
-    
+
 
 # TESTERS: Bittrex
 def BittrexTesters():
@@ -54,6 +54,23 @@ def BittrexTesters():
 # TESTERS: CoinMarketCap
 def CoinMarketCapTesters():
     PrintLibrary.header("CoinMarketCap Tests")
+
+    # Base calls
+    CoinMarketCap.getGlobal()
+    time.sleep(60)
+    CoinMarketCap.getTicker()
+    time.sleep(60)
+    CoinMarketCap.getTickerId("BTC")
+    time.sleep(60)
+    CoinMarketCap.getTickerId("ARK")
+
+    # Base calls: Limit/Start tests
+
+    # Derivative calls
+    CoinMarketCap.getPriceUSD()
+    time.sleep(60)
+    CoinMarketCap.getPriceBTC()
+    time.sleep(60)
 
 # TESTERS: Cryptopia
 # * DEPRECATED
