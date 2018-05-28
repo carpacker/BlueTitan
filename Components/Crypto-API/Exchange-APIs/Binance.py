@@ -31,6 +31,7 @@ WAPI_URL = "https://api.binance.com/wapi/v3/"
 # * - getInfoPairing    : Retrieves information for a specific pairing
 # * - getInfoPairings   : Retrieves information for a list of pairings
 # * - testConnectivity  : Checks the connection to Binance
+####################################################################################################
 
 # FUNCTION: checkServerTime
 # INPUT: N/A
@@ -215,7 +216,7 @@ def testConnectivity():
 # ** No input returns tickers for all symbols in array
 def get24hr(symbol):
     url = V1_URL + 'ticker/24hr'
-    return encrypt_req(False, 'GET', url, symbol=symbol)
+    return encryptRequest(False, 'GET', url, symbol=symbol)
 
 # FUNCTION: getAggTrades
 # INPUT: symbol
@@ -225,7 +226,7 @@ def get24hr(symbol):
 #  TODO better description
 def getAggTrades(symbol, **kwargs):
     url =  V1_URL + 'aggTrades'
-    return encrypt_req(False, 'GET', url, symbol=symbol, **kwargs)
+    return encryptRequest(False, 'GET', url, symbol=symbol, **kwargs)
 
 # FUNCTION: getBookTicker 
 # INPUT: symbol - string
@@ -235,7 +236,7 @@ def getAggTrades(symbol, **kwargs):
 #   Best price & associated quantity on the order book for a symbol or list of symbols
 def getBookTicker(symbol=None):
     url = V3_URL + 'ticker/bookTicker'
-    return encrypt_req(False,'GET', url, symbol)
+    return encryptRequest(False,'GET', url, symbol)
 
 # FUNCTION: getCandlestick
 # INPUT: symbol - string
@@ -248,7 +249,7 @@ def getBookTicker(symbol=None):
 # ** If startTime and endTime are not sent, the most recent klines are returned.
 def getCandlestick(symbol, interval, limit=500,**kwargs):
     url = V1_URL + 'klines'
-    return encrypt_req(False, 'GET', url, symbol=symbol, interval=interval, limit=limit,**kwargs)
+    return encryptRequest(False, 'GET', url, symbol=symbol, interval=interval, limit=limit,**kwargs)
 
 # FUNCTION: getHistoricalTrades
 # INPUT: symbol - string
@@ -261,7 +262,7 @@ def getCandlestick(symbol, interval, limit=500,**kwargs):
 # to use tradeId, include fromId=.... in function args when called 
 def getHistoricalTrades(symbol, limit=500, **kwargs):
     url =  V1_URL + 'historicalTrades'
-    return encrypt_req(False,'GET',url,symbol=symbol, limit=limit,**kwargs)
+    return encryptRequest(False,'GET',url,symbol=symbol, limit=limit,**kwargs)
 
 # FUNCTION: getOrderbook
 # INPUT: symbol(pairing) - string
@@ -271,7 +272,7 @@ def getHistoricalTrades(symbol, limit=500, **kwargs):
 #   Get bid/ask book
 def getOrderbook(symbol, limit=10):
     url =  V1_URL + 'depth'
-    json_var = encrypt_req(False, 'GET', url, symbol=symbol, limit=limit)
+    json_var = encryptRequest(False, 'GET', url, symbol=symbol, limit=limit)
     if "msg" in json_var:
         dict_error = {
         "success": False
@@ -304,7 +305,7 @@ def getOrderbook(symbol, limit=10):
 # ** NOT SUPPORTED: url = If the symbol is not sent, prices for all symbols will be returned in an array.
 def getPrice(symbol=None):
     url = V3_URL + 'ticker/price'
-    json_var = encrypt_req(False, 'GET', url, symbol=symbol)
+    json_var = encryptRequest(False, 'GET', url, symbol=symbol)
     if "msg" in json_var:
         price = 0
     # TODO clean up the below
@@ -330,7 +331,7 @@ def getPriceUSD(symbol):
 # Get recent trades
 def getTrades(symbol, limit=500):
     url =  V1_URL + 'trades'
-    return encrypt_req(False, 'GET', url, symbol=symbol, limit=limit)
+    return encryptRequest(False, 'GET', url, symbol=symbol, limit=limit)
 
 # -------------------------------------------- (POST) ORDER CALLS ---------------------------------------------
 
@@ -345,9 +346,9 @@ def cancelOrder(order_id, symbol):
 
     # Check if id is orderId or clientId by length
     if len(order_id) > 8:
-        ret_json = encrypt_req(True, 'DELETE', url, symbol=symbol, origClientOrderId=order_id)
+        ret_json = encryptRequest(True, 'DELETE', url, symbol=symbol, origClientOrderId=order_id)
     else:
-        ret_json = encrypt_req(True, 'DELETE', url, symbol=symbol, orderId=order_id)
+        ret_json = encryptRequest(True, 'DELETE', url, symbol=symbol, orderId=order_id)
 
     print(ret_json)
     
@@ -375,7 +376,7 @@ def cancelOrder(order_id, symbol):
 #   Check an order's status. Uses one of the orderIds to access the order.
 def queryOrder(symbol, clientOrderId, **kwargs):
     url = V3_URL + 'order'
-    ret_json = encrypt_req(True, 'GET', url, symbol=symbol, origClientOrderId=clientOrderId, **kwargs)
+    ret_json = encryptRequest(True, 'GET', url, symbol=symbol, origClientOrderId=clientOrderId, **kwargs)
     if "code" in ret_json:
         return {"success" : False,
                 "message" : json_var["msg"]}
@@ -415,7 +416,7 @@ def queryOrder(symbol, clientOrderId, **kwargs):
 def postOrder(symbol, side, typeE, quantity, timeInForce='GTC', **kwargs):
     url = V3_URL + 'order'
 
-    json_ret = encrypt_req(True, 'POST', url, symbol=symbol, side=side, type=typeE, 
+    json_ret = encryptRequest(True, 'POST', url, symbol=symbol, side=side, type=typeE, 
                                 quantity=quantity, timeInForce=timeInForce, **kwargs)
     if "code" in json_ret:
         print("JSON_RET", json_ret)
@@ -455,7 +456,7 @@ def postOrder(symbol, side, typeE, quantity, timeInForce='GTC', **kwargs):
 # ** ADDITIONAL MANDATORY PARAMETERS NEEDED BASED ON REQUEST TYPE
 def testOrder(symbol, side, typeE, quantity, **kwargs):
     url = V3_URL + 'order/test'
-    return encrypt_req(True, 'POST', url, symbol=symbol, side=side, type=typeE, quantity=quantity, **kwargs)
+    return encryptRequest(True, 'POST', url, symbol=symbol, side=side, type=typeE, quantity=quantity, **kwargs)
 
 # WRAPPER: buyLimit
 # INPUT: symbol   - string
@@ -530,7 +531,7 @@ def stopLossLimit(type_trade, symbol, quantity, stop_rate, limit_rate):
 #   Return all orders (closed and open)
 def getAllOrders(symbol, **kwargs):
     url = V3_URL + 'allOrders'
-    return encrypt_req(True, 'GET', url,symbol=symbol,**kwargs)
+    return encryptRequest(True, 'GET', url,symbol=symbol,**kwargs)
 
 # FUNCTION: getAccount
 # INPUT: asset - string
@@ -539,7 +540,7 @@ def getAllOrders(symbol, **kwargs):
 #   Return's the account information
 def getBalance(asset):
     url = V3_URL + 'account'
-    json_var = encrypt_req(True, 'GET', url)
+    json_var = encryptRequest(True, 'GET', url)
 
     if "code" in json_var:
         return {"success" : False,
@@ -574,7 +575,7 @@ def getBalance(asset):
 #   Retrieves the balances for the entire account.
 def getBalances():
     url = V3_URL + 'account'
-    json_var = encrypt_req(True, 'GET', url)
+    json_var = encryptRequest(True, 'GET', url)
     if "code" in json_var:
         return {"success" : False,
                 "message" : json_var["msg"]}
@@ -609,7 +610,7 @@ def getBalances():
 #  Return account trade list
 def getMyTrades(symbol, **kwargs):
     url = V3_URL + 'myTrades'
-    return encrypt_req(True, 'GET', url, symbol=symbol, **kwargs)
+    return encryptRequest(True, 'GET', url, symbol=symbol, **kwargs)
 
 # FUNCTION: getOpenOrders
 # INPUT: N/A
@@ -622,7 +623,7 @@ def getMyTrades(symbol, **kwargs):
 #   to the number of symbols currently trading on the exchange.
 def getOpenOrders(**kwargs):
     url = V3_URL + 'openOrders'
-    return encrypt_req(True, 'GET', url, **kwargs)
+    return encryptRequest(True, 'GET', url, **kwargs)
 
 # ---------------------------------------------- WAPI ----------------------------------------------
 # FUNCTION: getAccountStatus
@@ -633,7 +634,7 @@ def getOpenOrders(**kwargs):
 #  Get the status of account
 def getAccountStatus(**kwargs):
     url = WAPI_URL + 'accountStatus.html'
-    return encrypt_req(False, 'GET', url, **kwargs)
+    return encryptRequest(False, 'GET', url, **kwargs)
 
 # FUNCTION: getDepositAddress
 # INPUT: asset - string
@@ -643,7 +644,7 @@ def getAccountStatus(**kwargs):
 #  Get the deposit address for a currency. 
 def getDepositAddress(asset, **kwargs):
     url = WAPI_URL + 'depositAddress.html'
-    json_var = encrypt_req(True, 'GET', url, asset=asset, **kwargs)
+    json_var = encryptRequest(True, 'GET', url, asset=asset, **kwargs)
     print(json_var)
 
     # JSON STANDARDIZATION
@@ -701,7 +702,7 @@ def getDeposit(asset, quantity):
 # * TODO - dictionary/list thing 
 def getDepositHistory(**kwargs):
     url = WAPI_URL + 'depositHistory.html'
-    json_var = encrypt_req(True, 'GET', url, **kwargs)
+    json_var = encryptRequest(True, 'GET', url, **kwargs)
     
     # TODO: fix
     if 'msg' in json_var:
@@ -738,7 +739,7 @@ def getDepositHistory(**kwargs):
 # * TODO - dictionary/list thing 
 def getDepositHistoryAsset(asset):
     url = WAPI_URL + 'depositHistory.html'    
-    json_var = encrypt_req(True, 'GET', url, asset=asset)
+    json_var = encryptRequest(True, 'GET', url, asset=asset)
     
     # TODO: fix
     if 'msg' in json_var:
@@ -774,7 +775,7 @@ def getDepositHistoryAsset(asset):
 #  Return JSON object of account's withdrawal history
 def getWithdrawalHistory(**kwargs):
     url = WAPI_URL + 'withdrawHistory.html'
-    json_var = encrypt_req(True, 'GET', url, **kwargs)
+    json_var = encryptRequest(True, 'GET', url, **kwargs)
 
     # TODO: fix
     if 'msg' in json_var:
@@ -794,7 +795,7 @@ def getWithdrawalHistory(**kwargs):
 def withdraw(asset, amount, address, addressTag="", **kwargs):
     url = WAPI_URL + 'withdraw.html'
     # TODO, re-add addressTag
-    json_var = encrypt_req(True, 'POST', url, asset=asset, address=address, amount=amount, name="bittrex", addressTag=addressTag, **kwargs)
+    json_var = encryptRequest(True, 'POST', url, asset=asset, address=address, amount=amount, name="bittrex", addressTag=addressTag, **kwargs)
     print(json_var["success"])
     
     if 'msg' in json_var:
@@ -822,9 +823,14 @@ def withdraw(asset, amount, address, addressTag="", **kwargs):
     return ret_dict
 
 
-# ---------------------------------------------------------- HELPER FUNCTIONS ----------------------------------------------------------
+########################################## HELPERS ################################################
+# * - encryptRequest     :
+# * - quoteSymbol        :
+# * - standardizePairing :
+# * - unscramblePairing  :
+###################################################################################################
 
-# FUNCTION: encrypt_req
+# FUNCTION: encryptRequest
 # INPUT: signature - boolean
 #        method    - 'POST' or 'GET'
 #        end       - url (string)
@@ -832,7 +838,7 @@ def withdraw(asset, amount, address, addressTag="", **kwargs):
 # OUTPUT: Encrypted url used for HTTPS request
 # DESCRIPTION:
 #   Encrypts an API request to Binance
-def encrypt_req(signature, method, end, **query_vars):
+def encryptRequest(signature, method, end, **query_vars):
     header = {'X-MBX-APIKEY':binance_public_key}
     queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
     if signature:
@@ -853,26 +859,23 @@ def encrypt_req(signature, method, end, **query_vars):
     req = requests.request(method,url,headers=header).json()
     return req
 
-
-def returnExchangeInfo():
-    pass
-
-# FUNCTION:
-# INPUT:
-# OUTPUT:
+# FUNCTION: quoteSymbol
+# INPUT: pairing - string ("ETHBTC" format)
+# OUTPUT: string
 # DESCRIPTION:
-#   TODO
-# * -Possibly do this differently in the future
+#   Returns just the qutoe symbol from an input pairing. Standardizes it first in the current case.
+#    This function will get reworked in the future.
 def quoteSymbol(pairing):
     pairing = standardizePairing(pairing)
     base, quote = pairing.split("-")
     return quote
 
-# FUNCTION: 
-# INPUT:
-# OUTPUT:
+# FUNCTION: standardizePairing
+# INPUT: pairing - string
+# OUTPUT: string
 # DESCRIPTION:
-#   TODO
+#   Takes a pairing that is in the base binance format ("ETHBTC") and standardizes it to the
+#    generic format ("BTC-ETH").
 def standardizePairing(pairing):
     length = len(pairing)
     if length == 6:
@@ -884,32 +887,33 @@ def standardizePairing(pairing):
     elif length == 9:
         return pairing[3:6] + "-" + pairing[0:3]
     else:
-        print(pairing)
+        print("Error in pairing length: ", pairing)
 
-# FUNCTION: 
-# INPUT:
-# OUTPUT:
+# FUNCTION: unscramblePairing
+# INPUT: pairing - string
+# OUTPUT: string
 # DESCRIPTION:
-#   TODO
+#   Takes a pairing that is standarized to the generic format ("BTC-ETH") and converts it
+#    to Binanace's input format ("ETHBTC").
 def unscramblePairing(pairing):
     base, quote = pairing.split("-")
     return quote + base
 
 
-#               WEB SOCKET IMPLEMENTATION
+######################################### WEB SOCKET ##############################################
 
 # SECURITY: USER_STREAM, NO SIGNATURE [WORK IN PROGRESS]
 def start_user_stream():
     url = V1_URL + 'userDataStream'
-    return encrypt_req(False, 'POST', url)
+    return encryptRequest(False, 'POST', url)
 
 def keepalive_user_stream():
     url = V1_URL + 'userDataStream'
-    return encrypt_req(False, 'PUT', url)
+    return encryptRequest(False, 'PUT', url)
 
 def close_user_stream(listenKey):
     url = V1_URL + 'userDataStream'
-    return encrypt_req(False, 'DELETE', url, listenKey=listenKey)
+    return encryptRequest(False, 'DELETE', url, listenKey=listenKey)
 
 
 # CLASS: BinanceErrors

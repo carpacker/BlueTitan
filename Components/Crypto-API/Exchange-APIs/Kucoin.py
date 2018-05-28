@@ -1,4 +1,19 @@
-# KUCOIN API
-# WORK IN PROGRESS (MARCH 4TH
+# External-Imports
+import hashlib
+import hmac
+import json
+import time
+import requests
+import sys
 
-# TODO
+# Windows path
+sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
+
+# Linux path
+# sys.path.append()
+
+# Internal-Imports
+from PrintLibrary import PrintLibrary
+
+# Secret Keys
+from secret_keyz import kucoin_secret_key, kucoin_public_key 

@@ -1,3 +1,22 @@
+# External-Imports
+import hashlib
+import hmac
+import json
+import time
+import requests
+import sys
+
+# Windows path
+sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
+
+# Linux path
+# sys.path.append()
+
+# Internal-Imports
+from PrintLibrary import PrintLibrary
+
+# Secret Keys
+from secret_keyz import poloniex_secret_key, poloniex_public_key 
 
 def createTimeStamp(datestr, format="%Y-%m-%d %H:%M:%S"):
     return time.mktime(time.strptime(datestr, format))
