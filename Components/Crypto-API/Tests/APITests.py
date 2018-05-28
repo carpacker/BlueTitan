@@ -24,6 +24,25 @@ import Poloniex
 # TESTERS: Binance
 def BinanceTesters():
     PrintLibrary.header("Binance Tests")
+    
+    # Standardize the below two
+    Binance.checkServertime()
+    Binance.getCurrencies()
+    # Figure out what to do with this guy (getCurrencies uses it)
+    Binance.getExchangeInfo()
+    
+    # Test (2 right, 1 wrong)
+    Binance.getInfoPairing("BTC-ETH")
+    Binance.getInfoPairing("BTC-FUN")
+    Binance.getInfoPairing("BTC-SMT")
+
+    Binance.getInfoPairings()
+    Binance.getInfoPairings()
+    Binance.getInfoPairings()
+
+    Binance.testConnectivity()
+
+
 
 # TESTERS: Bittrex
 def BittrexTesters():

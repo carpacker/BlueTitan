@@ -29,44 +29,57 @@ WAPI_URL = "https://api.binance.com/wapi/v3/"
 # INPUT: N/A
 # OUTPUT: JSON
 # DESCRIPTION:
-#   Ping server for time [unix]
-# * TODO (Standardize dictionary)
+#   Ping server for time [unix timestamp].
 def checkServerTime():
-    req = requests.request('GET', 'https://api.binance.com/api/v1/time').json()
-    return req
+    json_var = requests.request('GET', 'https://api.binance.com/api/v1/time').json()
+
+    # Print library to get return dictionary
+    PrintLibrary.displayDictionary(json_var)
+
+    if "code" in json_var:
+        return {"success" : False,
+                "message" : json_var["msg"]}
+    ret_dict = {}
+
+    return json_var
 
 # FUNCTION: getCurrencies
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#   Returns information on currencies traded on the exchange (Binance)
-# * TODO (Cleanup this code and notation)
+#   Returns information on currencies traded on Binance.
 def getCurrencies():
     json_var = getExchangeInfo()
     ret_dict = {}
+
     if "code" in json_var:
         return {"success" : False,
                 "message" : json_var["msg"]}
+
     symb_list = json_var["symbols"]
     for symb_json in symb_list:
         currency = symb_json["symbol"]
         is_active = (symb_json["status"] == "Trading")
+
+        # Check what else is there to put in the nested dictionary
+        PrintLibrary.displayDictionary(symb_json)
+
         nested_dict = {
         "is_active" : is_active
         }
-        ret_dict[currency] = nested_dict
-    ret_dict2 = {
+        asset_dict[currency] = nested_dict
+    
+    ret_dict = {
         "success" : True,
-        "currencies" : ret_dict
+        "currencies" : asset_dict
     }
-    return ret_dict2
+    return ret_dict
 
 # FUNCTION: getExchangeInfo
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#   Return current information on exchange.
-# * TODO (Standardize Dictionary)
+#   Returns the up-to-date informatino on the exchange and its trading pairs.
 def getExchangeInfo():
     req = requests.request('GET', 'https://api.binance.com/api/v1/exchangeInfo').json()
     return req
@@ -75,15 +88,19 @@ def getExchangeInfo():
 # INPUT: pairing - string
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#   
+#   Retrieves relevant information for a single pairing on the exchange. This includes
+#    items like minimum quantity, maximum quantity, minimum price, and so on.
 def getInfoPairing(pairing):
-    json = getExchangeInfo()["symbols"]
-    if "code" in json:
+    json_var = getExchangeInfo()["symbols"]
+
+    if "code" in json_var:
         return {
-        "success" : False
-        }
-    for dictionary in json:
+        "success" : False,
+        "message" : json_var["msg"]}
+
+    for dictionary in json_var:
         if dictionary["symbol"] == pairing:
+
             pairing_s = standardizePairing(pairing)
             filters = dictionary["filters"]
             MinTradeSize = float(filters[2]["minNotional"])
@@ -92,32 +109,47 @@ def getInfoPairing(pairing):
             maxPrice = float(filters[0]["maxPrice"])
             minPrice = float(filters[0]["minPrice"])
             stepSize= float(filters[1]["stepSize"])
-            inner_dict = {
-            "success" : True,
-            "pairing" : pairing_s,
-            "min_trade_size" : MinTradeSize,
-            "max_quantity" : maxQty,
-            "min_quantity" : minQty,
-            "max_price" : maxPrice,
-            "min_price" : minPrice,
-            "step_size" : stepSize
+
+            ret_dict = {
+                "success" : True,
+                "pairing" : pairing_s,
+                "min_trade_size" : MinTradeSize,
+                "max_quantity" : maxQty,
+                "min_quantity" : minQty,
+                "max_price" : maxPrice,
+                "min_price" : minPrice,
+                "step_size" : stepSize
             }
-    return inner_dict
+
+    return ret_dict
 
 # FUNCTIO: getInfoPAirings
+# INPUT: pairings - [string, ...]
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#   Retrieves relevant information for a list of pairings on the exchange. This includes
+#    items like minimum quantity, maximum quantity, minimum price, and so on.
 def getInfoPairings(pairings):
     ret_dict = {}
-    json = getExchangeInfo()["symbols"]
-    if "code" in json:
+    json_var = getExchangeInfo()["symbols"]
+    if "code" in json_var:
         return {
-        "success" : False
-        }
+        "success" : False,
+        "message" : json_var["msg"]}
+
+    # Build the pairing list for the given exchange. 
+    # NOTE: In the future there is probably a better way to do this,
+    #        but I'm not sure. This might be the best way to do it.
+    #        For the time being, this will be the way to unscramble
+    #        pairings.
     pair_list = {}
     for pairing in pairings:
         pair = unscramble(pairing)
         pair_list[pair] = pairing
-    for dictionary in json:
+
+    for dictionary in json_var:
         if dictionary["symbol"] in pair_list.keys():
+
             filters = dictionary["filters"]
             MinTradeSize = float(filters[2]["minNotional"])
             minQty = float(filters[1]["minQty"])
@@ -125,7 +157,8 @@ def getInfoPairings(pairings):
             maxPrice = float(filters[0]["maxPrice"])
             minPrice = float(filters[0]["minPrice"])
             inner_pair = pair_list[dictionary["symbol"]]
-            inner_dict = {
+
+            nested_dict = {
                 "pairing" : inner_pair,
                 "min_trade_size" : MinTradeSize,
                 "max_quantity" : maxQty,
@@ -133,18 +166,27 @@ def getInfoPairings(pairings):
                 "max_price" : maxPrice,
                 "min_price" : minPrice
             }
-            ret_dict[inner_pair] = inner_dict
+            ret_dict[inner_pair] = nested_dict
+
     ret_dict["success"] = True
     return ret_dict
 
 # FUNCTION: testConnectivity
 # INPUT: N/A
-# OUTPUT: JSON
+# OUTPUT: Dictionary
 # DESCRIPTION:
-#   Ping server for response time
+#   Ping server for response time.
 def testConnectivity():
-    req = requests.request('GET', 'https://api.binance.com/api/v1/ping').json()
-    return req
+    json_var = requests.request('GET', 'https://api.binance.com/api/v1/ping').json()
+
+    # Print library to get return dictionary
+    PrintLibrary.displayDictionary(json_var)
+
+    if "code" in json_var:
+        return {"success" : False,
+                "message" : json_var["msg"]}
+    ret_dict = {}
+    return json_var
 
 # ---------------------------------------- MARKET CALLS ----------------------------------------
 
@@ -476,7 +518,7 @@ def getAllOrders(symbol, **kwargs):
     return encrypt_req(True, 'GET', url,symbol=symbol,**kwargs)
 
 # FUNCTION: getAccount
-# INPUT: timestamp - TODO
+# INPUT: asset - string
 # OUTPUT: dictionary
 # DESCRIPTION:
 #   Return's the account information
