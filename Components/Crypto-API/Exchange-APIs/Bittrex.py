@@ -22,7 +22,7 @@ from secret_keyz import bittrex_public_key, bittrex_private_key
 def createTimestamp():
     return str(int(time.time() * 1000))
 
-# ---------------------------------------- MARKET CALLS ----------------------------------------
+######################################## MARKET CALLS #############################################
 # * - getCurrencies   :
 # * - getInfoPairing  :
 # * - getInfoPairings :

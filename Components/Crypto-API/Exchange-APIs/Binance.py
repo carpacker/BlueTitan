@@ -24,7 +24,14 @@ V1_URL = "https://api.binance.com/api/v1/"
 V3_URL = "https://api.binance.com/api/v3/"
 WAPI_URL = "https://api.binance.com/wapi/v3/"
 
-######################################## PUBLIC CALLS #############################################
+######################################## PUBLIC CALLS ############################################## 
+# * - checkServerTime   : Returns the server's recorded current time
+# * - getCurrencies     : Retrieves a list of currencies being actively traded on Binance
+# * - getExchangeInfo   : Retrieves general information on the exchange and its pairings
+# * - getInfoPairing    : Retrieves information for a specific pairing
+# * - getInfoPairings   : Retrieves information for a list of pairings
+# * - testConnectivity  : Checks the connection to Binance
+
 # FUNCTION: checkServerTime
 # INPUT: N/A
 # OUTPUT: JSON
@@ -188,13 +195,23 @@ def testConnectivity():
     ret_dict = {}
     return json_var
 
-# ---------------------------------------- MARKET CALLS ----------------------------------------
+######################################## MARKET CALLS ############################################## 
+# * - get24hr             : Retrieves 24hr ticker 
+# * - getAggTrades        :
+# * - getBookTicker       :
+# * - getCandlestick      :
+# * - getHistoricalTrades :
+# * - getOrderbook        :
+# * - getPrice            :
+# * - getPriceUSD         :
+# * - getPriceBTC         :
+# * - getTrades           :
 
 # FUNCTION: get24hr
 # INPUT: (optional) symbol - string
 # OUTPUT: JSON
 # DESCRIPTION:
-#  Get 24hr ticker price change statistics
+#  Get 24hr ticker price change statistics.
 # ** No input returns tickers for all symbols in array
 def get24hr(symbol):
     url = V1_URL + 'ticker/24hr'
@@ -205,8 +222,8 @@ def get24hr(symbol):
 # OPTIONALS:  fromId, startTime, endTime, limit
 # OUTPUT: JSON
 # DESCRIPTION:
-#  Get aggregated trades (explained on binance API)
-def getAggTrades(symbol,**kwargs):
+#  TODO better description
+def getAggTrades(symbol, **kwargs):
     url =  V1_URL + 'aggTrades'
     return encrypt_req(False, 'GET', url, symbol=symbol, **kwargs)
 
@@ -225,7 +242,7 @@ def getBookTicker(symbol=None):
 #             interval - TODO
 #             limit = 500
 # OPTIONALS:  startTime, endTime 
-# OUTPUT: JSON
+# OUTPUT: Dictionary
 # DESCRIPTION:
 #  Get candlestick data
 # ** If startTime and endTime are not sent, the most recent klines are returned.
@@ -236,7 +253,7 @@ def getCandlestick(symbol, interval, limit=500,**kwargs):
 # FUNCTION: getHistoricalTrades
 # INPUT: symbol - string
 #             limit = 500
-# OUTPUT: JSON
+# OUTPUT: Dictionary
 # DESCRIPTION:
 #  Get older trades
 # TODO
@@ -249,9 +266,9 @@ def getHistoricalTrades(symbol, limit=500, **kwargs):
 # FUNCTION: getOrderbook
 # INPUT: symbol(pairing) - string
 #             limit - int
-# OUTPUT: JSON
+# OUTPUT: Dictionary
 # DESCRIPTION:
-# Get bid/ask book
+#   Get bid/ask book
 def getOrderbook(symbol, limit=10):
     url =  V1_URL + 'depth'
     json_var = encrypt_req(False, 'GET', url, symbol=symbol, limit=limit)
@@ -261,17 +278,20 @@ def getOrderbook(symbol, limit=10):
         }
         return dict_error
     json_bids = json_var["bids"]
+
     dict_bids = []
     for bid in json_bids:
         dict_bids.append( (bid[0],bid[1]) )
     json_asks = json_var["asks"]
+
     dict_asks = []
     for ask in json_asks:
         dict_asks.append( (ask[0],ask[1]) )
+
     ret_dict = {
-    "success" : True,
-    "bids" : dict_bids,
-    "asks" : dict_asks
+        "success" : True,
+        "bids" : dict_bids,
+        "asks" : dict_asks
     }
 
     return ret_dict
@@ -313,17 +333,13 @@ def getTrades(symbol, limit=500):
     return encrypt_req(False, 'GET', url, symbol=symbol, limit=limit)
 
 # -------------------------------------------- (POST) ORDER CALLS ---------------------------------------------
-# * Optionals are described at the bottom of the file
-
 
 # FUNCTION: cancelOrder
 # INPUT: symbol - string
 # OPTIONALS: orderId, origClientOrderId, newClientOrderId, recvWindow
-# OUTPUT: JSON
+# OUTPUT: Dictionary
 # DESCRIPTION:
-#  Cancel an open trade
-# ** Either orderId or origClientOrderId must be sent.
-# 
+#   Cancel an open trade.
 def cancelOrder(order_id, symbol):
     url = V3_URL + 'order'
 
@@ -354,10 +370,9 @@ def cancelOrder(order_id, symbol):
 # FUNCTION: queryOrder
 # INPUT:  symbol - string
 # OPTIONALS: orderId, origClientOrderId, recvWindow
-# OUTPUT: JSON
+# OUTPUT: Dictionary
 # DESCRIPTION:
-#  Check an order's status
-# ** Either orderId or origClientOrderId must be sent.
+#   Check an order's status. Uses one of the orderIds to access the order.
 def queryOrder(symbol, clientOrderId, **kwargs):
     url = V3_URL + 'order'
     ret_json = encrypt_req(True, 'GET', url, symbol=symbol, origClientOrderId=clientOrderId, **kwargs)

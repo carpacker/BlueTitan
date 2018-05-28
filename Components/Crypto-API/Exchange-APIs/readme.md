@@ -1,0 +1,4 @@
+
+Each exchange has its own way of dealing with information and the labels for said information. This is a difficult roadblock for a generic API, as the same piece of data may be called two different things b two different exchanges. For instance, one exchange might call the rate at which one is attempting to buy or sell an asset the 'rate', and another exchange may be call it the 'price'. In order to circumvent these idiosyncacies, there must be a method in which to standardize these differences. Each file in this folder is a wrapper for a given exchange. 'Poloniex.py' is the API wrapper for the exchange Poloniex. The rest follow this pattern besides a few special files that will be addressed later. The standardization system allows for a consistency between these APIs and accounts for the differences in labelling and formatting between exchanges. 
+TODO - explain the dictionary and then gto through each dictionary key
+TODO - explain the pairing notation
