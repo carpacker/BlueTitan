@@ -207,6 +207,7 @@ def testConnectivity():
 # * - getPriceUSD         :
 # * - getPriceBTC         :
 # * - getTrades           :
+################################################################################################### 
 
 # FUNCTION: get24hr
 # INPUT: (optional) symbol - string
@@ -216,7 +217,9 @@ def testConnectivity():
 # ** No input returns tickers for all symbols in array
 def get24hr(symbol):
     url = V1_URL + 'ticker/24hr'
-    return encryptRequest(False, 'GET', url, symbol=symbol)
+    json_var = encryptRequest(False, 'GET', url, symbol=symbol)
+
+    return json_var
 
 # FUNCTION: getAggTrades
 # INPUT: symbol
@@ -333,14 +336,24 @@ def getTrades(symbol, limit=500):
     url =  V1_URL + 'trades'
     return encryptRequest(False, 'GET', url, symbol=symbol, limit=limit)
 
-# -------------------------------------------- (POST) ORDER CALLS ---------------------------------------------
+######################################## ORDER CALLS ############################################## 
+# * - cancelOrder :
+# * - queryOrder  :
+# * - postOrder   :
+# * - testOrder   : tests an given order, does not actually execute the order.
+#   ORDER DERIVATIVES
+# * - buyLimit    :
+# * - sellLimit   :
+# * - stopLoss    :
+# * - stopLossLim :
+################################################################################################### 
 
 # FUNCTION: cancelOrder
 # INPUT: symbol - string
 # OPTIONALS: orderId, origClientOrderId, newClientOrderId, recvWindow
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#   Cancel an open trade.
+#   Cancel an open trade. Requires both symbol and the order id.
 def cancelOrder(order_id, symbol):
     url = V3_URL + 'order'
 
@@ -349,8 +362,6 @@ def cancelOrder(order_id, symbol):
         ret_json = encryptRequest(True, 'DELETE', url, symbol=symbol, origClientOrderId=order_id)
     else:
         ret_json = encryptRequest(True, 'DELETE', url, symbol=symbol, orderId=order_id)
-
-    print(ret_json)
     
     success = not ("code" in ret_json)
     if 'msg' in ret_json:
@@ -514,15 +525,37 @@ def sellLimit(symbol, quantity, rate):
     return_dict["btc_value"] = btc_value
     return return_dict
 
-# WRAPPER: stoploss
+# WRAPPER: stopLoss
+# INPUT: type_trade - string ['sell' or 'buy']
+#        symbol     - string
+#        quantity   - float
+#        stop_rate  - float
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#   Perform a stop-loss trade. 
 def stopLoss(type_trade, symbol, quantity, stop_rate):
     pass
 
 # WRAPPER: stopLossLimit
+# INPUT: type_trade - string ['sell' or 'buy']
+#        symbol     - string
+#        quantity   - float
+#        stop_rate  - float
+#        limit_rate - float
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#   Perform a stop-loss limit trade.
 def stopLossLimit(type_trade, symbol, quantity, stop_rate, limit_rate):
     pass
 
-# ----------------------------------------------  ACCOUNT CALLS ----------------------------------------------
+####################################### ACCOUNT CALLS ############################################# 
+# * - getAllOrders  :
+# * - getBalance    :
+# * - getBalances   :
+# * - getMyTrades   :
+# * - getOpenOrders :
+################################################################################################### 
+
 # FUNCTION: getAllOrders
 # INPUT: symbol - string
 # OPTIONALS: origClientOrderId(TODO), orderId, limit, recvWindow,
@@ -625,7 +658,20 @@ def getOpenOrders(**kwargs):
     url = V3_URL + 'openOrders'
     return encryptRequest(True, 'GET', url, **kwargs)
 
-# ---------------------------------------------- WAPI ----------------------------------------------
+
+######################################### WAPI CALLS ############################################## 
+# * - getAccountStatus          :
+# * - getDepositAddress         :
+# * - checkDeposit              :
+# * - getDeposit                :
+# * - getDepositHistory         :
+# * - getDepositHistoryAsset    :
+# * - getWithdrawal             :
+# * - getWithdrawalHistory      :
+# * - getWithdrawalHistoryAsset :
+# * - withdraw                  :
+################################################################################################### 
+
 # FUNCTION: getAccountStatus
 # INPUT: N/A
 # OPTIONALS: recvWindow
@@ -810,14 +856,14 @@ def withdraw(asset, amount, address, addressTag="", **kwargs):
     timestamp = time.time() 
     withdrawal_id = json_var["id"]
     ret_dict = {
-    "success" : True,
-    "id" : withdrawal_id,
-    "exchange" : "binance",
-    "amount" : amount,
-    "asset" : asset,
-    "address" : address,
-    "time" : timestamp,
-    "paymentid" : addressTag
+        "success" : True,
+        "id" : withdrawal_id,
+        "exchange" : "binance",
+        "amount" : amount,
+        "asset" : asset,
+        "address" : address,
+        "time" : timestamp,
+        "paymentid" : addressTag
     }
 
     return ret_dict
@@ -901,17 +947,21 @@ def unscramblePairing(pairing):
 
 
 ######################################### WEB SOCKET ##############################################
+# * - startUsrStrm     :
+# * - keepaliveUsrStrm : 
+# * - closeUsrStrm     :
+###################################################################################################
+# Work in Progress
 
-# SECURITY: USER_STREAM, NO SIGNATURE [WORK IN PROGRESS]
-def start_user_stream():
+def startUsrStrm():
     url = V1_URL + 'userDataStream'
     return encryptRequest(False, 'POST', url)
 
-def keepalive_user_stream():
+def keepaliveUsrStrm():
     url = V1_URL + 'userDataStream'
     return encryptRequest(False, 'PUT', url)
 
-def close_user_stream(listenKey):
+def closeUsrStream(listenKey):
     url = V1_URL + 'userDataStream'
     return encryptRequest(False, 'DELETE', url, listenKey=listenKey)
 
