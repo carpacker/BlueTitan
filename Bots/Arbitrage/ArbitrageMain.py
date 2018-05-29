@@ -1,6 +1,14 @@
+
+# External-Imports
+from copy import deepcopy
+import threading
+import time
+import math 
+import schedule
 import sys
 
-# SYS imports for PERSONAL DESKTOP
+# Windows
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
 sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Exchange_APIs')
 sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Main')
 sys.path.append('C:/C-directory/Projects/Work-i/Components/Database-Manager')
@@ -8,33 +16,24 @@ sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Information_accou
 sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Libraries')
 sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Scripts')
 
-# SYS imports for MAIN ARBITRAGE SERVER
-#
-
-# External-Imports
-from copy import deepcopy
-import math 
-import time
-import threading
-import schedule
+# Linux
+# sys.path.append()
 
 # Internal-Imports
 from API import ExchangeAPI
-from PTrackingLibrary import PTrackingLibrary
 from ArbitrageLibrary import ArbitrageLibrary
-from PrintLibrary import PrintLibrary
 from BalancingLibrary import BalancingLibrary
 import Helpers
+from PrintLibrary import PrintLibrary
 
-# GOING TO WANT TO FIX THIS MONSTER OF A NAMING CONFLICT
-import DatabaseLibrary as DatabaseLibraryBase
-from DatabaseLibrary import DatabaseLibrary
-
+# Replace
+from PTrackingLibrary import PTrackingLibrary
 from ProfitTracker import ProfitTracker
 from DatabaseManager import ArbitrageDatabase, MetricsDatabase, AssetMetricsDatabase
 
 # CLASS: LowLiquidityArbitrage
-#   Container arbitrage for the low-liquidity arbitrage component. Comprehensive description to come.
+#   Container arbitrage for the low-liquidity arbitrage component. This is the main loop for arbitrage and can be
+#    considered the top-level.
 class LowLiquidityArbitrage(object):
 
     # Class Variables [Exchanges, Pairings, Assets, Balances]
@@ -44,9 +43,11 @@ class LowLiquidityArbitrage(object):
     class_balance_dict = {}
 
     # INITIALIZATION
-    #   Input: Clean - Used to designate whether to clean databases on initialization
-    #   TODO (DESCRIPTION)
+    # INPUT: Clean - Used to designate whether to clean databases on initialization. Defaults to True.
+    # DESCRIPTION:
+    #   Performs necessary tasks to begin Arbitrage.
     def __init__(self, clean=True):
+        
         PrintLibrary.header("Initialization")
 
         # Grab arguments and update relevant class variables

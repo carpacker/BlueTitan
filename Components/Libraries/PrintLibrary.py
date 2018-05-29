@@ -3,24 +3,29 @@ import time
 
 # CLASS: PrintLibrary
 # DESCRPTION:
-#   Used to help with debugging. More comprehensive description to come.
-class PrintLibrary():
-
+#   Used to help with debugging. More comprehensive description to come. A feature of the library is a built in
+#    'run' boolean. When set to True, the PrintLibrary executes code. When set to false, none of the Printing code
+#    is executed. This is to allow for the bot to run without printing with just a slight performance hit.
+class PrintLibrary(object):
+    run = True
     # FUNCTON: displayDictionary
     # INPUT: var_dict -  tuple of (key,value)
     #        header   -  string (OPTIONAL)
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Takes a dictionary and prints each key/value pairing of the dictionary.
-    def displayDictionary(var_dict, header=""):
-        if header != "":
-            print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
-            print(" * " + header)
-            print("  ___________")
-        else :
-            print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
-        for key,value in var_dict.items():
-            print("  " + str(key) + " - " + str(value))  
+    def displayDictionary(var_dict, header="", run=run):
+        if run == True:
+            if header != "":
+                print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
+                print(" * " + header)
+                print("  ___________")
+            else :
+                print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
+            for key,value in var_dict.items():
+                print("  " + str(key) + " - " + str(value))  
+        else:
+            pass
 
     # FUNCTION: displayOrderbook
     # INPUT:

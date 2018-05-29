@@ -1,3 +1,4 @@
+
 import sys
 # Temporary solution: append sys path in order to import from other folders
 sys.path.append('C:/Users/Carson/Desktop/Coding Projects/Red-Dogs/2API/Exchange_APIs')

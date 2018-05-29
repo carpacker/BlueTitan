@@ -1,10 +1,17 @@
 # External-Imports
 import time 
+import sys
+
+# Windows
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
+
+# Linux
+# sys.path.append()
 
 # Internal-Imports
 from API import ExchangeAPI
 import Helpers
-from DatabaseLibrary import DatabaseLibrary
+from GeneralizedDatabase import GenDatabaseLibrary
 from PrintLibrary import PrintLibrary
 
 # CLASS: ArbitrageLibrary
