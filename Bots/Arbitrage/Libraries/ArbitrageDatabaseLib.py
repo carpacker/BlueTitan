@@ -1,16 +1,11 @@
-import sys
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Exchange_APIs')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Main')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Database-Manager')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Information_accounting')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Libraries')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Scripts')
-
 # External-Imports
 from collections import defaultdict
-import time
 import sqlite3
+import sys
+import time
+
+# Windows Main Desktop
+sys.path.append()
 
 # Internal-Imports
 import Helpers

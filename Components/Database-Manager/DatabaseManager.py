@@ -18,6 +18,8 @@ sys.path.append('C:/Users/Carson/Desktop/Coding Projects/Bots/Arbitrage/Librarie
 import os
 import sqlite3
 import time
+from collections import defaultdict
+
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary

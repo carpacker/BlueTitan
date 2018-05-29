@@ -4,12 +4,28 @@ import os
 import sqlite3
 import time
 
+# Windows Main Desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
+# Windows Laptop
+sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')
+sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
+sys.path.append('C:/C-Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 # Internal-Imports
 from PrintLibrary import PrintLibrary
-import Helpers
-import ArbitrageDatabaseLib
+# import Helpers
+# import ArbitrageDatabaseLib
+
+############################## HELPERS ###########################
+
+# FUNCTION: checkTableNameExists
+# INPUT: table_name - string
+# OUTPUT: N/A
+#   Wrapper function to ensure that the table exists before performing an operation.
+def checkTableNameExists(cursor, table_name, database):
+    table_names = GenDatabaseLibrary.listTables(cursor)
+    if table_name not in table_names:
+        database.createTable(cursor, table_name)
 
 # FUNCTION: commitWrite
 # INPUT: connect - SQL connection
@@ -33,6 +49,16 @@ def connect(path=DEFAULT_PATH):
     except Error as e:
         print(e)
     return None
+
+# FUNCTION: createUuid
+# INPUT: table_name    - string
+#        database_name - string
+# OUTPUT: int
+# DESCRIPTION:
+#   Creates a unique identifier for a given trade, metric, transfer, etc.
+def createUuid(table_name, database_name):
+    # Use letter at beginning to designate what type of thing it is 
+    return 0
 
 # FUNCTION: disconnect
 # INPUT: connect - *
@@ -66,22 +92,22 @@ def generalQuery(cursor, query):
 #   In order to initialize our databases with ease, base information about each (number of columns,
 #    typing and names) are stored in a dictionary which is accessed by the database library.
 
-trades_info = {'initialize' : ArbitrageDatabaseLib.initializeTrades}
+# trades_info = {'initialize' : ArbitrageDatabaseLib.initializeTrades}
 
-arbitrage_tables = {'trades' : trades_info}
-assetMetrics_tables = {}
-exchangeRecords_tables = {}
-historicalData_tables = {}
-metrics_tables = {}
-miningRecords_tables = {}
+# arbitrage_tables = {'trades' : trades_info}
+# assetMetrics_tables = {}
+# exchangeRecords_tables = {}
+# historicalData_tables = {}
+# metrics_tables = {}
+# miningRecords_tables = {}
 
-databases = {'arbitrage' : arbitrage_tables,	
-            'asset_metrics' : assetMetrics_tables,
-            'exchange_records' : exchangeRecords_tables,
-            'historical_data' : historicalData_tables,
-            'metrics' : metrics_tables,
-            'mining_records' : miningRecords_tables
-            }
+# databases = {'arbitrage' : arbitrage_tables,	
+#             'asset_metrics' : assetMetrics_tables,
+#             'exchange_records' : exchangeRecords_tables,
+#             'historical_data' : historicalData_tables,
+#             'metrics' : metrics_tables,
+#             'mining_records' : miningRecords_tables
+#             }
 
 database_paths = {"ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3')}
 
@@ -165,16 +191,16 @@ class GenDatabaseLibrary(object):
     def storeEntry(data, table_name, database_name):
         # 1. Set database, initializes variables, check table exists
         database_path = database_paths[database_name]
-        timestamp = Helpers.createTimestamp()
+        timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
-        checkTableNameExists(cursor, table_name, database)
-        connect, cursor = database.connect(database_path)
+        connection, cursor = connect(database_path)
+        checkTableNameExists(cursor, table_name, database_name)
 
         # 1. List columns
-        columns = SQLoperations.listColumns(cursor, table_name)
-        num_columns = len(column)
+        columns = GenDatabaseLibrary.listColumns(cursor, table_name)
+        num_columns = len(columns)
 
-        PrintLibrary.displayVariables(column_names, "Columns for table")
+        PrintLibrary.displayVariables(columns, "Columns for table")
 
         # 2. Build string based on column names and number of columns
 
@@ -182,18 +208,19 @@ class GenDatabaseLibrary(object):
         sql_q = "("
         for value in range(0, num_columns):
             sql_q += "?,"
-        sql_q -= ","
+        sql_q = sql_q[:-1]
         sql_q += ")"
 
-        sql_s = "INSERT INTO %s (" % table_name
+        sql_s = "INSERT INTO %s(" % table_name
         for column in columns:
             sql_s += column + ","
-        sql_s -= ","
+        sql_s = sql_s[:-1]
         sql_s += ") VALUES " + sql_q
-
+        sql_r = "INSERT INTO %s(Exchange,Asset,Proportion_as,Proportion_ex) VALUES (?,?,?,?)" % table_name
+        print(sql_r)
         PrintLibrary.displayVariable(sql_s, "SQL string")
-        cursor.execute(sql_s)
-        disconnect(connect)
+        cursor.execute(sql_s,data)
+        disconnect(connection)
 
     # FUNCTION: storeEntries
     # INPUT: data - [(data, ...), ...]
