@@ -182,6 +182,26 @@ class GenDatabaseLibrary(object):
         for database_name in databases_names:
             GenDatabaseLibrary.initializeDatabase(database_name)
 
+    def buildStringStore(cursor, table_name):
+        # 1. List columns
+        columns = GenDatabaseLibrary.listColumns(cursor, table_name)
+        num_columns = len(columns)
+
+        # 2. Build string based on column names and number of columns
+        sql_q = "("
+        for value in range(0, num_columns):
+            sql_q += "?,"
+        sql_q = sql_q[:-1]
+        sql_q += ")"
+
+        # 3. (?, ...) where number of elements is equal to number of columns.
+        sql_s = "INSERT INTO %s(" % table_name
+        for column in columns:
+            sql_s += column + ","
+        sql_s = sql_s[:-1]
+        sql_s += ") VALUES " + sql_q
+        return sql_s
+
     # FUNCTION: storeEntry
     # INPUT: data          - tuple
     #        database_name - string
@@ -189,35 +209,14 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Generic function for storing an entry into a table in a database.
     def storeEntry(data, table_name, database_name):
-        # 1. Set database, initializes variables, check table exists
+        # Set database, initializes variables, check table exists
         database_path = database_paths[database_name]
         timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
         connection, cursor = connect(database_path)
         checkTableNameExists(cursor, table_name, database_name)
-
-        # 1. List columns
-        columns = GenDatabaseLibrary.listColumns(cursor, table_name)
-        num_columns = len(columns)
-
-        PrintLibrary.displayVariables(columns, "Columns for table")
-
-        # 2. Build string based on column names and number of columns
-
-        # (?, ...) where number of elements is equal to number of columns.
-        sql_q = "("
-        for value in range(0, num_columns):
-            sql_q += "?,"
-        sql_q = sql_q[:-1]
-        sql_q += ")"
-
-        sql_s = "INSERT INTO %s(" % table_name
-        for column in columns:
-            sql_s += column + ","
-        sql_s = sql_s[:-1]
-        sql_s += ") VALUES " + sql_q
-        sql_r = "INSERT INTO %s(Exchange,Asset,Proportion_as,Proportion_ex) VALUES (?,?,?,?)" % table_name
-        print(sql_r)
+        # Build SQL execution string, execute and then disconnect
+        sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
         PrintLibrary.displayVariable(sql_s, "SQL string")
         cursor.execute(sql_s,data)
         disconnect(connection)
@@ -227,10 +226,21 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for storing multiple entries into a table in a database.
-    def storeEntries():
-        # TODO
-        #  Similar to above but only one connect
-        pass
+    def storeEntries(data, table_name, database_name):
+        # Set database, initializes variables, check table exists
+        database_path = database_paths[database_name]
+        timestamp = int(time.time() * 1000)
+        uuid = createUuid(table_name, database_name)
+        connection, cursor = connect(database_path)
+        checkTableNameExists(cursor, table_name, database_name)
+        # For each tuple in data, build SQL execution string, execute and then disconnect
+        for value in data:
+            sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
+            PrintLibrary.displayVariable(sql_s, "SQL string")
+            print(value)
+            cursor.execute(sql_s,value)
+        disconnect(connection)
+
 
     # FUNCTION: retrieveEntry
     # INPUT: TBD
@@ -378,6 +388,9 @@ class GenDatabaseLibrary(object):
         result = cursor.fetchall()
         return result
 
-# If called independently, these are the tests.
 if __name__ == "__main__":
+    # storeEntry, storeEntries 
     GenDatabaseLibrary.storeEntry(("", "", 0, 0), "IntendedFAE", "ArbitrageDatabase")
+    GenDatabaseLibrary.storeEntries([("first", "second", 1, 1), ("third", "fourth", 1, 1)], "IntendedFAE", "ArbitrageDatabase")
+
+    # deleteEntry, deleteEntries

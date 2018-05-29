@@ -7,7 +7,13 @@ import time
 #    'run' boolean. When set to True, the PrintLibrary executes code. When set to false, none of the Printing code
 #    is executed. This is to allow for the bot to run without printing with just a slight performance hit.
 class PrintLibrary(object):
+    
+    # GLOBAL VARIABLE: run
+    # DESCRIPTION:
+    #   If set to true, all print statements will work. If set to False, none of them
+    #    will work.
     run = True
+
     # FUNCTON: displayDictionary
     # INPUT: var_dict -  tuple of (key,value)
     #        header   -  string (OPTIONAL)
