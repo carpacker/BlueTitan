@@ -4,6 +4,8 @@ import sys
 
 # Windows
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
 
 # Linux
 # sys.path.append()
@@ -63,16 +65,16 @@ class ArbitrageLibrary(object):
         return fees 
 
     # FUNCTION: assessProfitRatio
+    # INPUT: profit_ratio -float
+    # OUTPUT: boolean
     # DESCRIPTION: 
-    #   Used to assess whether the profit ratio is suitable in runtime to execute arbitrage
-    def assessProfitRatio(profit_ratio):
+    #   Used to assess whether the profit ratio is suitable in runtime to execute arbitrage.
+    def assessProfitRatio(profit_ratio, pairing):
+        # 1. Estimate minimum profit ratio
+        # 1. Look at current profits to date 
         if profit_ratio > .5:
             return True
         return False
-
-    # Don't want to mess up code that already works...
-    def baseAsset(value_one, value_two):
-        return value_one * value_two
 
     # FUNCTION: checkMinimumOrder
     # INPUT: pairing      - string
