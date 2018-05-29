@@ -280,8 +280,45 @@ class GenDatabaseLibrary(object):
         print(sql_s)
         cursor.execute(sql_s, data_uuid)
 
+    # FUNCTION: getEntries
+    # INPUT:
+    # OUTPUT: [(*entry), ...]
+    # DESCRIPTION:
+    #   Retrieves multiple entries. Various different methods are possible to
+    #    determine what entries to return. TODO
     def getEntries():
-        pass
+        if columns is not None:
+            col_s = ",".join(columns)
+            sql_s = "SELECT %s FROM %s" % (col_s, table_name)
+            if limit > -1:
+                sql_s += " LIMIT %s" % limit
+            if order_by is not "":
+                sql_s += " ORDER BY %s" % order_by
+            cursor.execute(sql_s)
+            result = cursor.fetchall()
+            return result
+        sql_s ="SELECT * FROM %s" % table_name
+        if limit > -1:
+                sql_s += " LIMIT %S" % limit
+        if order_by is not "":
+                sql_s += " ORDER BY %s" % order_by
+        cursor.execute(sql_s)
+        result = cursor.fetchall()
+        return result
+    def selectFromTablePeriod(cursor, table_name, period, order_by, columns=None):
+        print("TIMESTAMP BASE", period)
+        if columns is not None:
+            col_s = ",".join(columns)
+            sql_s = "SELECT %s FROM %s WHERE Time_stamp > %s" % (col_s,table_name,period)
+            print(sql_s, "SQL string")
+            if order_by is not "":
+                sql_s += " ORDER BY %s" % order_by
+            cursor.execute(sql_s)
+            result = cursor.fetchall()
+            return result
+        sql_s = "SELECT FROM %s WHERE Time_stamp > %s" % (col_s,table_name, period)
+        if order_by is not "":
+            sql_s += " ORDER BY %s" % order_by
 
     # FUNCTION: selectEntry
     # INPUT: table_name - string
@@ -303,25 +340,67 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Retrieves the last entry in a database. Uses timestamp instead of internal
     #    id, assumes ascending order based on timestamp.
-    def getLastEntry(cursor, table_name):
+    def getLastEntry(table_name, database_name):
+        # Edit/fix this
+        database_path = database_paths[database_name]
+        timestamp = int(time.time() * 1000)
+        uuid = createUuid(table_name, database_name)
+        connection, cursor = connect(database_path)
+        checkTableNameExists(cursor, table_name, database_name)
         sql_s = "SELECT * FROM %s ORDER BY Time_stamp DESC LIMIT 1" % table_name
         cursor.execute(sql_s,)
         entry = cursor.fetchall()
         return entry[0]
 
+    # FUNCTION: getItem
+    # INPUT:
+    # OUTPUT:
+    # DESCRIPTION:
+    #   
     def getItem():
         pass
 
-    # Special parameters
+    # FUNCTION: getItems
+    # INPUT: 
+    # OUTPUT: 
+    # DESCRIPTION:
+    #   
     def getItems():
         pass
 
+    # FUNCTION: replaceItem
+    # INPUT: 
+    # OUTPUT: 
+    # DESCRIPTION:
+    #   
+    def replaceItem():
+        pass
+
+    # FUNCTION: replaceItems
+    # INPUT: 
+    # OUTPUT: 
+    # DESCRIPTION:
+    #   
+    def replaceItems():
+        pass
+        
+    # FUNCTION: getColumn
+    # INPUT:
+    # OUTPUT:
+    # DESCRIPTION:
+    #   
+    # WARNING: heavy load on time, very slow
     def getColumn():
         pass
 
-    # NOTE: If database is provided, just go into database, other than that just infer database based on uuid
-    # 
-    def deleteEntry(uuid, database=None):
+    # FUNCTION: deleteEntry
+    # INPUT: data_uuid 
+    #        table_name    - string
+    #        database_name - string
+    # OUTPUT: N/A
+    # DESCRIPTION:
+    #   TODO: will be similar to getEntry
+    def deleteEntry(data_uuid, table_name=None, database_name=None):
     def deleteFailuresTimeframe(cursor, days, table_name=TRADE_TABLE_NAME):
         one_day = 60*60*24 # seconds
         time = int(time.time() * 1000)
@@ -445,7 +524,7 @@ if __name__ == "__main__":
 
     GenDatabaseLibrary.storeEntry()
     GenDatabaseLibrary.storeEntries()
-    
+
     # getEntry, getEntries
     GenDatabaseLibrary.getEntry("aa1", "ArbitrageTrades", "ArbitrageDatabase")
     GenDatabaseLibrary.getEntry("mm1", "Metrics", "MetricsDatabase")
