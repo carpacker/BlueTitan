@@ -111,6 +111,9 @@ def generalQuery(cursor, query):
 
 database_paths = {"ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3')}
 
+tableNamesUuid = {}
+databaseNamesUuid = {}
+
 # CLASS: GenDatabaseLibrary
 # DESCRIPTION:
 #   Library of generic functions for interacting with any database (and tables). Takes databases
@@ -246,14 +249,52 @@ class GenDatabaseLibrary(object):
     # INPUT: TBD
     # OUTPUT: (V1, ..., Vn) where n is number of columns
     # DESCRIPTION:
-    #	Accesses a table in a database and pulls a row from the database.
-    # TODO - retrieving variables within row
-    # TODO - various methods to retrieve an entry
-    def getEntry():
-        pass
+    #	Accesses a table in a database and pulls a row from the database. There
+    #    are two options to access the entry. The first is by a unique identifier
+    #    (uuid). The second is by a list of variables/values, and the function
+    #    attempts to find the entry using these as a key.
+    def getEntry(data_uuid, table_name=None, database_name=None):
+        # Set database, initializes variables, check table exists
+        print(type(data_uuid))
+        if data_uuid == 'list':
+            database_path = database_paths[database_name]
+            timestamp = int(time.time() * 1000)
+            uuid = createUuid(table_name, database_name)
+            connection, cursor = connect(database_path)
+            checkTableNameExists(cursor, table_name, database_name)
+        elif data_uuid == 'string':
+            # Grab table_name database_name based on uuid
+            table_name = tableNamesUuid[uuid[0]]
+            database_name = databaseNamesUuid[uuid[1]]
+
+            database_path = database_paths[database_name]
+            timestamp = int(time.time() * 1000)
+            uuid = createUuid(table_name, database_name)
+            connection, cursor = connect(database_path)
+            checkTableNameExists(cursor, table_name, database_name)
+            data_uuid = [data_uuid]
+        else:
+            # TODO, better error handling
+            return 'error'
+        sql_s = GenDatabaseLibrary.selectEntry(table_name, data_uuid)
+        print(sql_s)
+        cursor.execute(sql_s, data_uuid)
 
     def getEntries():
         pass
+
+    # FUNCTION: selectEntry
+    # INPUT: table_name - string
+    #        data       - list
+    # OUTPUT: string
+    # DESCRIPTION:
+    #   Builds selection string.
+    def selectEntry(table_name, data):
+        sql_s = "SELECT * FROM %s WHERE " % table_name
+        for value in data:
+            sql_s += "%s = ? AND " % value
+        sql_s = sql_s[:-4]
+        return sql_s
 
     # FUNCTION: getLastEntry
     # INPUT: cursor     - *
@@ -281,8 +322,12 @@ class GenDatabaseLibrary(object):
     # NOTE: If database is provided, just go into database, other than that just infer database based on uuid
     # 
     def deleteEntry(uuid, database=None):
-        pass
-
+    def deleteFailuresTimeframe(cursor, days, table_name=TRADE_TABLE_NAME):
+        one_day = 60*60*24 # seconds
+        time = int(time.time() * 1000)
+        cutoff = time - (one_day*days)
+        sql_s = 'DELETE FROM %s WHERE Time < %s' % cutoff
+        cursor.execute(sql_s)
     # 
     def deleteEntries(uuid, database=None):
         pass
@@ -389,8 +434,39 @@ class GenDatabaseLibrary(object):
         return result
 
 if __name__ == "__main__":
+    
+    #                    Base Function Calls
+    # GenDatabaseLibrary.listColumns()
+    # GenDatabaseLibrary.selectFromTable()
+    #                        Top-level 
     # storeEntry, storeEntries 
     GenDatabaseLibrary.storeEntry(("", "", 0, 0), "IntendedFAE", "ArbitrageDatabase")
     GenDatabaseLibrary.storeEntries([("first", "second", 1, 1), ("third", "fourth", 1, 1)], "IntendedFAE", "ArbitrageDatabase")
 
+    GenDatabaseLibrary.storeEntry()
+    GenDatabaseLibrary.storeEntries()
+    
+    # getEntry, getEntries
+    GenDatabaseLibrary.getEntry("aa1", "ArbitrageTrades", "ArbitrageDatabase")
+    GenDatabaseLibrary.getEntry("mm1", "Metrics", "MetricsDatabase")
+    GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
+
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+
+    GenDatabaseLibrary.getLastEntry()
+
+    GenDatabaseLibrary.getColumn()
+
+    # getItem, getItems
+    GenDatabaseLibrary.getItem()
+    GenDatabaseLibrary.getItem()
+
+    GenDatabaseLibrary.getItems()
+    GenDatabaseLibrary.getItems()
+
     # deleteEntry, deleteEntries
+    GenDatabaseLibrary.deleteEntry()
+    GenDatabaseLibrary.deleteEntries()
+
