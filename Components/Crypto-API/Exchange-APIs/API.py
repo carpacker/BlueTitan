@@ -11,6 +11,10 @@ import Gdax
 
 from PrintLibrary import PrintLibrary
 
+############################### Global Function Dictionaries ######################################
+#   Each exchange has a dictionary of functions. There is a key for each generic call and it 
+#    coincides with a function within the exchange's file.
+
 binance =  {'getCurrencies' : Binance.getCurrencies,
             'getInfoPairing' : Binance.getInfoPairing,
             'getInfoPairings': Binance.getInfoPairings,
@@ -111,9 +115,13 @@ exchanges = {'binance' : binance,
              'poloniex' : poloniex
              } 
 
+# CLASS: ExchangeAPI
+# DESCRIPTION:
+#   Container for all calls to the generic exchange API.
 class ExchangeAPI():
 
-    # --------------------------- MARKET API CALLS ---------------------------
+    ##################################### MARKET CALLS #############################################
+
     # FUNCTION: getCurrencies
     # INPUT: exchange - string
     # OUTPUT: dictionary
@@ -126,14 +134,14 @@ class ExchangeAPI():
             return -1
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getCurrencies']
-        # Inputs: pairing, [kwarg1, kwarg2, ..., kwargN]
         result_dict = curr_func()
         return result_dict
 
     # FUNCTION: getInfoPairing
     # INPUT: pairing
-    # OUTPUT:
+    # OUTPUT: Dictionary
     # DESCRIPTION:
+    #   Returns the relevant information for a given pairing on a given exchange.
     def getInfoPairing(exchange, pairing):
         supportedexchanges = ['binance', 'bittrex']
         if verifySupported(exchange, supportedexchanges) == False:
@@ -141,35 +149,39 @@ class ExchangeAPI():
         pairing_u = unscramblePairing(exchange, pairing)
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getInfoPairing']
-        # Inputs: pairing, [kwarg1, kwarg2, ..., kwargN]
         result_dict = curr_func(pairing_u)
         return result_dict
 
     # FUNCTION: getInfoPairings
     # INPUT: pairing
-    # OUTPUT: dictionary
+    # OUTPUT: Dictionary
     # DESCRIPTION:
-    #   Generic function call to get the relevant information for a pairing on a
-    #    given exchange.
+    #   Generic function call to get the relevant information for a list of pairings on a given
+    #    exchange. 
     def getInfoPairings(exchange, pairings):
         supportedexchanges = ['binance', 'bittrex']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getInfoPairings']
-        # Inputs: pairing, [kwarg1, kwarg2, ..., kwargN]
         result_dict = curr_func(pairings)
         return result_dict
 
+    # FUNCTION: getMarkets
+    # INPUT:
+    # OUTPUT: Dictionary
+    # DESCRIPTION:
+    #   Outputs a list of currently traded markets. Each element is a dictionary containing
+    #    relevant information.
     def getMarkets():
         pass
 
     # FUNCTION: getPrice
     # INPUT: exchange - string
     #        pairing  - string
-    # OUTPUT: dictionary
+    # OUTPUT: float
     #   Generic function call for getPrice. Outputs the last price for a given
-    #    market pairing.
+    #    market pairing. Return is in terms of bitcoin.
     def getPrice(exchange, pairing):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia', 'coinmarketcap']
         if verifySupported(exchange, supportedexchanges) == False:
@@ -177,68 +189,81 @@ class ExchangeAPI():
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getPrice']
         pairing_u = unscramblePairing(exchange, pairing)
-        # Inputs: pairing, [kwarg1, kwarg2, ..., kwargN]
+        result_dict = curr_func(pairing_u)
+        return result_dict
+
+    # FUNCTION: getPriceBTC
+    # INPUT: exchange - string
+    #        pairing  - string
+    # OUTPUT: float
+    #   Generic function call for getPrice. Outputs the last price for a given
+    #    market pairing in terms of BTC.
+    def getPriceBTC(exchange, pairing):
+        supportedexchanges = ['coinmarketcap', 'binance', 'bittrex']
+        if verifySupported(exchange, supportedexchanges) == False:
+            return -1
+        curr_ex = exchanges[exchange]
+        curr_func = curr_ex['getPriceBTC']
+        pairing_u = unscramblePairing(exchange, pairing)
         result_dict = curr_func(pairing_u)
         return result_dict
 
     # FUNCTION: getPriceUSD
     # INPUT: exchange - string
     #        pairing  - string
-    # OUTPUT: dictionary
+    # OUTPUT: float
     #   Generic function call for getPrice. Outputs the last price for a given
     #    market pairing in terms of USD. 
-    # * - Only implemented for coinmarketcap
     def getPriceUSD(exchange, pairing):
-        supportedexchanges = ['coinmarketcap', 'binance', 'bittrex']
+        supportedexchanges = ['coinmarketcap']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getPriceUSD']
         pairing_u = unscramblePairing(exchange, pairing)
-        # Inputs: pairing, [kwarg1, kwarg2, ..., kwargN]
         result_dict = curr_func(pairing_u)
         return result_dict
 
     # FUNCTION: getOrderbook
     # INPUT: exchange - string
-    #        symbol  - string
+    #        pairing  - string
     # OUTPUT: dictionary
     #   Generic function call for getOrderbook. Outputs a list of tuples which
     #    consist of a price and quantity for an ask or a bid.
-    def getOrderbook(exchange, symbol):
+    def getOrderbook(exchange, pairing):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
-        symbol_u = unscramblePairing(exchange, symbol)
+        pairing_u = unscramblePairing(exchange, pairing)
         curr_func = curr_ex['getOrderbook']
-        result_dict = curr_func(symbol_u)
+        result_dict = curr_func(pairing_u)
         return result_dict
 
     # FUNCTION: getRecentTrades
     # INPUT: exchange - string
-    #        symbol  - string
+    #        pairing  - string
     #        limit    - int 
     # OUTPUT: dictionary
     # DESCRIPTION:
     #   Generic function call that outputs a list of the most recent trades for
     #    a given market symbol.
-    def getRecentTrades(exchange, symbol):
+    def getRecentTrades(exchange, pairing):
         supportedexchanges = ['binance', 'bittrex']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
-        symbol_u = unscramblePairing(exchange, symbol)
+        pairing_u = unscramblePairing(exchange, pairing)
         curr_func = curr_ex['getRecentTrades']
-        result_json = curr_func(symbol_u)
+        result_json = curr_func(pairing_u)
         return result_json
 
-    # --------------------------- ACCOUNT API CALLS ---------------------------
+    #################################### ACCOUNT CALLS ############################################
 
     # FUNCTION: getBalance
     # INPUT: exchange - string
-    #        asset - string
-    # OUTPUT: dictionary
+    #        asset    - string
+    # OUTPUT: Dictionary
     # DESCRIPTION: 
     #   Generic function call for getBalance. Returns the balance for
     #    specific asset on an exchange.
@@ -248,13 +273,12 @@ class ExchangeAPI():
             return -1
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getBalance']
-        # Inputs: asset, [kwarg1, kwarg2, ..., kwargN]
         result_dict = curr_func(asset)
         return result_dict
 
     # FUNCTION: getBalances
     # INPUT: exchange - string
-    # OUTPUT: dictionary
+    # OUTPUT: Dictionary
     # DESCRIPTION: 
     #   Generic function call for getBalances. Returns the balances of all
     #    assets on a specific exchange.
@@ -291,7 +315,7 @@ class ExchangeAPI():
     # INPUT: exchange   - string
     #        assets     - string
     #        quantity   - float
-    # OUTPUT: dictionary
+    # OUTPUT: Dictionary
     # DESCRIPTION:
     #   Retrieve a single deposit given input parameters to detect it. Returns False if
     #    the deposit could not be found.
@@ -317,7 +341,6 @@ class ExchangeAPI():
             return -1
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getDepositAddress']
-        # Inputs: asset [kwarg1, kwarg2, ..., kwargN] 
         result_json = curr_func(asset)
         return result_json
 
@@ -378,6 +401,11 @@ class ExchangeAPI():
     def getTradeHistoryAsset(exchange, asset, quantity=100):
         pass
 
+    # FUNCTION: getWithdraw
+    # INPUT: TODO
+    # OUTPUT: TODO
+    # DESCRIPTION:
+    #   retrieves a withdraw record from a given exchange.
     def getWithdraw():
         pass
 
@@ -389,7 +417,7 @@ class ExchangeAPI():
     # DESCRIPTION: 
     #   Generic function call for getWithdrawalHistory. Retrieves the withdrawal
     #    history of either a single currency or all currencies for a given period 
-    #    of time
+    #    of time.
     def getWithdrawalHistory():
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
@@ -419,11 +447,10 @@ class ExchangeAPI():
             return -1
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['withdraw']
-        # Inputs: asset, address, [kwarg1, kwarg2, ..., kwargN] 
         result_json = curr_func(asset, quantity, address, tag)
         return result_json
 
-    # ---------------------------- ORDER API CALLS ----------------------------
+    ##################################### ORDER CALLS #############################################
     # FUNCTION: buyLimit
     # INPUT: TODO
     # OUTPUT: dictionary
@@ -436,7 +463,6 @@ class ExchangeAPI():
         symbol_u = unscramblePairing(exchange, symbol)
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['buyLimit']
-        # Inputs: pairing, quantity, rate [kwarg1, kwarg2, ..., kwargN]
         result_dict = curr_func(symbol_u, quantity, rate)
         return result_dict
 

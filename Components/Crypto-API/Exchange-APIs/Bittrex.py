@@ -23,11 +23,19 @@ def createTimestamp():
     return str(int(time.time() * 1000))
 
 ######################################## MARKET CALLS #############################################
-# * - getCurrencies   :
-# * - getInfoPairing  :
-# * - getInfoPairings :
-# * - getMarkets      :
-# * - getMarketHistory:
+# * - getCurrencies      :
+# * - getInfoPairing     :
+# * - getInfoPairings    :
+# * - getMarkets         :
+# * - getMarketHistory   :
+# * - getMarketSummary   :
+# * - getMarketSummaries :
+# * - getOrderbook       :
+# * - getOrderbookBoth   :
+# * - getticker          :
+# * - getPriceUSD        :
+# * - getPriceBTC        :
+###################################################################################################
 
 # FUNCTION: getCurrencies
 # INPUT: N/A
