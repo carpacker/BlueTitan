@@ -47,7 +47,7 @@ class LowLiquidityArbitrage(object):
     # DESCRIPTION:
     #   Performs necessary tasks to begin Arbitrage.
     def __init__(self, clean=True):
-        
+
         PrintLibrary.header("Initialization")
 
         # Grab arguments and update relevant class variables

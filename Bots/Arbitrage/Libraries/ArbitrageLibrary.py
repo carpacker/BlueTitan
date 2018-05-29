@@ -70,8 +70,7 @@ class ArbitrageLibrary(object):
     # DESCRIPTION: 
     #   Used to assess whether the profit ratio is suitable in runtime to execute arbitrage.
     def assessProfitRatio(profit_ratio, pairing):
-        # 1. Estimate minimum profit ratio
-        # 1. Look at current profits to date 
+        # TODO: the big rework
         if profit_ratio > .5:
             return True
         return False
@@ -84,17 +83,18 @@ class ArbitrageLibrary(object):
     #        rate         - float
     # OUTPUT: quantity [float]
     # DESCRIPTION:
-    #   Checks to ensure that order parameters fit minimum order size for each respective exchange
+    #   Checks to ensure that order parameters fit minimum order size for each respective exchange.
     def checkMinOrder(pairing, exchange_one, exchange_two, quantity, rate):
-        # * TODO - Possible deal with both directions later
         order_size = quantity * rate
         notional_dict_one = ExchangeAPI.getInfoPairing(exchange_one, pairing)
         notional_dict_two = ExchangeAPI.getInfoPairing(exchange_two, pairing)
         notional_one = notional_dict_one["min_trade_size"]
         notional_two = notional_dict_two["min_trade_size"]
         notional = min(notional_one, notional_two)
-        print("NOTIONAL: ", notional)
-        print("ORDER SIZE: ", order_size)
+        
+        PrintLibrary.displayVariable(notional, "Notional")
+        PrintLibrary.displayVariable(order_size, "Order Size")
+
         if order_size < notional:
             print("ORDER IS BELOW THRESHOLD: " + str(order_size))
             return 0
@@ -114,7 +114,7 @@ class ArbitrageLibrary(object):
     #        pairing  - string
     # OUTPUT: price(float)
     # DESCRIPTION:
-    # Converts a given price to the minimum price for a pairing/exchange.
+    #   Converts a given price to the minimum price for a pairing/exchange.
     def convertMinPrice(exchange, price, pairing): 
         trim_value = ExchangeAPI.getInfoPairing(exchange, pairing)
         precision = Helpers.determinePrecision(trim_value["min_price"])
@@ -143,9 +143,8 @@ class ArbitrageLibrary(object):
     # DESCRIPTION:
     #   Decides which exchange to attempt to arbitrage on first
     def decideOrder(buy_exchange, sell_exchange):
-        # returns True if sell first, meaning sell is low liq
+        # TODO: In future decide by some complex means
         temp_dict = {'binance': 3, 'bittrex': 2, 'cryptopia': 1}
-        # binance > bittrex > cryptopia 
         return temp_dict[sell_exchange] < temp_dict[buy_exchange]
 
     # FUNCTION: determineOrderSizeo
@@ -153,7 +152,7 @@ class ArbitrageLibrary(object):
     #        quantity     - float
     # OUTPUT: quantity [float]
     # DESCRIPTION:
-    #   Determines the order size for an arbitrage trade based on profit ratio
+    #   Determines the order size for an arbitrage trade based on profit ratio.
     def determineOrderSize(profit_ratio, quantity, price):
 
         # Case 1: Profit ratios is huge
@@ -180,12 +179,12 @@ class ArbitrageLibrary(object):
         return final_quantity
 
     # FUNCTION: evaluatePairing
-    # INPUT: order_list - TODO
-    #        pairing    - TODO
-    #        buy_num    - TODO
-    # OUTPUT: TODO
+    # INPUT: order_list - [(bids, asks), ...], (TODO)
+    #        pairing    - string
+    #        buy_num    - ???
+    # OUTPUT: Tuple
     # DESCRIPTION:
-    #   TODO
+    #   Top level function for evaluating whether a pairing has profitable arbitrage available.
     def evaluatePairing(order_list, pairing, buy_num):
 
         # ERROR CHECK
@@ -387,17 +386,19 @@ class ArbitrageLibrary(object):
     #        pairing  - string
     #        ask_list - passed in by reference
     #        bid_list - passed in by reference
-    # OUTPUT: TODO
+    # OUTPUT: N/A
     # DESCRIPTION:
     #   Retrieves order books for a given pairing on a given exchange and builds a list
     #    of the combined asks and bids for each exchange. Each list is a list of lists,
     #    [[price, quantity, exchange, btc_value], ...].
     def getOrders(exchange, pairing, ask_list, bid_list):
 
-        # Temporary workaround to make sure the program doesn't go over rate limit
+        # NOTE: Temporary workaround to make sure the program doesn't go over rate limit
         time.sleep(1)
 
         dict1 = ExchangeAPI.getOrderbook(exchange, pairing)
+
+        # Build our bid and ask lists
         if dict1["success"] == True:
             bids = dict1["bids"]
             asks = dict1["asks"]
@@ -418,10 +419,9 @@ class ArbitrageLibrary(object):
                 ask_l = [price, quantity, exchange, btc_value]
                 ask_list.append(ask_l)
 
+            # Sort bids and asks
             ask_list.sort(key=lambda x: x[0], reverse=False) # Ascending [lowest first]
             bid_list.sort(key=lambda x: x[0], reverse=True)  # Descending [highest first]
-
-        return -1
 
     # FUNCTION: handle_incomplete_arbitrage
     # INPUT: sell_dict     - TODO
@@ -432,35 +432,26 @@ class ArbitrageLibrary(object):
     #        pairing       - string
     # OUTPUT: dictionary
     # DESCRIPTION:
-    #   Hack solution to handle incomplete arbitrage for the time being
-    # * - TODO, come back to this and devise a more comprehensive solution
+    #   Wrapper function to call buy/sell-limitAbs when an Arbitrage is left incomplete. It simply 
+    #    sells or buys the currency o nthe same exchange, and takes a loss if it needs.
     def handleIncompleteArbitrage(sell_dict, sell_exchange, buy_dict, buy_exchange, order_type, pairing):
 
-        # ATTEMPT AGAIN IN 10S
-        time.sleep(10)
+        # Just try to buy/sell it back
         if order_type == 'Buy':
-            ret_dict = ExchangeAPI.buyLimit(buy_exchange, pairing, buy_dict["quantity"], buy_dict["rate"])
+            ret_dict = ExchangeAPI.buyLimitAbs(buy_exchange, pairing, buy_dict["quantity"], buy_dict["rate"])
         if order_type == 'Sell':
-            ret_dict = ExchangeAPI.sellLimit(sell_exchange, pairing, sell_dict["quantity"], sell_dict["rate"])
+            ret_dict = ExchangeAPI.sellLimitAbs(sell_exchange, pairing, sell_dict["quantity"], sell_dict["rate"])
 
         if ret_dict['success'] == 'True':
+            # TODO: record difference between prices
             ret_dict["incomplete_arbitrage"] = False
             return ret_dict
-
-        # IF UNSUCCESSFUL: PLACE LIMIT ORDER ON ORIGINAL EXCHANGE
-        if order_type == 'Buy':
-            ret_dict = ExchangeAPI.buyLimit(buy_exchange, pairing, buy_dict["quantity"], buy_dict["rate"])
-            ret_dict["incomplete_arbitrage"] = True
-            return ret_dict
-        if order_type == 'Sell':
-            ret_dict = ExchangeAPI.sellLimit(sell_exchange, pairing, sell_dict["quantity"], sell_dict["rate"])
-            ret_dict["incomplete_arbitrage"] = True
-            return ret_dict
-
 
 # CLASS: LimitArbitrage
 # DESCRIPTION:
 #   Container for all functions related to performing limit based arbitrage
 class LimitArbitrage(object):
+
     def main():
         pass
+

@@ -7,7 +7,7 @@ import time
 #    'run' boolean. When set to True, the PrintLibrary executes code. When set to false, none of the Printing code
 #    is executed. This is to allow for the bot to run without printing with just a slight performance hit.
 class PrintLibrary(object):
-    run = True
+    run = False
     # FUNCTON: displayDictionary
     # INPUT: var_dict -  tuple of (key,value)
     #        header   -  string (OPTIONAL)
@@ -33,8 +33,11 @@ class PrintLibrary(object):
     # DESCRIPTION:
     #   Takes input tuples representing an order book (bids and asks) of an exchange and constructs a series of print
     #    statements to display them in a visually cohesive manner.
-    def displayOrderbook():
-        pass
+    def displayOrderbook(header="", run=run):
+        if run == True:
+            pass
+        else:
+            pass
         
     # FUNCTION: displayVariable
     # INPUT: value
@@ -42,14 +45,14 @@ class PrintLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Prints a single variable (string, int, ...). Cannot display tuples, lists or dictionaries.
-    def displayVariable(value, func_name=None):
-        print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
-        # Different cases for tuple, list, float (?)
-        if func_name != None:
-            print("** FUNCTION : " + func_name) # Func name display
+    def displayVariable(value, func_name=None, run=run):
+        if run == True:
+            print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
+            if func_name != None:
+                print("** FUNCTION : " + func_name) # Func name display
+            print(" * - " + str(value)) # Add to this
         else:
             pass
-        print(" * - " + str(value)) # Add to this
 
     # FUNCTON: displayVariables
     # INPUT: var_tuple -  list or tuple
@@ -57,36 +60,47 @@ class PrintLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Takes a list or tuple, itereates through and prints each element.
-    def displayVariables(var_tuple, header=""):
-        if header != "":
-            print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
-            print(" * " + header)
-            print("  ___________")
-        else :
-            print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
-        ticker = 0
-        for value in var_tuple:
-            ticker += 1
-            print("  " + str(ticker) + " - " + str(value))  
+    def displayVariables(var_tuple, header="", run=run):
+        if run == True:         
+            if header != "":
+                print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
+                print(" * " + header)
+                print("  ___________")
+            else :
+                print("|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -|")
+            ticker = 0
+            for value in var_tuple:
+                ticker += 1
+                print("  " + str(ticker) + " - " + str(value))  
+        else:
+            pass
 
 
     # FUNCTION: header
     # DESCRIPTION:
     #   Displays a header for testing.
-    def header(message):
-        print("|- - - - - - - - - - - - - - - - - - - - - - " + message + " - - - - - - - - - - - - - - - - - - - - - -|")
+    def header(message, run=run):
+        if run == True:
+            print("|- - - - - - - - - - - - - - - - - - - - - - " + message + " - - - - - - - - - - - - - - - - - - - - - -|")
+        else:
+            pass
 
-    def header2(message):
-        print("|# # # # # # # # # # # # # # # # # # " + message + " # # # # # # # # # # # # # # # # # #|")
-
+    def header2(message, run=run):
+        if run == True:
+            print("|# # # # # # # # # # # # # # # # # # " + message + " # # # # # # # # # # # # # # # # # #|")
+        else:
+            pass
     # FUNCTION: sleep
     # INPUT: time       - int
     #        message    - string
     #        func_name  - string (OPTIONAL)
     # DESCRIPTION:
     #   Custom sleep statement that prints out a message.
-    def sleep(time, message="", func_name=None):
-        pass 
+    def sleep(time, message="", func_name=None, run=run):
+        if run == True:
+            pass
+        else:
+            pass
 
     # probably rework this...
     def stageHeader(message, stage):
@@ -94,12 +108,23 @@ class PrintLibrary(object):
         stage += 1
         return stage
 
-    def delimiter():
-        print("- - - - - - - - - - - - - - - - - - - - -")
-    
+    # FUNCTION: delimiter
+    # DESCRIPTION:
+    #   Displays a line that acts as a delimiter in the prints.
+    def delimiter(run=run):
+        if run == True:
+            print("- - - - - - - - - - - - - - - - - - - - -")
+        else: 
+            pass
+            
+    # FUNCTION: miniDelimiter
+    # DESCRIPTION:
+    #   Displays a line that acts as a delimiter in the prints.
     def miniDelimiter():
-        print ("  *---------------------------*  ")
-
+        if run == True:
+            print ("  *---------------------------*  ")
+        else:
+            pass
 
 # CLASS: DynamicPrinter
 # DESCRIPTION:
@@ -133,3 +158,6 @@ class DynamicPrinter():
             DynamicPrinter.buildString(size, message)
             print(string)
     
+if __name__ == '__main__':
+    PrintLibrary.displayDictionary({"top":"gun",
+                                    "seven":"devin"})

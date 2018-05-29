@@ -26,6 +26,12 @@ from PrintLibrary import PrintLibrary
 #   Tests for functions in the ArbitrageLibrary.py file
 def ArbitrageUnitTests():
     PrintLibrary.header("Arbitrage Unit Tests")
+    ArbitrageLibrary.getAggregateWFees()
+    ArbitrageLibrary.checkMinOrder()
+    ArbitrageLibrary.convertMinPrice()
+    ArbitrageLibrary.convertMinQuantity()
+    ArbitrageLibrary.decideOrder()
+
 
 # TESTER: BalancingUnitTests
 # DESCRIPTION:
