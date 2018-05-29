@@ -20,7 +20,6 @@ import sqlite3
 import time
 from collections import defaultdict
 
-
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 

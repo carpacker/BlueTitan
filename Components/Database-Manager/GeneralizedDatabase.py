@@ -352,6 +352,21 @@ class GenDatabaseLibrary(object):
         entry = cursor.fetchall()
         return entry[0]
 
+    # FUNCTION: updateEntry
+    # INPUT: 
+    # OUTPUT: 
+    # DESCRIPTION:
+    #   
+    def updateEntry():
+        pass
+
+    # FUNCTION: updateEntries
+    # INPUT: 
+    # OUTPUT: 
+    # DESCRIPTION:
+    #   
+    def updateEntries():
+        pass
     # FUNCTION: getItem
     # INPUT:
     # OUTPUT:
@@ -373,7 +388,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: 
     # DESCRIPTION:
     #   
-    def replaceItem():
+    def updateItem():
         pass
 
     # FUNCTION: replaceItems
@@ -381,9 +396,9 @@ class GenDatabaseLibrary(object):
     # OUTPUT: 
     # DESCRIPTION:
     #   
-    def replaceItems():
+    def updateItems():
         pass
-        
+
     # FUNCTION: getColumn
     # INPUT:
     # OUTPUT:
@@ -401,19 +416,21 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   TODO: will be similar to getEntry
     def deleteEntry(data_uuid, table_name=None, database_name=None):
-    def deleteFailuresTimeframe(cursor, days, table_name=TRADE_TABLE_NAME):
+        pass
+
+    # FUNCTION: deleteEntries
+    # INPUT: 
+    # OUTPUT:
+    # DESCRIPTION:
+    #   TODO: will be similar to getEntries
+    def deleteEntries():
+        
+        # Below is reference for time based
         one_day = 60*60*24 # seconds
         time = int(time.time() * 1000)
         cutoff = time - (one_day*days)
         sql_s = 'DELETE FROM %s WHERE Time < %s' % cutoff
         cursor.execute(sql_s)
-    # 
-    def deleteEntries(uuid, database=None):
-        pass
-
-    #
-    def deleteEntriesPeriod(period, database=None):
-        pass
 
     # FUNCTION: listColumns
     # INPUT: cursor     - *
@@ -462,56 +479,6 @@ class GenDatabaseLibrary(object):
             ret_tuple = selectFromTable(cursor, table_name, -1, "", [column_name])
         return ret_tuple
 
-    # FUNCTION: selectFromTable
-    # INPUT: table_name - string
-    #        limit      - int
-    #        order_by   - string (column to order the list by)
-    #        columns    - [string, ...]
-    # OUTPUT: [tuple, ...]
-    # DESCRIPTION:
-    #   Returns list of tuples (each tuple represents a row)
-    # ** Limit -1 returns all rows
-    # ** order_by is either "" or the name of a column  
-    def selectFromTable(cursor, table_name, limit, order_by, columns=None):
-        if columns is not None:
-            col_s = ",".join(columns)
-            sql_s = "SELECT %s FROM %s" % (col_s, table_name)
-            if limit > -1:
-                sql_s += " LIMIT %s" % limit
-            if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
-            cursor.execute(sql_s)
-            result = cursor.fetchall()
-            return result
-        sql_s ="SELECT * FROM %s" % table_name
-        if limit > -1:
-                sql_s += " LIMIT %S" % limit
-        if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
-        cursor.execute(sql_s)
-        result = cursor.fetchall()
-        return result
-
-    def selectFromTablePeriod(cursor, table_name, period, order_by, columns=None):
-        print("TIMESTAMP BASE", period)
-        if columns is not None:
-            col_s = ",".join(columns)
-            sql_s = "SELECT %s FROM %s WHERE Time_stamp > %s" % (col_s,table_name,period)
-            print(sql_s, "SQL string")
-            if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
-            cursor.execute(sql_s)
-            result = cursor.fetchall()
-            return result
-        sql_s = "SELECT FROM %s WHERE Time_stamp > %s" % (col_s,table_name, period)
-        if order_by is not "":
-            sql_s += " ORDER BY %s" % order_by
-
-        print(sql_s)
-        cursor.execute(sql_s)
-        result = cursor.fetchall()
-        return result
-
 if __name__ == "__main__":
     
     #                    Base Function Calls
@@ -544,6 +511,10 @@ if __name__ == "__main__":
 
     GenDatabaseLibrary.getItems()
     GenDatabaseLibrary.getItems()
+
+    # updateEntry, updateEntries
+    
+    # updateItem, updateItems
 
     # deleteEntry, deleteEntries
     GenDatabaseLibrary.deleteEntry()
