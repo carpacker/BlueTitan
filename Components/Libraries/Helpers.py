@@ -322,6 +322,52 @@ def sumFAE(fae_list):
         tally += btc_value
     return tally
 
+# FUNCTION: sumValues
+# INPUT: listy - list
+# OUTPUT: float
+# DESCRIPTION:
+#   Sums the values in a list
+def sumValues():
+    pass
+
+# Model it/replace below
+
+# FUNCTION: sumBalances
+# INPUT: balances - tuple (asset, exchange, value, BTCvalue)
+# OUTPUT: float
+# DESCRIPTION:
+#   Sums the value of assets in terms of BTC and outputs the final value
+# * - TODO - make this more robust... currently a bit simple and mostly a wrapper
+def sumBalances(balances):
+    total = 0
+    for balance in balances:
+        total += balance[3]
+    return total
+
+# FUNCTION: sumProfit
+# INPUT: profits - TODO
+# OUTPUT: TODO
+# DESCRIPTION:
+#   TODO
+# * - TODO, Input tuple already a list of profits from a period...
+# * - TODO, probably make this more robust...
+def sumProfit(profits):
+    sum_profit = 0
+    for value in profits:
+        sum_profit += float(value[0])
+    return sum_profit
+
+# FUNCTION: sumVolume
+# INPUT: initial_balances - float
+#        final_balances   - [float]
+# OUTPUT: volume[float]
+#   Sums up volume traded for period
+# * - TODO - This isn't right
+def sumVolume(initial_balance, final_balances):
+    final_balance = sum(final_balances)
+    volume = final_balance - initial_balance
+    return volume
+
 # FUNCTION: usdValue
 # INPUT: quantity - float
 #        asset    - string

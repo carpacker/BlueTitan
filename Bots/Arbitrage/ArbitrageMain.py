@@ -1,3 +1,6 @@
+# ArbitrageMain.py
+# Carson Packer
+# Summer 2018
 
 # External-Imports
 from copy import deepcopy
