@@ -152,6 +152,34 @@ def determinePrecision(value):
     else:
         return 0
 
+# FUNCTION: retrieveAccountBalances
+# INPUTS: supportedexchanges - list of strings
+# OUTPUT: list of balances by exchange (alphabetical ordering)
+# DESCRIPTION:
+#   Creates a list that consists of the balances for each exchange we are using.
+# TODO: review this
+def retrieveAccountBalances(supportedexchanges, supportedassets):
+    balance_dict = {}
+    for exchange in supportedexchanges:
+        balance_dict[exchange] = ExchangeAPI.getBalances(exchange)
+
+    ret_list = []
+    for asset in supportedassets:
+        for exchange in supportedexchanges:
+            balance = balance_dict[exchange]["balances"][asset]["available_balance"]
+            if asset != "BTC":
+                pairing = "BTC-" + asset 
+                price = ExchangeAPI.getPrice(exchange, pairing)
+                btc_balance = Helpers.btcValue(asset, balance, exchange)
+            else: 
+                btc_balance = balance
+
+            tuple_s = (asset, exchange, balance, btc_balance)
+            ret_list.append(tuple_s)
+            time.sleep(1)
+
+    return ret_list # (ASSET, EXCHANGE, BALANCE)
+
 # FUNCTION: getFee
 # INPUT: exchange - string
 # OUTPUT: float

@@ -19,25 +19,3 @@ class ProfitTracker(object):
     def __init__(self, clean=True):
     	PrintLibrary.displayMessage("ProfitTracker Initialized")
 
-    # FUNCTION: runHourly
-    # INPUT: exchanges	- [string]
-    #		 assets     - [string]
-    #		 balances  	- TODO
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #	Top level function for profit tracking on the hour
-    def runHourly(exchanges, assets):
-        balances = PTrackingLibrary.retrieveAccountBalances(exchanges, assets)
-        hourly_metrics = PTrackingLibrary.calculateMetrics(balances, exchanges, assets)
-        print(hourly_metrics)
-
-	# FUNCTION: runDaily
-	# INPUT: exchanges  - [string]
-	#		 assets		- [string]
-	#		 balances	- TODO
-	# OUTPUT: N/A
-	# DESCRIPTION:
-	#	Top level function for profit tracking on the daily
-    def runDaily(exchanges, assets, balances):
-        daily_metrics = PTrackingLibrary.calculateMetrics(balances, print_b, exchanges, assets)
-        print(daily_metrics)

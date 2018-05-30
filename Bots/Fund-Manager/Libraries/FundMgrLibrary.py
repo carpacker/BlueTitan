@@ -14,22 +14,23 @@ import Helpers
 from GeneralizedDatabase import GenDatabaseLibrary
 from PrintLibrary import PrintLibrary
 
-# CLASS: PTrackingLibrary
+# CLASS: Helpers
 # FUNCTION LIST: [calculateMetrics, averageValue, calculateChange, sumBalances, sumProfit, sumVolume]
 # DESCRIPTION:
 #   Function library for the profit tracking components. More comprehensive description to come.
 class MetricsCalculator(object):
 
     # FUNCTION: calculateMetrics
-    # INPUTS: period             - int
-    #         balances           - TODO
-    #         supportedexchanges - [string]
-    #         supportedassets    - [string]
+    # INPUTS: period              - int
+    #         balances            - TODO
+    #         supported_exchanges - [string, ...]
+    #         supported_assets    - [string, ...]
+    #         running_algos       - [string, ...] <-- list of currently running algorithms (TODO, description to come, mining, arbitrage)
     # OUTPUT: integer (representing sucess or not)
     # DESCRIPTION:
     #   Calculates metric based on time period, grabs values from successful trades and from
     #    unsuccessful trades and then stores them in a new database.
-    def calculateMetrics(balances, supportedexchanges, supportedassets):
+    def calculateMetrics(balances, supported_exchanges, supported_assets, running_algos):
 
         # 1. Retrieve the last entry
         # TODO: change inputs here
@@ -52,7 +53,7 @@ class MetricsCalculator(object):
             btc_balance = balance_a[3]
             final_balance = balance_a[2]
             if final_balance != 0:
-                delta_balance = PTrackingLibrary.calculateChange(previous_balance, final_balance)
+                delta_balance = Helpers.calculateChange(previous_balance, final_balance)
             else:
                 delta_balance = 0
 
@@ -111,33 +112,33 @@ class MetricsCalculator(object):
 
         # 4. Calculate global asset metrics
         initial_balance = previous_tuple_metric[3]
-        final_balance = PTrackingLibrary.sumBalances(balances)
+        final_balance = Helpers.sumValues(balances)
 
-        agg_pr = PTrackingLibrary.averageValue(profit_ratio_t)
-        agg_profit = PTrackingLibrary.(profit_t)
-        agg_volume = PTrackingLibrary.sumProfit(volume_t)
-        agg_utilization = PTrackingLibrary.calculateChange(final_balance, agg_volume)
+        agg_pr = Helpers.averageValue(profit_ratio_t)
+        agg_profit = Helpers.sumValues(profit_t)
+        agg_volume = Helpers.sumValues(volume_t)
+        agg_utilization = Helpers.calculateChange(final_balance, agg_volume)
         agg_quantity = quantity_t
 
-        agg_volume_delta = PTrackingLibrary.calculateChange(previous_tuple_metric[5], agg_volume)
-        agg_pr_delta = PTrackingLibrary.calculateChange(previous_tuple_metric[7], agg_pr)
-        agg_profit_delta = PTrackingLibrary.calculateChange(previous_tuple_metric[9], agg_profit)
-        agg_utilization_delta = PTrackingLibrary.calculateChange(previous_tuple_metric[11], agg_utilization)
-        agg_quantity_delta = PTrackingLibrary.calculateChange(previous_tuple_metric[14], quantity_t)
+        agg_volume_delta = Helpers.calculateChange(previous_tuple_metric[5], agg_volume)
+        agg_pr_delta = Helpers.calculateChange(previous_tuple_metric[7], agg_pr)
+        agg_profit_delta = Helpers.calculateChange(previous_tuple_metric[9], agg_profit)
+        agg_utilization_delta = Helpers.calculateChange(previous_tuple_metric[11], agg_utilization)
+        agg_quantity_delta = Helpers.calculateChange(previous_tuple_metric[14], quantity_t)
 
-        agg_pr_failures = PTrackingLibrary.averageValue(profit_ratio_f)
-        agg_volume_failures = PTrackingLibrary.sumProfit(volume_f)
-        agg_utilization_failures = PTrackingLibrary.calculateChange(final_balance, agg_volume_failures)
+        agg_pr_failures = Helpers.averageValue(profit_ratio_f)
+        agg_volume_failures = Helpers.sumValues(volume_f)
+        agg_utilization_failures = Helpers.calculateChange(final_balance, agg_volume_failures)
         agg_quantity_failures = quantity_f
-        agg_success_rate = PTrackingLibrary.calculateChange(agg_quantity_failures, agg_quantity)
+        agg_success_rate = Helpers.calculateChange(agg_quantity_failures, agg_quantity)
 
         quantity_s1 = 0
         quantity_s2 = 0
-        agg_pr_failures_delta = PTrackingLibrary.calculateChange(previous_tuple_metric[10], agg_pr_failures)
-        agg_quantity_failures_delta = PTrackingLibrary.calculateChange(previous_tuple_failure_metric[9], agg_quantity_failures)
-        agg_utilization_failures_delta = PTrackingLibrary.calculateChange(previous_tuple_failure_metric[7], agg_utilization_failures)
-        agg_volume_failures_delta = PTrackingLibrary.calculateChange(previous_tuple_failure_metric[3], agg_volume_failures)
-        agg_success_rate_delta = PTrackingLibrary.calculateChange(previous_tuple_failure_metric[13], agg_success_rate)
+        agg_pr_failures_delta = Helpers.calculateChange(previous_tuple_metric[10], agg_pr_failures)
+        agg_quantity_failures_delta = Helpers.calculateChange(previous_tuple_failure_metric[9], agg_quantity_failures)
+        agg_utilization_failures_delta = Helpers.calculateChange(previous_tuple_failure_metric[7], agg_utilization_failures)
+        agg_volume_failures_delta = Helpers.calculateChange(previous_tuple_failure_metric[3], agg_volume_failures)
+        agg_success_rate_delta = Helpers.calculateChange(previous_tuple_failure_metric[13], agg_success_rate)
 
         # TODO FIX SUPPORTED ASSETS STUFF
         success_values = ("", initial_balance, final_balance, agg_volume, agg_volume_delta, agg_pr, agg_pr_delta,
@@ -154,39 +155,32 @@ class MetricsCalculator(object):
         PrintLibrary.displayKeyVariables(Plist)
 
         # Store values
-        DatabaseLibrary.storeMetric(success_values)
-        DatabaseLibrary.storeFailureMetric(failure_values)
+        # Storing metric and failure metric
+        GenDatabaseLibrary.storeEntry(success_values)
+        GenDatabaseLibrary.storeEntry(failure_values)
 
-        DatabaseLibraryBase.disconnect(connect)
-        return -1
-
-    # FUNCTION: retrieveAccountBalances
-    # INPUTS: supportedexchanges - list of strings
-    # OUTPUT: list of balances by exchange (alphabetical ordering)
+    # FUNCTION: runHourly
+    # INPUT: exchanges  - [string]
+    #        assets     - [string]
+    #        balances   - TODO
+    # OUTPUT: N/A
     # DESCRIPTION:
-    #   Creates a list that consists of the balances for each exchange we are using.
-    def retrieveAccountBalances(supportedexchanges, supportedassets):
-        balance_dict = {}
-        for exchange in supportedexchanges:
-            balance_dict[exchange] = ExchangeAPI.getBalances(exchange)
+    #   Top level function for profit tracking on the hour
+    def runHourly(exchanges, assets):
+        balances = PTrackingLibrary.retrieveAccountBalances(exchanges, assets)
+        hourly_metrics = PTrackingLibrary.calculateMetrics(balances, exchanges, assets)
+        print(hourly_metrics)
 
-        ret_list = []
-        for asset in supportedassets:
-            for exchange in supportedexchanges:
-                balance = balance_dict[exchange]["balances"][asset]["available_balance"]
-                if asset != "BTC":
-                    pairing = "BTC-" + asset 
-                    price = ExchangeAPI.getPrice(exchange, pairing)
-                    btc_balance = Helpers.btcValue(asset, balance, exchange)
-                else: 
-                    btc_balance = balance
-
-                tuple_s = (asset, exchange, balance, btc_balance)
-                ret_list.append(tuple_s)
-                time.sleep(1)
-
-        return ret_list # (ASSET, EXCHANGE, BALANCE)
-
+    # FUNCTION: runDaily
+    # INPUT: exchanges  - [string]
+    #        assets     - [string]
+    #        balances   - TODO
+    # OUTPUT: N/A
+    # DESCRIPTION:
+    #   Top level function for profit tracking on the daily
+    def runDaily(exchanges, assets, balances):
+        daily_metrics = PTrackingLibrary.calculateMetrics(balances, print_b, exchanges, assets)
+        print(daily_metrics)
 class Liquidator(object):
 
     # FUNCTION: assessProfitPeriod
