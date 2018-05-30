@@ -167,20 +167,10 @@ class MetricsCalculator(object):
     # DESCRIPTION:
     #   Top level function for profit tracking on the hour
     def runHourly(exchanges, assets):
-        balances = PTrackingLibrary.retrieveAccountBalances(exchanges, assets)
+        balances = Helpers.retrieveAccountBalances(exchanges, assets)
         hourly_metrics = PTrackingLibrary.calculateMetrics(balances, exchanges, assets)
-        print(hourly_metrics)
+        PrintLibrary.displayVariable(hourly_metrics)
 
-    # FUNCTION: runDaily
-    # INPUT: exchanges  - [string]
-    #        assets     - [string]
-    #        balances   - TODO
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #   Top level function for profit tracking on the daily
-    def runDaily(exchanges, assets, balances):
-        daily_metrics = PTrackingLibrary.calculateMetrics(balances, print_b, exchanges, assets)
-        print(daily_metrics)
 class Liquidator(object):
 
     # FUNCTION: assessProfitPeriod

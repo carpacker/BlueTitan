@@ -16,8 +16,7 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 from PrintLibrary import PrintLibrary
 
 # Key Imports
-#from secret_keys import bittrex_public_key, bittrex_private_key
-from secret_keyz import bittrex_public_key, bittrex_private_key
+from secret_keys import bittrex_public_key, bittrex_private_key
 
 def createTimestamp():
     return str(int(time.time() * 1000))

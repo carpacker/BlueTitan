@@ -8,13 +8,14 @@ import time
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
 # Windows Laptop
-sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')
-sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
-sys.path.append('C:/C-Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
+# sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')
+# sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
+# sys.path.append('C:/C-Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
+
 # Internal-Imports
 from PrintLibrary import PrintLibrary
-# import Helpers
-# import ArbitrageDatabaseLib
+import Helpers
+import ArbitrageDatabaseLib
 
 ############################## HELPERS ###########################
 
@@ -92,24 +93,25 @@ def generalQuery(cursor, query):
 #   In order to initialize our databases with ease, base information about each (number of columns,
 #    typing and names) are stored in a dictionary which is accessed by the database library.
 
-# trades_info = {'initialize' : ArbitrageDatabaseLib.initializeTrades}
+trades_info = {'initialize' : ArbitrageDatabaseLib.initializeTrades}
 
-# arbitrage_tables = {'trades' : trades_info}
-# assetMetrics_tables = {}
-# exchangeRecords_tables = {}
-# historicalData_tables = {}
-# metrics_tables = {}
-# miningRecords_tables = {}
+arbitrage_tables = {'trades' : trades_info}
+assetMetrics_tables = {}
+exchangeRecords_tables = {}
+historicalData_tables = {}
+metrics_tables = {}
+miningRecords_tables = {}
 
-# databases = {'arbitrage' : arbitrage_tables,	
-#             'asset_metrics' : assetMetrics_tables,
-#             'exchange_records' : exchangeRecords_tables,
-#             'historical_data' : historicalData_tables,
-#             'metrics' : metrics_tables,
-#             'mining_records' : miningRecords_tables
-#             }
+databases = {'arbitrage' : arbitrage_tables,	
+            'asset_metrics' : assetMetrics_tables,
+            'exchange_records' : exchangeRecords_tables,
+            'historical_data' : historicalData_tables,
+            'metrics' : metrics_tables,
+            'mining_records' : miningRecords_tables
+            }
 
-database_paths = {"ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3')}
+database_paths = {"ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
+                    "MetricsDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3')}
 
 tableNamesUuid = {}
 databaseNamesUuid = {}
@@ -305,7 +307,7 @@ class GenDatabaseLibrary(object):
         cursor.execute(sql_s)
         result = cursor.fetchall()
         return result
-    def selectFromTablePeriod(cursor, table_name, period, order_by, columns=None):
+    # def selectFromTablePeriod(cursor, table_name, period, order_by, columns=None):
         print("TIMESTAMP BASE", period)
         if columns is not None:
             col_s = ",".join(columns)
@@ -356,7 +358,8 @@ class GenDatabaseLibrary(object):
     # INPUT: 
     # OUTPUT: 
     # DESCRIPTION:
-    #   
+    #   Effectively replaces an entry with new values. It doesn't necessitate that every value is updated, but it
+    #    will check to update each item.
     def updateEntry():
         pass
 
@@ -406,6 +409,34 @@ class GenDatabaseLibrary(object):
     #   
     # WARNING: heavy load on time, very slow
     def getColumn():
+        pass
+    # FUNCTION: selectColumn
+    # INPUT: cursor 
+    #        table_name   - string
+    #        column_name  - string
+    #        limit_period - int [will either be number of trades OR a unix timestamp designating the time to start from]
+    # OUTPUT: tuple
+    # DESCRIPTION:
+    #   Returns a tuple from a single column.
+    # * TODO [NotUrgent] - Make this more robust, for instance 50,000 is arbitrary
+    def selectColumn(cursor, table_name, column_name, limit_period=None):
+        if limit_period < 50000:
+            ret_tuple = selectFromTable(cursor, table_name, limit_period, "", [column_name])
+        elif limit_period > 50001:
+            print("select from period")
+            ret_tuple = selectFromTablePeriod(cursor, table_name, limit_period, "", [column_name])
+        else:
+            ret_tuple = selectFromTable(cursor, table_name, -1, "", [column_name])
+        return ret_tuple
+
+
+    # FUNCTION: getColumn
+    # INPUT:
+    # OUTPUT:
+    # DESCRIPTION:
+    #   
+    # WARNING: heavy load on time, very slow
+    def getColumns():
         pass
 
     # FUNCTION: deleteEntry
@@ -459,64 +490,3 @@ class GenDatabaseLibrary(object):
         for tup in fetched:
             table_list.append(tup[0])
         return table_list
-
-    # FUNCTION: selectColumn
-    # INPUT: cursor 
-    #        table_name   - string
-    #        column_name  - string
-    #        limit_period - int [will either be number of trades OR a unix timestamp designating the time to start from]
-    # OUTPUT: tuple
-    # DESCRIPTION:
-    #   Returns a tuple from a single column.
-    # * TODO [NotUrgent] - Make this more robust, for instance 50,000 is arbitrary
-    def selectColumn(cursor, table_name, column_name, limit_period=None):
-        if limit_period < 50000:
-            ret_tuple = selectFromTable(cursor, table_name, limit_period, "", [column_name])
-        elif limit_period > 50001:
-            print("select from period")
-            ret_tuple = selectFromTablePeriod(cursor, table_name, limit_period, "", [column_name])
-        else:
-            ret_tuple = selectFromTable(cursor, table_name, -1, "", [column_name])
-        return ret_tuple
-
-if __name__ == "__main__":
-    
-    #                    Base Function Calls
-    # GenDatabaseLibrary.listColumns()
-    # GenDatabaseLibrary.selectFromTable()
-    #                        Top-level 
-    # storeEntry, storeEntries 
-    GenDatabaseLibrary.storeEntry(("", "", 0, 0), "IntendedFAE", "ArbitrageDatabase")
-    GenDatabaseLibrary.storeEntries([("first", "second", 1, 1), ("third", "fourth", 1, 1)], "IntendedFAE", "ArbitrageDatabase")
-
-    GenDatabaseLibrary.storeEntry()
-    GenDatabaseLibrary.storeEntries()
-
-    # getEntry, getEntries
-    GenDatabaseLibrary.getEntry("aa1", "ArbitrageTrades", "ArbitrageDatabase")
-    GenDatabaseLibrary.getEntry("mm1", "Metrics", "MetricsDatabase")
-    GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
-
-    GenDatabaseLibrary.getEntries()
-    GenDatabaseLibrary.getEntries()
-    GenDatabaseLibrary.getEntries()
-
-    GenDatabaseLibrary.getLastEntry()
-
-    GenDatabaseLibrary.getColumn()
-
-    # getItem, getItems
-    GenDatabaseLibrary.getItem()
-    GenDatabaseLibrary.getItem()
-
-    GenDatabaseLibrary.getItems()
-    GenDatabaseLibrary.getItems()
-
-    # updateEntry, updateEntries
-    
-    # updateItem, updateItems
-
-    # deleteEntry, deleteEntries
-    GenDatabaseLibrary.deleteEntry()
-    GenDatabaseLibrary.deleteEntries()
-

@@ -16,8 +16,7 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 from PrintLibrary import PrintLibrary
 
 # Secret Keys
-from secret_keyz import binance_private_key, binance_public_key 
-#from secret_keys_2 import binance_private_key, binance_public_key 
+from secret_keys import binance_private_key, binance_public_key
 
 # Endpoint URLs
 V1_URL = "https://api.binance.com/api/v1/"
