@@ -3,8 +3,8 @@ import sys
 import time
 
 # Windows Main Desktop
-sys.path.append('C:/Users/Carson/Desktop/Coding Projects/Crypto-API/Exchange_APIs')
-sys.path.append('C:/Users/Carson/Desktop/Coding Projects/Database-RD')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/DatabaseManager')
 
 # Linux Main Server
 
@@ -18,7 +18,7 @@ from PrintLibrary import PrintLibrary
 # FUNCTION LIST: [calculateMetrics, averageValue, calculateChange, sumBalances, sumProfit, sumVolume]
 # DESCRIPTION:
 #   Function library for the profit tracking components. More comprehensive description to come.
-class PTrackingLibrary(object):
+class MetricsCalculator(object):
 
     # FUNCTION: calculateMetrics
     # INPUTS: period             - int
@@ -160,45 +160,6 @@ class PTrackingLibrary(object):
         DatabaseLibraryBase.disconnect(connect)
         return -1
 
-    # FUNCTION: averageValue
-    # INPUT: values - [float or number-as-string]
-    # OUTPUT: float
-    # DESCRIPTION:
-    #   Takes an input list of values and averages them
-    def averageValue(values):
-        if values != []:
-            average = 0
-            for value in values:
-                average += float(value[0])
-            return_value = average / float(len(values))
-            return return_value
-        else:
-            return 0
-
-    # FUNCTION: calculateChange
-    # INPUT: value_one - float
-    #        value_two - float
-    # OUTPUT: float
-    #   TODO (Not sure what to do this with, its a bit too simple)
-    def calculateChange(value_one, value_two):
-        if value_one != 0:
-            value = (value_two / value_one)
-            return value
-        else: 
-            return value_two
-
-    # FUNCTION: liquidateProfits
-    # DESCRIPTION:
-    #   Function that checks the profit margin for the day and sets aside a portion to be sold into USDT that 
-    #    represents a 'cash out'
-    def liquidateProfits():
-        pass
-        # 1. Access the profits for the day
-        # 2. Determine the 'degree' of liquidation
-        # 3. Liquidate the profits
-        # 4. Store the results
-        #   ^ -- need a new database for this
-
     # FUNCTION: retrieveAccountBalances
     # INPUTS: supportedexchanges - list of strings
     # OUTPUT: list of balances by exchange (alphabetical ordering)
@@ -225,3 +186,35 @@ class PTrackingLibrary(object):
                 time.sleep(1)
 
         return ret_list # (ASSET, EXCHANGE, BALANCE)
+
+class Liquidator(object):
+
+    # FUNCTION: assessProfitPeriod
+    # INPUT: TBD
+    # OUTPUT: TBD
+    # DESCRIPTION:
+    #   Looks at the account balances for a period of time and determines how much
+    #    profit there was. 
+    def assessProfitPeriod():
+        pass
+
+    # FUNCTION: liquidateProfit
+    # INPUT: ratio - int
+    # OUTPUT:
+    # DESCRIPTION:
+    #   Attempts to liquidate given profit for a period of time
+    def liquidateProfit(ratio):
+        pass
+    # FUNCTION: liquidateProfits
+
+    # DESCRIPTION:
+    #   Function that checks the profit margin for the day and sets aside a portion to be sold into USDT that 
+    #    represents a 'cash out'
+    def liquidateProfits():
+        pass
+        # 1. Access the profits for the day
+        # 2. Determine the 'degree' of liquidation
+        # 3. Liquidate the profits
+        # 4. Store the results
+        #   ^ -- need a new database for this
+

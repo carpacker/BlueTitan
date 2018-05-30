@@ -331,6 +331,32 @@ def sumValues():
     pass
 
 # Model it/replace below
+# FUNCTION: averageValue
+# INPUT: values - [float or number-as-string]
+# OUTPUT: float
+# DESCRIPTION:
+#   Takes an input list of values and averages them
+def averageValue(values):
+    if values != []:
+        average = 0
+        for value in values:
+            average += float(value[0])
+        return_value = average / float(len(values))
+        return return_value
+    else:
+        return 0
+
+# FUNCTION: calculateChange
+# INPUT: value_one - float
+#        value_two - float
+# OUTPUT: float
+#   TODO (Not sure what to do this with, its a bit too simple)
+def calculateChange(value_one, value_two):
+    if value_one != 0:
+        value = (value_two / value_one)
+        return value
+    else: 
+        return value_two
 
 # FUNCTION: sumBalances
 # INPUT: balances - tuple (asset, exchange, value, BTCvalue)
