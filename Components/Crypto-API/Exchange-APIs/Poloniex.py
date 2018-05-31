@@ -16,7 +16,7 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 from PrintLibrary import PrintLibrary
 
 # Secret Keys
-from secret_keyz import poloniex_secret_key, poloniex_public_key 
+from secret_keys import poloniex_private_key, poloniex_public_key 
 
 # Endpoint URLs
 base_url = ""

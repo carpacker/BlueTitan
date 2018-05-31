@@ -5,13 +5,12 @@ import sys
 import time
 
 # Windows Main Desktop
-sys.path.append()
+sys.path.append("U:/Directory/Projects/BlueTitan/Bots/Data-Scrapers")
 
 # Internal-Imports
 import Helpers
 from API import ExchangeAPI
 from FeeScraper import FeeScraper
-import Arbitrage
 #                                       Tables
 #  
 #   ArbitrageTrades : [Time_stamp, Uuid, Symbol, Total_quantity, Total_btc, Executed_qauntity

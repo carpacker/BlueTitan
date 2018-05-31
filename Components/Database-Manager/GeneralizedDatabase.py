@@ -15,7 +15,7 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 import Helpers
-import ArbitrageDatabaseLib
+# import ArbitrageDatabaseLib
 
 ############################## HELPERS ###########################
 
@@ -93,7 +93,7 @@ def generalQuery(cursor, query):
 #   In order to initialize our databases with ease, base information about each (number of columns,
 #    typing and names) are stored in a dictionary which is accessed by the database library.
 
-trades_info = {'initialize' : ArbitrageDatabaseLib.initializeTrades}
+trades_info = {'initialize' : 0}
 
 arbitrage_tables = {'trades' : trades_info}
 assetMetrics_tables = {}
@@ -370,6 +370,7 @@ class GenDatabaseLibrary(object):
     #   
     def updateEntries():
         pass
+        
     # FUNCTION: getItem
     # INPUT:
     # OUTPUT:

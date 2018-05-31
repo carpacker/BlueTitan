@@ -18,7 +18,7 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
 from PrintLibrary import PrintLibrary
 import Helpers
 import ArbitrageDatabaseLib
-from GeneralizedDataase import GenDatabaseLibrary
+from GeneralizedDatabase import GenDatabaseLibrary
 
 # FUNCTION: initializeTestDatabase
 # INPUT: N/A
@@ -28,7 +28,7 @@ from GeneralizedDataase import GenDatabaseLibrary
 #    may be expanded to test other parts of the program
 def initializeTestDatabase():
     pass
-    
+
 # TESTERS: base functions
 # DESCRIPTION:
 #   All testers for helper functions exclusively used within the GeneralizedDatabase.py file
@@ -48,7 +48,7 @@ def mainTesters():
     GenDatabaseLibrary.storeEntry(("", "", 0, 0), "IntendedFAE", "ArbitrageDatabase")
     GenDatabaseLibrary.storeEntries([("first", "second", 1, 1), ("third", "fourth", 1, 1)], "IntendedFAE", "ArbitrageDatabase")
     # GenDatabaseLibrary.storeEntry() . do test database here
-    GenDatabaseLibrary.storeEntries([("fifth", "sixth", 1, 2), ("seventh", "eighth", 3, 4), "IntendedFAE", "ArbitrageDatabase"])
+    GenDatabaseLibrary.storeEntries([("fifth", "sixth", 1, 2), ("seventh", "eighth", 3, 4)], "IntendedFAE", "ArbitrageDatabase")
 
     PrintLibrary.header("getEntry, getEntries, getLastEntry")
     GenDatabaseLibrary.getEntry("aa1", "ArbitrageTrades", "ArbitrageDatabase")
@@ -80,3 +80,4 @@ def mainTesters():
     GenDatabaseLibrary.deleteEntries()
 
 if __name__ == "__main__":
+    mainTesters()
