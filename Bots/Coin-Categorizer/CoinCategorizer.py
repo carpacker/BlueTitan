@@ -26,8 +26,9 @@ class SpreadsheetParser():
         return currency_list
 
     # OUTPUT: DICTIONARY
-    #     [Pairing :  (PRICE, VOLUME, MARKETS, TIMELINE, SOCIAL_NEWS, WEBSITE,
-    #                   SOURCE_CODE, PRICE_MOV, MINEABLE, WHITEPAPER)]
+    #     [Asset :  (PRICE, VOLUME, MARKETS, TIMELINE, SOCIAL_NEWS, WEBSITE,
+    #                   SOURCE_CODE, PRICE_MOV, MINEABLE, WHITEPAPER)]  
+    #     [ETH   :   (8, 10, 8, ...)] --> 8
     # LENGTH = (1 + NUMBER OF VARIABLES)
 
 # CLASS: CoinRanker

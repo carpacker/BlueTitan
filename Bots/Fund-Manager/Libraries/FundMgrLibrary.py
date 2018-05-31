@@ -156,7 +156,8 @@ class MetricsCalculator(object):
 
         # Store values
         # Storing metric and failure metric
-        GenDatabaseLibrary.storeEntry(success_values)
+        DatabaseLibrary.storeMetricsValue(success_values)
+        GenDatabaseLibrary.storeEntry(success_values, "table", "MetricsDatabase")
         GenDatabaseLibrary.storeEntry(failure_values)
 
     # FUNCTION: runHourly
@@ -189,6 +190,7 @@ class Liquidator(object):
     #   Attempts to liquidate given profit for a period of time
     def liquidateProfit(ratio):
         pass
+
     # FUNCTION: liquidateProfits
 
     # DESCRIPTION:

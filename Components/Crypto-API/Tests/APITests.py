@@ -26,6 +26,7 @@ def BinanceTesters():
     PrintLibrary.header("Binance Tests")
     PrintLibrary.delimiter()
     PrintLibrary.header("Public calls")
+    
     # Standardize the below two
     Binance.checkServertime()
     Binance.getCurrencies()

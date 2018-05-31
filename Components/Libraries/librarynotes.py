@@ -1,30 +1,4 @@
-# 1. write Store & test...
-# 2. Replace store functions in each and test individually
-# 3. write get/select & test
-# 4. Replace get/select in each and test individually
-# 5. SelectfromPeriod/table
-# 6. Initializes
-
-
-INITIALIZE FUNCTIONS
-
-
-
-Possibly deprecate these comments
-# CLASS: DatabaseLibrary
-# DESCRIPTION:
-#   Used to contain database calls. Acts as object for convinient references. Tables currently in use 
-#    for the database include: ArbitradeTrades, AccountBalances, BalancingHistory, DepositAddresses, 
-#    Metrics, FailureMetrics, AssetMetrics, AssetFailureMetrics.
-class DatabaseLibrary(object):
-
-
-----------------------------------------------------
-
-# Work these into ONE function:
 # 	selectDistinct
-
-
     def getCurrenciesAmounts(cursor, exchange, table_name=ACCOUNT_BALANCES_NAME):
         sql_s = "SELECT DISTINCT Asset, Amount, Btc_value, Usd_value FROM %s WHERE Exchange= ? " % table_name
         cursor.execute(sql_s,(exchange,))

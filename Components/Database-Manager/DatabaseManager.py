@@ -251,7 +251,6 @@ class ArbitrageDatabase(object):
             print(e)
         return None
 
-
     # ------------------------------ INITIALIZATION OF TABLES ------------------------------------|
     # FUNCTION: create_table
     # INPUT: cursor       - *

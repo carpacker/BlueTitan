@@ -96,10 +96,10 @@ def generalQuery(cursor, query):
 trades_info = {'initialize' : 0}
 
 arbitrage_tables = {'trades' : trades_info}
-assetMetrics_tables = {}
+assetMetrics_tables = {'asset_metrics' : asset_metrics_info}
 exchangeRecords_tables = {}
 historicalData_tables = {}
-metrics_tables = {}
+metrics_tables = {'metrics' : metrics_info2444  }
 miningRecords_tables = {}
 
 databases = {'arbitrage' : arbitrage_tables,	
@@ -208,7 +208,8 @@ class GenDatabaseLibrary(object):
         return sql_s
 
     # FUNCTION: storeEntry
-    # INPUT: data          - tuple
+    # INPUT: data          - tuple, (item, ...)
+    #        table_name    - string
     #        database_name - string
     # OUTPUT: N/A
     # DESCRIPTION:
@@ -227,17 +228,19 @@ class GenDatabaseLibrary(object):
         disconnect(connection)
 
     # FUNCTION: storeEntries
-    # INPUT: data - [(data, ...), ...]
+    # INPUT: data - list [(data, ...), ...]
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for storing multiple entries into a table in a database.
     def storeEntries(data, table_name, database_name):
+
         # Set database, initializes variables, check table exists
         database_path = database_paths[database_name]
         timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
         connection, cursor = connect(database_path)
         checkTableNameExists(cursor, table_name, database_name)
+
         # For each tuple in data, build SQL execution string, execute and then disconnect
         for value in data:
             sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
@@ -245,7 +248,6 @@ class GenDatabaseLibrary(object):
             print(value)
             cursor.execute(sql_s,value)
         disconnect(connection)
-
 
     # FUNCTION: retrieveEntry
     # INPUT: TBD
@@ -360,7 +362,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Effectively replaces an entry with new values. It doesn't necessitate that every value is updated, but it
     #    will check to update each item.
-    def updateEntry():
+    def updateEntry(data_uuid, input, table_name, database_name):
         pass
 
     # FUNCTION: updateEntries
@@ -368,15 +370,15 @@ class GenDatabaseLibrary(object):
     # OUTPUT: 
     # DESCRIPTION:
     #   
-    def updateEntries():
+    def updateEntries(data_uuid, input, table_name, database_name):
         pass
-        
+
     # FUNCTION: getItem
     # INPUT:
     # OUTPUT:
     # DESCRIPTION:
     #   
-    def getItem():
+    def getItem(data_uuid, column, table_name, database_name):
         pass
 
     # FUNCTION: getItems
@@ -384,7 +386,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: 
     # DESCRIPTION:
     #   
-    def getItems():
+    def getItems(data_uuid, column, table_name, database_name):
         pass
 
     # FUNCTION: replaceItem
@@ -392,7 +394,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: 
     # DESCRIPTION:
     #   
-    def updateItem():
+    def updateItem(data_uuid, input, column, table_name, database_name):
         pass
 
     # FUNCTION: replaceItems
@@ -400,17 +402,22 @@ class GenDatabaseLibrary(object):
     # OUTPUT: 
     # DESCRIPTION:
     #   
-    def updateItems():
+    def updateItems(data_uuid, input, columns, table_name, database_name):
         pass
 
     # FUNCTION: getColumn
-    # INPUT:
-    # OUTPUT:
+    # INPUT: table_name    - string
+    #        database_name - string
+    # KWARGS: limit  - int,  [how many entries to return]
+    #         period - tuple (start_time, end_time), in UNIX timestamp
+    # OUTPUT: list
     # DESCRIPTION:
-    #   
+    #   Retrieves an entire column from a table in a datbase. kwargs limit and period can
+    #    be used to restrict the number of values to return.
     # WARNING: heavy load on time, very slow
-    def getColumn():
+    def getColumn(table_name, database_name, **kwargs):
         pass
+
     # FUNCTION: selectColumn
     # INPUT: cursor 
     #        table_name   - string

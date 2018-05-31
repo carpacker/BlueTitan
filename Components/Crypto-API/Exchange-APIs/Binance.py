@@ -86,7 +86,7 @@ def getCurrencies():
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#   Returns the up-to-date informatino on the exchange and its trading pairs.
+#   Returns the up-to-date information on the exchange and its trading pairs.
 def getExchangeInfo():
     req = requests.request('GET', 'https://api.binance.com/api/v1/exchangeInfo').json()
     return req
@@ -130,7 +130,7 @@ def getInfoPairing(pairing):
 
     return ret_dict
 
-# FUNCTIO: getInfoPAirings
+# FUNCTION: getInfoPAirings
 # INPUT: pairings - [string, ...]
 # OUTPUT: Dictionary
 # DESCRIPTION:
