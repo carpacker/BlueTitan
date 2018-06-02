@@ -124,16 +124,154 @@ def generalQuery(cursor, query):
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
-    balances_info = {"name" : "AccountBalances"}
-    fae_info = {"name" : "IntendedFAE"}
-    trades_info = {"name" : "ArbitrageTrades",
-               "initialize" : 0}
-    lfailure_info = {"name" : "LFailureTrades"}
-    mfailure_info = {"name" : "MFailureTrades"}
-    balancing_info = {"name" : "BalancingHistory"}
-    asset_info = {"name" : "AssetInformation"}
-    arb_errors_info = {"name" : "Errors"}
+    # DATABASE CONTAINER CLASSES
+    # DESCRIPTION:
+    #    Each database has its own container class which contains functions unique to that
+    #     database.
+    class ArbitrageDatabase():
+        path = 0
+        table_names = []
+        # FUNCTION: createTable
+        # INPUT: cursor       - *
+        #        table_name   - string
+        #        table_tuples - (column_name, column_type, 'NULL'||'NOT NULL')
+        # OUTPUT: creates SQL table
+        # DESCRIPTION:
+        #   Creates a given table based on input. Can create a new table, if trying to create
+        #    a specific table it checks for that table to create.
+        def createTable(cursor, table_name, table_tuples=None):
+            print("ArbitrageDatabase: Initializing Table as ", table_name)
+            if table_name == "ArbitrageTrades":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp text NOT NULL,
+                    Uuid text NOT NULL,
+                    Symbol text NOT NULL,
+                    Total_quantity real NOT NULL,
+                    Total_btc real NOT NULL,
+                    Executed_quantity real NOT NULL,
+                    Buy_exchange text NOT NULL,
+                    Sell_exchange text NOT NULL,
+                    Avg_buy_rate real NOT NULL,
+                    Avg_sell_rate real NOT NULL,
+                    Profit_ratio real NOT NULL,
+                    Profit real NOT NULL)
+                """ % table_name
+            elif table_name == "FailureTrades":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp text NOT NULL,
+                    Uuid text NOT NULL,
+                    Symbol text NOT NULL,
+                    Total_quantity real NOT NULL,
+                    Total_btc real NOT NULL,
+                    Buy_exchange text NOT NULL,
+                    Sell_exchange text NOT NULL,
+                    Avg_buy_rate real NOT NULL,
+                    Avg_sell_rate real NOT NULL,
+                    Profit_ratio real NOT NULL,
+                    Profit real NOT null,
+                    Failed_exchange text NOT NULL,
+                    Stage text NOT NULL,
+                    Consecutive_fails integer NOT NULL)
+                """ % table_name
+            elif table_name == "AccountBalances":
+                sql_s = """
+                CREATE TABLE %s (
+                    id integer PRIMARY KEY,
+                    Exchange text NOT NULL,
+                    Asset text NOT NULL,
+                    Amount real NOT NULL,
+                    Btc_value real NOT NULL,
+                    Usd_value real NOT NULL)
+                """ % table_name       
+            elif table_name == "IntendedFAE":
+                sql_s = """
+                CREATE TABLE %s (
+                    Exchange text NOT NULL,
+                    Asset text NOT NULL,
+                    Proportion_as real NOT NULL, 
+                    Proportion_ex real NOT NULL)
+                """ % table_name
+            elif table_name == "BalancingHistory":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp integer NOT NULL,
+                    Transfer_time integer NOT NULL,
+                    Buy_exchange text NOT NULL,
+                    Asset  text NOT NULL,
+                    Amount  real NOT NULL, 
+                    Sell_exchange text NOT NULL,
+                    Base_t_asset text NOT NULL,
+                    Base_btc_value real NOT NULL,
+                    Total_btc real NOT NULL,
+                    Fee_btc real NOT NULL,
+                    Buy_withdraw_id text NOT NULL,
+                    Sell_withdraw_id text NOT NULL)
+                """ % table_name
+            elif table_name == "AssetInformation":
+                sql_s = """
+                CREATE TABLE %s (
+                    Asset text NOT NULL,
+                    Exchange text NOT NULL,
+                    Address text NOT NULL,
+                    Tag text NOT NULL,
+                    Fee real NOT NULL,
+                    USDFee real NOT NULL)
+                """ % table_name
+            elif table_name == "Errors":
+                sql_s = """
+                CREATE TABLE %s (
+                    id integer PRIMARY KEY,
+                    Time_stamp text NOT NULL,
+                    Error text NOT NULL,
+                    Code text NOT NULL,
+                    Type text NOT NULL)
+                """ % table_name              
+            else:
+                if table_tuples is None:
+                    table_tuples = []
+                sql_s = """
+                CREATE TABLE %s (
+                    id integer PRIMARY KEY)""" % table_name
+                for tup in table_tuples:
+                    added_s = ",%s %s %s" % tup
+                sql_s += added_s
+            ArbitrageDatabase.table_names.append(table_name)
+            cursor.execute(sql_s)
 
+        # TODO:
+        # Initialize each table in the database
+        def initializeTables():
+            pass
+
+    class AssetMetricsDatabase():
+        pass
+
+    class MetricsDatabase():
+        pass
+
+    class RuntimeDatabase():
+        pass
+
+    class HistoricalDatabase():
+        pass
+
+    class MiningDatabase():
+        pass
+
+    class ExchangeRecords():
+        pass
+
+    class RunningDatabase():
+        pass
+
+    class MADatabase():
+        pass
+        
+    # CLASS VARIABLE: database_paths
+    # DESCRIPTION:
+    #    Dictionary to access the path for a given database.
     database_paths = {
         "ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
         "MetricsDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
@@ -145,12 +283,13 @@ class GenDatabaseLibrary(object):
         "RunningDatabase" : 0,
         "MADatabase" : 0
     }
+    
     # FUNCTION: createTable
     # INPUT: 
     # OUTPUT:
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
-    def createTable():
+    def createTable(database_name):
         # Check for tables that are already set
         pass
         # Otherwise, fill in with input parameters.

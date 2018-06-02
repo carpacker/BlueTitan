@@ -149,115 +149,7 @@ class ArbitrageDatabase(object):
             print(e)
         return None
 
-    # ------------------------------ INITIALIZATION OF TABLES ------------------------------------|
-    # FUNCTION: create_table
-    # INPUT: cursor       - *
-    #        table_name   - string
-    #        table_tuples - (column_name, column_type, 'NULL'||'NOT NULL')
-    # OUTPUT: creates SQL table
-    # DESCRIPTION:
-    #   Creates a given table based on input. Can create a new table, if trying to create
-    #    a specific table it checks for that table to create.
-    def createTable(cursor, table_name, table_tuples=None):
-        print("ArbitrageDatabase: Initializing Table as ", table_name)
-        if table_name == "ArbitrageTrades":
-            sql_s = """
-            CREATE TABLE %s (
-                Time_stamp text NOT NULL,
-                Uuid text NOT NULL,
-                Symbol text NOT NULL,
-                Total_quantity real NOT NULL,
-                Total_btc real NOT NULL,
-                Executed_quantity real NOT NULL,
-                Buy_exchange text NOT NULL,
-                Sell_exchange text NOT NULL,
-                Avg_buy_rate real NOT NULL,
-                Avg_sell_rate real NOT NULL,
-                Profit_ratio real NOT NULL,
-                Profit real NOT NULL)
-            """ % table_name
-        elif table_name == "FailureTrades":
-            sql_s = """
-            CREATE TABLE %s (
-                Time_stamp text NOT NULL,
-                Uuid text NOT NULL,
-                Symbol text NOT NULL,
-                Total_quantity real NOT NULL,
-                Total_btc real NOT NULL,
-                Buy_exchange text NOT NULL,
-                Sell_exchange text NOT NULL,
-                Avg_buy_rate real NOT NULL,
-                Avg_sell_rate real NOT NULL,
-                Profit_ratio real NOT NULL,
-                Profit real NOT null,
-                Failed_exchange text NOT NULL,
-                Stage text NOT NULL,
-                Consecutive_fails integer NOT NULL)
-            """ % table_name
-        elif table_name == "AccountBalances":
-            sql_s = """
-            CREATE TABLE %s (
-                id integer PRIMARY KEY,
-                Exchange text NOT NULL,
-                Asset text NOT NULL,
-                Amount real NOT NULL,
-                Btc_value real NOT NULL,
-                Usd_value real NOT NULL)
-            """ % table_name       
-        elif table_name == "IntendedFAE":
-            sql_s = """
-            CREATE TABLE %s (
-                Exchange text NOT NULL,
-                Asset text NOT NULL,
-                Proportion_as real NOT NULL, 
-                Proportion_ex real NOT NULL)
-            """ % table_name
-        elif table_name == "BalancingHistory":
-            sql_s = """
-            CREATE TABLE %s (
-                Time_stamp integer NOT NULL,
-                Transfer_time integer NOT NULL,
-                Buy_exchange text NOT NULL,
-                Asset  text NOT NULL,
-                Amount  real NOT NULL, 
-                Sell_exchange text NOT NULL,
-                Base_t_asset text NOT NULL,
-                Base_btc_value real NOT NULL,
-                Total_btc real NOT NULL,
-                Fee_btc real NOT NULL,
-                Buy_withdraw_id text NOT NULL,
-                Sell_withdraw_id text NOT NULL)
-            """ % table_name
-        elif table_name == "AssetInformation":
-            sql_s = """
-            CREATE TABLE %s (
-                Asset text NOT NULL,
-                Exchange text NOT NULL,
-                Address text NOT NULL,
-                Tag text NOT NULL,
-                Fee real NOT NULL,
-                USDFee real NOT NULL)
-            """ % table_name
-        elif table_name == "Errors":
-            sql_s = """
-            CREATE TABLE %s (
-                id integer PRIMARY KEY,
-                Time_stamp text NOT NULL,
-                Error text NOT NULL,
-                Code text NOT NULL,
-                Type text NOT NULL)
-            """ % table_name              
-        else:
-            if table_tuples is None:
-                table_tuples = []
-            sql_s = """
-            CREATE TABLE %s (
-                id integer PRIMARY KEY)""" % table_name
-            for tup in table_tuples:
-                added_s = ",%s %s %s" % tup
-            sql_s += added_s
-        ArbitrageDatabase.table_names.append(table_name)
-        cursor.execute(sql_s)
+
 
     # FUNCTION: createTables
     # INPUT: tables - [string, ...]
@@ -512,29 +404,11 @@ class ArbitrageDatabase(object):
         row = cursor.fetchall()
         return row[0][0]
 
+# INSERTIONS
+# error
+#   timestamp, uuid, message, typeOf, stage
 
-
-    # --------------------------------------- ERRORS -------------------------------------------
-    # F: Insertion
-    def insertError(cursor, timestamp, uuid, message, typeOf, stage, table_name=ERROR_TABLE_NAME):
-        sql_s = "INSERT INTO %s VALUES (?,?,?,?,?)" % table_name
-        cursor.execute(sql_s,(timestamp,uuid,message,typeOf,stage))
-
-    # F: Retrieval
-    def getError(cursor, uuid, table_name=ERROR_TABLE_NAME):
-        sql_s = "SELECT FROM %s WHERE Uuid = ?" % table_name
-        cursor.execute(sql_s,(uuid))
-
-    # F: Retrieval : Multiple by period and/or uuids
-    def getErrors():
-        # TODO BUT NOT NECESSARY
-        pass
-
-    # F: Deletion : Currently not in use
-    def deleteError(cursor, table_name=ERROR_TABLE_NAME):
-        pass
-
-    # ------------------------- MISC HELPER FUNCTIONS ----------------------------
+# ------------------------- MISC HELPER FUNCTIONS ----------------------------
     def getAssets(cursor, exchange, table_name=ACCOUNT_BALANCES_NAME):
         sql_s = "SELECT DISTINCT Asset FROM %s WHERE Exchange= ? " % table_name
         cursor.execute(sql_s,(exchange,))
@@ -1052,65 +926,13 @@ class AssetMetricsDatabase(object):
         ArbitrageDatabase.table_names.append(table_name)
         cursor.execute(sql_s)
 
+# Other asset metric insertion timestamp, uuid, asset, primary_sell_ex, primary_buy_ex, initial_balance, end_balance volume, volume_d, profit_ratio, profit_ratio_d, utilization, utilization_d, quantity_trades,quantity_trades_d
 
-    # ----------------------------- ASSET METRIC HELPER FUNCTIONS --------------------------    
+# ASSET METRIC INSERTION
+#timestamp, uuid, asset, stage, primary_sell_ex, primary_buy_ex, volume, volume_d, profit_ratio, profit_ratio_d, quantity_trades, quantity_trades_d, avg_success_rate, avg_success_rate_d
 
-    # F: Insertion
-    def insertAssetMetric(cursor, timestamp, uuid, asset, primary_sell_ex, primary_buy_ex, initial_balance, end_balance,
-                            volume, volume_d, profit_ratio, profit_ratio_d, utilization, utilization_d, quantity_trades,
-                            quantity_trades_d, table_name="AssetMetrics"):
-        sql_s = "INSERT INTO %s VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" % table_name
-        cursor.execute(sql_s,(timestamp, uuid, asset, primary_sell_ex, primary_buy_ex, initial_balance, end_balance,
-                            volume, volume_d, profit_ratio, profit_ratio_d, utilization, utilization_d, quantity_trades,
-                            quantity_trades_d))
-
-    # F: Retrieval : Single by UUID
-    def getAssetMetric(cursor, uuid, table_name="AssetMetrics"):
-        sql_s = "SELECT * FROM %s WHERE Uuid = ?" % table_name
-        cursor.execute(sql_s,(uuid,))
-        ma_row = cursor.fetchall()
-        print("DatabaseManager/getAssetMetric", ma_row)
-        return ma_row
-
-    # F: Retrieval : Multiple by period and/or UUIDs
-    def getAssetMetrics(cursor, asset, period, uuids=None, table_name="AssetMetrics"):
-        sql_s = "SELECT * FROM %s WHERE Asset = ?" % table_name
-        cursor.execute(sql_s,(asset,))
-        ma_row = cursor.fetchall()
-        print("DatabaseManager/getAssetMetrics", ma_row)
-        return ma_row
-
-    # F: Deletion : Currently not in use
-    def deleteAssetMetric(cursor, asset, id, table_name="AssetMetrics"):
-        # FINE FOR NOW
-        pass
-
-    # ** FAILURES
-
-    # F: Insertion
-    def insertAssetMetricFailure(cursor, timestamp, uuid, asset, stage, primary_sell_ex, primary_buy_ex, volume, volume_d,
-                                    profit_ratio, profit_ratio_d, quantity_trades, quantity_trades_d, avg_success_rate,
-                                    avg_success_rate_d, table_name="AssetFailureMetrics"):
-        sql_s = "INSERT INTO %s VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)" % table_name
-        cursor.execute(sql_s,(timestamp, uuid, asset, stage, primary_sell_ex, primary_buy_ex, volume, volume_d,
-                                    profit_ratio, profit_ratio_d, quantity_trades, quantity_trades_d, avg_success_rate,
-                                    avg_success_rate_d))
-
-
-    # F: Retrieval : Single by UUID
-    def getAssetMetricFailure(cursor, uuid, table_name="AssetFailureMetrics"):
-        sql_s = "SELECT * FROM %s WHERE Uuid = ?" % table_name
-        cursor.execute(sql_s,(uuid,))
-        maf_row = cursor.fetchall()
-        print("DatabaseManager/getAssetMetricFailure")
-        return maf_row
-
-    # F: Retrieval : Multiple by period/UUIDs
-    def getAssetFailureMetrics():
-        # TODO BUT NOT NECESSARY
-        pass
-
-    # F: Deletion : Currently not in use
-    def deleteAssetMetricFailure(cursor, asset, id,  table_name="AssetFailureMetrics"):
-        pass
-
+# RETRIEVALS:
+# getAssetMEtricFailure
+# getAssetMetricFailures
+# getAssetMetric - UUID or timestamp
+# getAssetMetrics - by period or by uuids (need asset as input)

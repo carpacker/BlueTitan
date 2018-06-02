@@ -1,3 +1,13 @@
+    balances_info = {"name" : "AccountBalances"}
+    fae_info = {"name" : "IntendedFAE"}
+    trades_info = {"name" : "ArbitrageTrades",
+               "initialize" : 0}
+    lfailure_info = {"name" : "LFailureTrades"}
+    mfailure_info = {"name" : "MFailureTrades"}
+    balancing_info = {"name" : "BalancingHistory"}
+    asset_info = {"name" : "AssetInformation"}
+    arb_errors_info = {"name" : "Errors"}
+
 # 	selectDistinct
     def getCurrenciesAmounts(cursor, exchange, table_name=ACCOUNT_BALANCES_NAME):
         sql_s = "SELECT DISTINCT Asset, Amount, Btc_value, Usd_value FROM %s WHERE Exchange= ? " % table_name
