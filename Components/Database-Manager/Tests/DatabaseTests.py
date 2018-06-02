@@ -44,7 +44,7 @@ def baseTesters():
     PrintLibrary.header("UUID tets")
     PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("ArbitrageTrades", "ArbitrageDatabase"))
     PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("Metrics", "MetricsDatabase"))
-    PrintLibrary.displayVariableGeneralizedDatabase.createUuid("AssetMetrics", "AssetMetricsDatabase"))
+    PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("AssetMetrics", "AssetMetricsDatabase"))
 
     PrintLibrary.header("Connect, checkTableNameExists, generalQuery, commitWrite, disconnect flow tests")
     connect, cursor = GeneralizedDatabase.connect()
@@ -58,7 +58,7 @@ def baseTesters():
 
 # TESTERS: main functions
 # DESCRIPTION:
-#   Testers for eac
+#   Testers for each main generic function.
 def mainTesters():
     PrintLibrary.header("Main functions")
     PrintLibrary.header("storeEntry, storeEntries")

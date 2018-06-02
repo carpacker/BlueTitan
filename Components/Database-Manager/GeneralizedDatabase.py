@@ -127,6 +127,14 @@ class GenDatabaseLibrary(object):
 
     tableNamesUUID = {}
     databaseNamesUUID = {}
+
+    
+    def buildInitTuple(table_name, database_name):
+        # 1. Access table, get column types
+        # 2. For each column type, add the init value
+
+        PrintLibrary.displayVariables(init_tuple)
+        return init_tuple
     
     # DATABASE CONTAINER CLASSES
     # DESCRIPTION:
@@ -135,6 +143,7 @@ class GenDatabaseLibrary(object):
     class ArbitrageDatabase():
         path = 0
         table_names = []
+        
         # FUNCTION: createTable
         # INPUT: cursor       - *
         #        table_name   - string
@@ -302,19 +311,25 @@ class GenDatabaseLibrary(object):
             ArbitrageDatabase.table_names.append(table_name)
             cursor.execute(sql_s)
 
-    
+
+    # CLASS: ExchangeRecords
     class ExchangeRecords():
-        pass
-                
+        path = 0
+        table_names = []
+
+    # CLASS: HistoricalDatabase
     class HistoricalDatabase():
-        pass
-
+        path = 0
+        table_names = []
+        
+    # CLASS: MADatabase
     class MADatabase():
-        pass
-
+        path = 0
+        table_names = []
 
     # CLASS: MetricsDatabase
     class MetricsDatabase():
+        
         def createTable(cursor, table_name, table_tuples=None):
             if table_name == "Metrics":
                 sql_s = """
@@ -368,13 +383,20 @@ class GenDatabaseLibrary(object):
                     added_s = ",%s %s %s" % tup
                 sql_s += added_s
             ArbitrageDatabase.table_names.append(table_name)
-            cursor.execute(sql_s)    
+            cursor.execute(sql_s)
 
+        # FUNCTION: initializeTables
+        def initializeTables(self):
+            for table in self.table_names:
+                pass
+        
     # CLASS: MiningDatabase
+    # createTable(), 
     class MiningDatabase(object):
         path = 0
         table_names = []
 
+        # FUNCTION: createTable
         def createTable(cursor, table_name, table_tuples=None):
             if table_name == "MiningProfits":
                 sql_s = """
@@ -416,47 +438,48 @@ class GenDatabaseLibrary(object):
                 sql_s += added_s
             ArbitrageDatabase.table_names.append(table_name)
             cursor.execute(sql_s)
-        
+
+        # FUNCTION: initializeTables
+        def initializeTables():
+            pass
+
+    # CLASS: MiningDatabase
     class MiningDatabase():
         pass
 
+    # CLASS: RunningDatabase
     class RunningDatabase():
         pass
 
+    # CLASS: RuntimeDatabase
     class RuntimeDatabase():
         pass
 
-    # CLASS VARIABLE: database_paths
+    # CLASS VARIABLE: databases
     # DESCRIPTION:
-    #    Dictionary to access the path for a given database.
-    database_paths = {
-        "ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
-        "MetricsDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
-        "AssetMetricsDatabase" : 0,
-        "RuntimeDatabase" : 0,
-        "HistoricalDatabase" : 0,
-        "MiningDatabase" : 0,
-        "ExchangeRecords" : 0,
-        "RunningDatabase" : 0,
-        "MADatabase" : 0
+    #    Dictionary to access the database object
+    databases = {
+        "ArbitrageDatabase" : GeneralizedDatabase.ArbitrageDatabase,
+        "MetricsDatabase" : GeneralizedDatabase.MetricsDatabase,
+        "AssetMetricsDatabase" : GeneralizedDatabase.AssetMetricsDatabase,
+        "RuntimeDatabase" : GeneralizedDatabase.RuntimeDatabase,
+        "HistoricalDatabase" : GeneralizedDatabase.HistoricalDatabase,
+        "MiningDatabase" : GeneralizedDatabase.MiningDatabase,
+        "ExchangeRecords" : GeneralizedDatabase.ExchRecordsDtabase,
+        "RunningDatabase" : GeneralizedDatabase.RunningDatabase,
+        "MADatabase" : GeneralizedDatabase.MADatabase
     }
     
     # FUNCTION: createTable
-    # INPUT: 
-    # OUTPUT:
+    # INPUT: table_name    - string
+    #        database_name - string
+    # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
-    def createTable(database_name, columns=""):
-        
-        if columns == "":
-            for table in tables:
-                database.createTable(cursor, table)
-
-        # OTHERWISE, create tables using input parameters
-        else:
-            pass        # Check for tables that are already set
-        pass
-        # Otherwise, fill in with input parameters.
+    def createTable(table_name, database_name, columns=""):
+        database = databases[database_name]
+        for table in tables:
+            database.createTable(cursor, table)
 
     # FUNCTION: createTable
     # INPUT: cursor   - *
@@ -507,6 +530,26 @@ class GenDatabaseLibrary(object):
         for database_name in databases_names:
             GenDatabaseLibrary.initializeDatabase(database_name)
 
+    # FUNCTION: cleanDatabase
+    # INPUT: tables     - [string, ...]
+    #        exceptions - [string, ...] 
+    # OUTPUT: list of tables cleaned in database
+    # DESCRIPTION
+    #   Used to clean a database's tables minus exceptions.
+    def cleanDatabase(database_nameles, exceptions=[""]):
+        connect, cursor = database.connect()
+
+        # Use regular expression to find difference of two lists
+        list_clean = list(set(tables).difference(set(exceptions)))
+        for table in list_clean:
+            try:
+                deleteTable(cursor, table, database_name)
+            except sqlite3.OperationalError:
+                pass
+            database.createTable(cursor, table, database_name)
+        disconnect(connect)
+    return list_clean
+                             
     #
     def buildStringStore(cursor, table_name):
         # 1. List columns
@@ -676,10 +719,12 @@ class GenDatabaseLibrary(object):
         entry = cursor.fetchall()
         return entry[0]
 
-    # FUNCTION: updateEntry
-    # INPUT: data_uuid -
-    #
-    # OUTPUT: 
+    # FUNCTION: updateEntry 
+    # INPUT: data_uuid     - [] OR []
+    #        input_val     - [value1, value2, ...]
+    #        table_name    - string
+    #        database_name - string
+    # OUTPUT: TBD
     # DESCRIPTION:
     #   Effectively replaces an entry with new values. It doesn't necessitate that every value
     #    is updated, but it will check to update each item.
@@ -687,10 +732,14 @@ class GenDatabaseLibrary(object):
         pass
 
     # FUNCTION: updateEntries
-    # INPUT: 
-    # OUTPUT: 
+    # INPUT: data_uuid     - [] OR []
+    #        input_val     - [value1, value2, ...]
+    #        table_name    - string
+    #        database_name - string
+    # OUTPUT: TBD
     # DESCRIPTION:
-    #   
+    #   Replaces multiple entries with new values. Similar to update entry, but with lists
+    #    as inputs.
     def updateEntries(data_uuid, input_val, table_name, database_name):
         pass
 
@@ -731,6 +780,7 @@ class GenDatabaseLibrary(object):
     # FUNCTION: getColumn
     # INPUT: table_name    - string
     #        database_name - string
+    #        column        - string
     # KWARGS: limit  - int,  [how many entries to return]
     #         period - tuple (start_time, end_time), in UNIX timestamp
     # OUTPUT: list
@@ -739,35 +789,20 @@ class GenDatabaseLibrary(object):
     #    be used to restrict the number of values to return.
     # WARNING: heavy load on time, very slow
     def getColumn(table_name, database_name, **kwargs):
-        pass
-
-    # FUNCTION: selectColumn
-    # INPUT: cursor 
-    #        table_name   - string
-    #        column_name  - string
-    #        limit_period - int [will either be number of trades OR a unix timestamp designating the time to start from]
-    # OUTPUT: tuple
-    # DESCRIPTION:
-    #   Returns a tuple from a single column.
-    # * TODO [NotUrgent] - Make this more robust, for instance 50,000 is arbitrary
-    def selectColumn(cursor, table_name, column_name, limit_period=None):
-        if limit_period < 50000:
-            ret_tuple = selectFromTable(cursor, table_name, limit_period, "", [column_name])
-        elif limit_period > 50001:
-            print("select from period")
-            ret_tuple = selectFromTablePeriod(cursor, table_name, limit_period, "", [column_name])
-        else:
-            ret_tuple = selectFromTable(cursor, table_name, -1, "", [column_name])
-        return ret_tuple
-
-
+        # 1. Check if attempting use period
+        # 2. Check the quantity of entries to grab
+        # 3. If neither, grab all
+        
     # FUNCTION: getColumn
-    # INPUT:
+    # INPUT: table_name    - string
+    #        database_name - string
+    #        columns       - [string, ...]
+    # KWARGS:
     # OUTPUT:
     # DESCRIPTION:
-    #   
+    #   Performs multiple getColumn() calls in order to retrieve multiple columns.
     # WARNING: heavy load on time, very slow
-    def getColumns():
+    def getColumns(table_name, database_name, **kwargs):
         pass
 
     # FUNCTION: deleteEntry
