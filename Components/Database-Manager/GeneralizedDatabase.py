@@ -312,9 +312,111 @@ class GenDatabaseLibrary(object):
     class MADatabase():
         pass
 
-    class MetricsDatabase():
-        pass
 
+    # CLASS: MetricsDatabase
+    class MetricsDatabase():
+        def createTable(cursor, table_name, table_tuples=None):
+            if table_name == "Metrics":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp text NOT NULL,
+                    Uuid text NOT NULL,
+                    Pairings text NOT NULL,
+                    Initial_balance real NOT NULL,
+                    End_balance real NOT NULL,
+                    Volume real NOT NULL,
+                    Volume_delta real NOT NULL,
+                    Profit_ratio real NOT NULL,
+                    Profit_ratio_delta real NOT NULL,
+                    Profit real NOT NULL,
+                    Profit_delta real NOT NULL,
+                    Utilization real NOT NULL,
+                    Utilization_delta real NOT NULL,
+                    Quantity_trades real NOT NULL,
+                    Quantity_trades_delta real NOT NULL)
+                """ % table_name
+            elif table_name == "FailureMetrics":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp text NOT NULL,
+                    Uuid text NOT NULL,
+                    Pairings text NOT NULL,
+                    Volume real NOT NULL,
+                    Volume_delta real NOT NULL,
+                    Profit_ratio real NOT NULL,
+                    Profit_ratio_delta real NOT NULL,
+                    Utilization real NOT NULL,
+                    Utilization_delta real NOT NULL, 
+                    Quantity_trades_f real NOT NULL,
+                    Quantity_trades_f_delta real NOT NULL,
+                    Quantity_stage1 real NOT NULL,
+                    Quantity_stage2 real NOT NULL,
+                    Avg_success_rate real NOT NULL,
+                    Avg_success_rate_delta real NOT NULL)
+                """ % table_name   
+            elif table_name == "ProfitMetrics":
+                pass
+            elif table_name == "LiquidationHistory":
+                pass
+            else:
+                if table_tuples is None:
+                    table_tuples = []
+                sql_s = """
+                CREATE TABLE %s (
+                    id integer PRIMARY KEY)""" % table_name
+                for tup in table_tuples:
+                    added_s = ",%s %s %s" % tup
+                sql_s += added_s
+            ArbitrageDatabase.table_names.append(table_name)
+            cursor.execute(sql_s)    
+
+    # CLASS: MiningDatabase
+    class MiningDatabase(object):
+        path = 0
+        table_names = []
+
+        def createTable(cursor, table_name, table_tuples=None):
+            if table_name == "MiningProfits":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp text NOT NULL,
+                    Mining_pool text NOT NULL,
+                    Primary text NOT NULL,
+                    Mined_primary real NOT NULL,
+                    Secondary text NOT NULL,
+                    Mined_secondary real NOT NULL)
+                """ % table_name    
+            elif table_name == "MiningStatistics":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp text NOT NULL,
+                    Eth_difficulty real NOT NULL,
+                    Zec_difficulty real NOT NULL,
+                    Sc_difficulty real NOT NULL,
+                    Dcr_difficulty real NOT NULL)
+                """ % table_name   
+            elif table_name == "MiningMetrics":
+                sql_s = """
+                CREATE TABLE %s (
+                    Time_stamp text NOT NULL,
+                    Mining_pool text NOT NULL,
+                    Primary text NOT NULL,
+                    Mined_primary real NOT NULL,
+                    Secondary text NOT NULL,
+                    Mined_secondary real NOT NULL)
+                """ % table_name               
+            else:
+                if table_tuples is None:
+                    table_tuples = []
+                sql_s = """
+                CREATE TABLE %s (
+                    id integer PRIMARY KEY)""" % table_name
+                for tup in table_tuples:
+                    added_s = ",%s %s %s" % tup
+                sql_s += added_s
+            ArbitrageDatabase.table_names.append(table_name)
+            cursor.execute(sql_s)
+        
     class MiningDatabase():
         pass
 
@@ -344,8 +446,15 @@ class GenDatabaseLibrary(object):
     # OUTPUT:
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
-    def createTable(database_name):
-        # Check for tables that are already set
+    def createTable(database_name, columns=""):
+        
+        if columns == "":
+            for table in tables:
+                database.createTable(cursor, table)
+
+        # OTHERWISE, create tables using input parameters
+        else:
+            pass        # Check for tables that are already set
         pass
         # Otherwise, fill in with input parameters.
 
@@ -359,14 +468,8 @@ class GenDatabaseLibrary(object):
     #   Generic function for creating multiple tables in a database. Iterates over 
     #    a list of table names and declare the tables in the database
     def createTables(cursor, tables, database, columns=""):
-        # IF no input parameters [assume it is handled in createTable]
-        if columns == "":
-            for table in tables:
-                database.createTable(cursor, table)
-
-        # OTHERWISE, create tables using input parameters
-        else:
-            pass
+        for table in tables:
+            database.createTable(cursor, table)
 
     # FUNCTION: deleteTable
     # INPUT: cursor     - *
