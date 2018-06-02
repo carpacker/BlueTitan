@@ -1,49 +1,7 @@
-# External-Imports
-from collections import defaultdict
-import sqlite3
-import sys
-import time
-
-# Windows Main Desktop
-sys.path.append("U:/Directory/Projects/BlueTitan/Bots/Data-Scrapers")
-
-# Internal-Imports
-import Helpers
-from API import ExchangeAPI
-from FeeScraper import FeeScraper
-#                                       Tables
-#  
 #   ArbitrageTrades : [Time_stamp, Uuid, Symbol, Total_quantity, Total_btc, Executed_qauntity
 #                       Buy_exchange, Sell_exchange, Avg_buy_rate, Avg_sell_rate, Profit_ratio,
 #                       Profit]
-#       Each entry is a single MarketArbitrage trade
-TRADE_TABLE_NAME = "ArbitrageTrades"
 
-#   MFailureTrades : []
-#   LFailureTrades : []
-#       Table of failed trades, to be used by other processing systems
-MFAILURETRADES_TABLE_NAME = "MFailureTrades"
-LFAILURESTRADES_TABLE_NAME = "LFailureTrades"
-
-#   AccountBalances : []
-#       Balances for each asset & exchange
-ACCOUNT_BALANCES_NAME = "AccountBalances"
-
-#   IntendedFAE : []
-#       TODO
-FAE_NAME = "IntendedFAE"
-
-#  BalancingHistory : []
-#       todo
-BALANCING_HISTORY_NAME = "BalancingHistory"
-
-#   AssetInformation : []
-#       Provides information for a specific asset on a specific exchange
-ASSET_INFO_NAME = "AssetInformation"
-
-#   Errors : []
-#       Database of errors that have occured during the arbitrage process
-ERROR_TABLE_NAME = "Errors"
 
 table_names = ["ArbitrageTrades", "FailureTrades", "AccountBalances", "IntendedFAE", "BalancingHistory",
                 "AssetInformation"]

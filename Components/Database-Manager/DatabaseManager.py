@@ -1,11 +1,7 @@
 '''
                                               Database Manager.py
 
-Intention of script is to act as an independent library to access and manager our various databases. Any other scripts
-in our program can call this library with all the necessary inputs and make changes to data. Compartamentalizing SQL
-calls provides a layer of security between databases and those that intend to interact with said databases. Additionally,
-this allows for us to scale our capabilities without needing to edit other parts of the program that have the initial
-database management protocol hardcoded.
+Intention of script is to act as an independent library to access and manager our various databases. Any other scripts in our program can call this library with all the necessary inputs and make changes to data. Compartamentalizing SQL calls provides a layer of security between databases and those that intend to interact with said databases. Additionally, this allows for us to scale our capabilities without needing to edit other parts of the program that have the initial database management protocol hardcoded.
 
 '''
 
@@ -27,104 +23,6 @@ from PrintLibrary import PrintLibrary
 # Possibly looking to deprecate this manager to move all database functions inside a DatabaseLibrary
 
 #                                           SQL Operation Functions
-
-# FUNCTION: commit_w
-# INPUT: connect - SQL connection
-# OUTPUT: N/A
-# DESCRIPTION:
-#   Wrapper function for commits
-def commitWrite(connect):
-    connect.commit()
-
-# FUNCTION: connect
-# INPUT: path - location of file
-# OUTPUT: None
-# DESCRIPTION:
-#   Wrapper function used to easily connect to the desired database 
-DEFAULT_PATH = os.path.join(os.path.dirname(__file__), 'MiscDatabase.sqlite3')
-def connect(path=DEFAULT_PATH):
-    try:
-        connection = sqlite3.connect(path)
-        cursor = connection.cursor()
-        return connection,cursor
-    except Error as e:
-        print(e)
-    return None
-
-# FUNCTION: deleteTable
-# INPUT: cursor     - *
-#        table_name - string
-# OUTPUT: N/A
-# DESCRIPTION:
-#   Deletes a table given a cursor for a databse and the table's name
-def deleteTable(cursor, table_name):
-    sql_s = 'DROP TABLE %s' % table_name
-    cursor.execute(sql_s)
-
-# FUNCTION: disconnect
-# INPUT: connect - *
-# OUTPUT: N/A
-# DESCRIPTION:
-#   Wrapper for disconnecting from a database
-def disconnect(connect):
-    connect.commit()
-    connect.close()
-
-# FUNCTION: generalQuery
-# INPUT: todo
-# OUTPUT: varying
-# DESCRIPTION:
-#   Performs a generalized query over a cursor
-def generalQuery(cursor, query):
-    cursor.execute(query)
-    return cursor.fetchall()
-
-# FUNCTION: listColumns
-# INPUT: cursor     - *
-#        table_name - string
-# OUTPUT: list of strings
-# DESCRIPTION:
-#   Returns a list of the names of each column in a given table
-def listColumns(cursor, table_name):
-    sql_s = "PRAGMA table_info('%s')" % table_name
-    cols_list = []
-    cursor.execute(sql_s)
-    col_tups = cursor.fetchall()
-    for tup in col_tups:
-        cols_list.append(tup[1])
-    return cols_list
-
-# FUNCTION: listTables
-# INPUT: cursor
-# OUTPUT: table_list which is a representation of all the tables
-# DESCRIPTION:
-#   Lists the tables in a database.
-def listTables(cursor):
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    table_list = []
-    fetched = cursor.fetchall()
-    for tup in fetched:
-        table_list.append(tup[0])
-    return table_list
-
-# FUNCTION: selectColumn
-# INPUT: cursor 
-#        table_name   - string
-#        column_name  - string
-#        limit_period - int [will either be number of trades OR a unix timestamp designating the time to start from]
-# OUTPUT: tuple
-# DESCRIPTION:
-#   Returns a tuple from a single column.
-# * TODO [NotUrgent] - Make this more robust, for instance 50,000 is arbitrary
-def selectColumn(cursor, table_name, column_name, limit_period=None):
-    if limit_period < 50000:
-        ret_tuple = selectFromTable(cursor, table_name, limit_period, "", [column_name])
-    elif limit_period > 50001:
-        print("select from period")
-        ret_tuple = selectFromTablePeriod(cursor, table_name, limit_period, "", [column_name])
-    else:
-        ret_tuple = selectFromTable(cursor, table_name, -1, "", [column_name])
-    return ret_tuple
 
 # FUNCTION: selectFromTable
 # INPUT: table_name - string

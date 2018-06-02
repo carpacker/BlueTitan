@@ -3,7 +3,7 @@ import sys
 import os
 import sqlite3
 import time
-
+import uuid
 # Windows Main Desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
@@ -12,12 +12,18 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 # sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
 # sys.path.append('C:/C-Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 
+# Linux Desktop
+# sys.path.append()
+
+# Main Server
+# sys.path.append()
+
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 import Helpers
 # import ArbitrageDatabaseLib
 
-############################## HELPERS ###########################
+############################################## HELPERS ###########################################
 
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string
@@ -51,6 +57,8 @@ def connect(path=DEFAULT_PATH):
         print(e)
     return None
 
+
+
 # FUNCTION: createUuid
 # INPUT: table_name    - string
 #        database_name - string
@@ -58,8 +66,16 @@ def connect(path=DEFAULT_PATH):
 # DESCRIPTION:
 #   Creates a unique identifier for a given trade, metric, transfer, etc.
 def createUuid(table_name, database_name):
-    # Use letter at beginning to designate what type of thing it is 
-    return 0
+
+    # Prototype, inefficient system to create unique identifiers. Future will need
+    #  a better solution, as this makes too many database calls in a row.
+    table_identifiers = GeneralizedDatabase.getItem(table_name, "table_ientifiers",  "RuntimeDatabase")
+    database_identifiers = GeneralizedDatabase.getItem(database_name, "database_identifiers", "RuntimeDatabase")
+    uuid_counter = GeneralizedDatabase.getItem("last_uuid", "globals", "RuntimeDatabase")
+    
+    identifier = table_identifier + database_identifier + str(uuid_counter)
+    print(identifier)
+    return identifier
 
 # FUNCTION: disconnect
 # INPUT: connect - *
@@ -81,47 +97,54 @@ def generalQuery(cursor, query):
     cursor.execute(query)
     return cursor.fetchall()
 
-# ----------------------------- GLOBAL DATABASE DICTIONARIES --------------------------------------
+# ----------------------------- GLOBAL DATABASE DICTIONARIES ----------------------------------------
 # DATABASES:
-#   arbitrage        -
-#   asset-metrics  	 -
-#   exchange-records -
-#   historical-data	 -
-#   metrics          -
-#   mining-records   -
-# DESCRIPTION:
-#   In order to initialize our databases with ease, base information about each (number of columns,
-#    typing and names) are stored in a dictionary which is accessed by the database library.
+#   arbitrage        - Contains all data pertinent to the 'arbitrage' suite of trading algorithms.
+#   moving-ave       - Contains all data pertinent to the 'moving-average' suite of trading
+#                       algorithms.
+# Records & Currency Data
+#   exchange-records - Contains all data that can be classified as a record on an exchange. This
+#                       includes trades, withdrawals, deposits and transfers. Each exchange gets
+#                       three tables, one for withdrawals, one for deposits and one for trades.
+#                       Transfers will be implemented another time.
+#                       
+#   historical-data  - Contains a list of tables that contain historical-data for each currency
+#                       that is designated to be tracked. Each currency has its own table where
+#                       each entry contains data pertinent to a period in time.
+#   running-data     - The same as above, but instead data captured by our own program rather
+#                       than scraped from an external site.
+#   mining-records   - Contains data pertinent to mining, specifically records and performance.
 
-trades_info = {'initialize' : 0}
-
-arbitrage_tables = {'trades' : trades_info}
-assetMetrics_tables = {'asset_metrics' : asset_metrics_info}
-exchangeRecords_tables = {}
-historicalData_tables = {}
-metrics_tables = {'metrics' : metrics_info2444  }
-miningRecords_tables = {}
-
-databases = {'arbitrage' : arbitrage_tables,	
-            'asset_metrics' : assetMetrics_tables,
-            'exchange_records' : exchangeRecords_tables,
-            'historical_data' : historicalData_tables,
-            'metrics' : metrics_tables,
-            'mining_records' : miningRecords_tables
-            }
-
-database_paths = {"ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
-                    "MetricsDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3')}
-
-tableNamesUuid = {}
-databaseNamesUuid = {}
+# Metrics & Performance Data
+#   asset-metrics    - Metrics for each asset
+#   metrics          - Global metrics
 
 # CLASS: GenDatabaseLibrary
 # DESCRIPTION:
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
+    balances_info = {"name" : "AccountBalances"}
+    fae_info = {"name" : "IntendedFAE"}
+    trades_info = {"name" : "ArbitrageTrades",
+               "initialize" : 0}
+    lfailure_info = {"name" : "LFailureTrades"}
+    mfailure_info = {"name" : "MFailureTrades"}
+    balancing_info = {"name" : "BalancingHistory"}
+    asset_info = {"name" : "AssetInformation"}
+    arb_errors_info = {"name" : "Errors"}
 
+    database_paths = {
+        "ArbitrageDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
+        "MetricsDatabase" : os.path.join(os.path.dirname(__file__), 'arbitrageDB.sqlite3'),
+        "AssetMetricsDatabase" : 0,
+        "RuntimeDatabase" : 0,
+        "HistoricalDatabase" : 0,
+        "MiningDatabase" : 0,
+        "ExchangeRecords" : 0,
+        "RunningDatabase" : 0,
+        "MADatabase" : 0
+    }
     # FUNCTION: createTable
     # INPUT: 
     # OUTPUT:
@@ -167,11 +190,11 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Executes the initialization of all tables in a given databases.
-    def initializeDatabase(database_name):
+    def initializeDatabase(self, database_name):
         # 1. Connect to database based on name
-        database = tbd[database_name]
-        connect, cursor = database.connect()
-        # 2. Create tables (???)
+        database = self.database_paths[database_name]
+        connect, cursor = connect(database)
+        
         # 3. Call initialize function using global dictionary
         database.initializeTables()
         disconnect(connect)
@@ -187,6 +210,7 @@ class GenDatabaseLibrary(object):
         for database_name in databases_names:
             GenDatabaseLibrary.initializeDatabase(database_name)
 
+    #
     def buildStringStore(cursor, table_name):
         # 1. List columns
         columns = GenDatabaseLibrary.listColumns(cursor, table_name)
