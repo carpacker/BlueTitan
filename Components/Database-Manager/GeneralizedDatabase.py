@@ -257,6 +257,215 @@ class GenDatabaseLibrary(object):
         # Initialize each table in the database
         def initializeTables():
             pass
+        
+        # FUNCTION: initializeBalances
+        # INPUT: exchanges - [string, ...] : (list of exchanges to initialize database with)
+        # OUTPUT: 'same kind of dictionary that getDbBalances returns'
+        # DESCRIPTION:
+        #   Initializes the balances for each asset in the used exchanges. index into balance_dict 
+        #    using the notation: dict[exchange][asset].
+        def initializeBalances(exchanges):
+            connect,cursor = ArbitrageDatabase.connect()
+            balance_dict = {}
+            total_value = 0
+            total_btc = 0
+
+            for exchange in exchanges:
+                exchange_usd = 0
+                exchange_btc = 0
+                api_balances = ExchangeAPI.getBalances(exchange)
+                if api_balances["success"]:
+                    balance_dict[exchange] = defaultdict(int)
+                    balances = api_balances["balances"]
+                    for asset, values in balances.items():
+                        quantity = values["total_balance"]
+
+                        # 1. Calculate USD, BTC value
+                        # Hack to work around USDT problem for now
+                        if quantity > 0:
+                            if asset == "USDT":
+                                btc_value = 0
+                                usd_value = 0
+                            if asset == "BTC":
+                                btc_value = quantity
+                                usd_value = Helpers.usdValue(asset, quantity, exchange)
+                            else: 
+                                btc_value = Helpers.btcValue(asset, quantity, exchange)
+                                usd_value = Helpers.usdValue(asset, quantity, exchange)
+
+                            # 2. Filter out unattractive/not useful assets 
+                            # Accounts for :
+                            #   - Unlisted assets
+                            #   - Micro-quantities
+                            #   - Zero balances
+                            if usd_value > 5:
+                                total_value += usd_value
+                                total_btc += btc_value
+                                exchange_usd += usd_value
+                                exchange_btc += btc_value
+
+                                # 3. Store desirable results in database, append to return list
+                                balance_dict[exchange][asset] = values["total_balance"]
+                                DatabaseLibrary.storeBalance(exchange, asset, quantity, btc_value, usd_value)
+
+                DatabaseLibrary.storeBalance(exchange, "ALL", "N/A", exchange_btc, exchange_usd)
+
+            DatabaseLibrary.storeBalance("ALL", "ALL", "N/A", total_btc, total_value)
+            balance_dict["ALL"] = defaultdict(int)
+            balance_dict["ALL"]["total_value_usd"] = total_value
+            balance_dict["ALL"]["total_value_btc"] = total_btc
+            disconnect(connect)
+            print(balance_dict)
+            return balance_dict
+
+        # FUNCTION: initializeFAE
+        # INPUT: fae_list - [(asset, exchange, proportion), ...]
+        # OUTPUT: N/A
+        # DESCRIPTION:
+        #   Purpose is to fill up fae table with our currently used asset/exchanges
+        def initializeFAE(fae_list):
+            for fae in fae_list:
+                DatabaseLibrary.storeFAE(fae[0], fae[1], fae[2], fae[3])
+
+
+        # FUNCTION: initializeAssetInfoes
+        # INPUT: exchanges - list of exchanges used
+        #        pairing   - list of pairings used
+        # OUTPUT: list of (exchange, asset) where the request failedA
+        # DESCRIPTION:
+        #   Goes through a list of pairings & exchanges and fills up the depositaddress database
+        #    Initializes the database with deposit addresses.
+        def initializeAssetInfo(assets, exchanges):
+            connect, cursor = ArbitrageDatabase.connect()
+            errors = []
+            table_name = ArbitrageDatabase.ASSET_INFO_NAME
+            table_names = listTables(cursor)
+            checkTableNameExists(cursor, table_name, table_names)
+            print(assets)
+            print(exchanges)
+
+            for asset in assets:
+                time.sleep(1)
+                for exchange in exchanges:
+                    # DICT1: deposit address, withdrawaltag(for some currencies only)
+                    dict1 = ExchangeAPI.getDepositAddress(exchange, asset) 
+                    if dict1["success"]:
+
+                        address = dict1["address"]
+                        if dict1["withdrawal_tag"] != None:
+                            withdrawal_tag = dict1["withdrawal_tag"]
+                        else: 
+                            withdrawal_tag = ""
+
+                        if exchange == "binance":
+                            withdrawal_fee = FeeScraper.getFee(exchange, asset)
+                            withdrawal_tag = dict1["withdrawal_tag"] 
+                            usd_value = Helpers.usdValue(asset, withdrawal_fee)
+                        else:
+                            dict2 = ExchangeAPI.getCurrencies(exchange)
+                            withdrawal_fee = dict2["currencies"][asset]["transaction_fee"]
+                            withdrawal_tag = ""
+                            usd_value = Helpers.usdValue(asset, withdrawal_fee)
+                        ArbitrageDatabase.insertAssetInformation(cursor, asset, exchange, address, withdrawal_tag, withdrawal_fee, usd_value)
+                    else:
+                        errors.append((exchange,asset)) 
+            disconnect(connect)
+            return errors
+        # FUNCTION: getPairings
+        # INPUT: exchange - string
+        # OUTPUT: list of strings [pairing_one, ...]
+        # DESCRIPTION:
+        #   Outputs list of traded pairings by the program on a given exchange 
+        #    based on the database in use.
+        # TODO - same function but API.
+        def getPairings():
+            pass
+
+        # FUNCTION: getWithdrawalFee
+        # INPUT: asset      - string
+        #        exchange   - string
+        #        type_value - TODO
+        # OUTPUT: float
+        # DESCRIPTION: 
+        #   Grabs the withdrawal fee for a given asset on a given exchange from the
+        #    asset information database.
+        def getWithdrawalFee(asset, exchange, type_value = ""):
+            connect, cursor = ArbitrageDatabase.connect()
+            table_name = ArbitrageDatabase.ASSET_INFO_NAME
+            table_names = listTables(cursor)
+            checkTableNameExists(cursor, table_name, table_names)
+            fee = ArbitrageDatabase.getWithdrawalFee(cursor, asset, exchange)
+            if type_value == "BTC":     
+                fee = Helpers.btcValue(asset, fee, exchange)
+            disconnect(connect)
+            return fee
+
+        # FUNCTION: getBalance
+        # INPUT: exchange - string
+        #        asset    - string
+        # OUTPUT: float
+        # DESCRIPTION:
+        #   Retrieves a balance for a given asset from the balance database.
+        # *If it returns -1, its unavailable
+        def getBalance(asset, exchange, type_value=""):
+            connect, cursor = ArbitrageDatabase.connect()
+            balance = ArbitrageDatabase.getBalanceAsset(cursor, asset, exchange)
+            if type_value == "BTC":
+                balance = ArbitrageDatabase.getBalanceBTCVal(cursor, asset, exchange)
+            elif type_value == "USD":
+                balance = ArbitrageDatabase.getBalanceUSDVal(cursor, asset, exchange)
+            disconnect(connect)
+            return balance  
+
+        # FUNCTION: getBalances
+        # * TODO flip assets and exchange for STOREBALANCE, UPDATEBALANCE, GETBALANCES
+        def getBalances(exchange, assets, cursor=None):
+            if cursor == None:
+                connect, cursor = ArbitrageDatabase.connect()
+                balance_dict = {}
+                for asset in assets:
+                    balance_dict[asset] = ArbitrageDatabase.getBalanceAll(cursor, asset, exchange)
+                disconnect(connect)
+                return balance_dict
+            else:
+                balance_dict = {}
+                for asset in assets:
+                    balance_dict[asset] = ArbitrageDatabase.getBalanceAll(cursor, asset, exchange)
+                return balance_dict
+
+        def getBalanceTotal(type_a): 
+            connect, cursor = ArbitrageDatabase.connect()
+            if type_a == "BTC":
+                value = ArbitrageDatabase.getBalanceBTCVal(cursor, 'ALL', 'ALL')
+            elif type_a == "USD":
+                value = ArbitrageDatabase.getBalanceUSDVal(cursor, 'ALL', 'ALL')
+
+            print("total", value)
+            return value
+
+        # FUNCTION: getAllBalances
+        # INPUT: exchanges - [string, ...]
+        # OUTPUT: dictionary of balances - {TODO}
+        # DESCRIPTION:
+        #   Retrieves all the balances from the exchanges, includes a total balance calculation
+        def getAllBalances(exchanges):
+            connect,cursor = ArbitrageDatabase.connect()
+            # TODO, check database exists shit
+
+            balance_dict = {}
+            for exchange in exchanges:
+                balance_dict[exchange] = defaultdict(lambda: (0,0,0))
+                quantity_list = ArbitrageDatabase.getCurrenciesAmounts(cursor,exchange)
+                for tup in quantity_list:
+                    balance_dict[exchange][tup[0]] = (tup[1], tup[2], tup[3])
+
+            # # Retrive values for totals
+            total_value_usd = DatabaseLibrary.getBalance("ALL", "ALL", "USD")
+            total_value_btc = DatabaseLibrary.getBalance("ALL", "ALL", "BTC")
+            balance_dict["ALL"] = defaultdict(int)
+            balance_dict["ALL"]["total_value_usd"] = total_value_usd
+            balance_dict["ALL"]["total_value_btc"] = total_value_btc
+            return balance_dict
 
     class AssetMetricsDatabase():
         path = os.path.join(os.path.dirname(__file__), 'AssetMetricsDB.sqlite3')

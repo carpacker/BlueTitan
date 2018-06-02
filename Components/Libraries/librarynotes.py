@@ -15,3 +15,16 @@ init_tuple = (timestamp, uuid"", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 init_tuple = (timestamp, uuid, "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 # FUNCTION: initializeAssetMetricsFailure
 init_tuple = (timestamp, uuid, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+def initializeTrades():
+init_tuple = (timestamp, "", 0, 0, 0, "", "", 0, 0, 0, 0)
+
+# FUNCTION: initializeFailureTrades
+init_tuple = ("", 0, 0, "", "", 0, 0, 0, 0, "", "", 0)
+
+
+def initializeTransferHistory():
+    init_tuple = (0, 0, 0, "", "", "", 0, 0, 0)
+
+def initializeErrors():
+    input_tuple = ("N/A", "", "initialization")
