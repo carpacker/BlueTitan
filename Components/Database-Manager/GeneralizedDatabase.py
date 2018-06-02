@@ -124,6 +124,10 @@ def generalQuery(cursor, query):
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
+
+    tableNamesUUID = {}
+    databaseNamesUUID = {}
+    
     # DATABASE CONTAINER CLASSES
     # DESCRIPTION:
     #    Each database has its own container class which contains functions unique to that
@@ -246,29 +250,80 @@ class GenDatabaseLibrary(object):
             pass
 
     class AssetMetricsDatabase():
+        path = os.path.join(os.path.dirname(__file__), 'AssetMetricsDB.sqlite3')
+
+        def createTable(cursor, table_name, table_tuples=None):
+            if table_name == "AssetMetrics":
+                sql_s = """
+                CREATE TABLE %s (                
+                    Time_stamp text NOT NULL,
+                    Uuid text NOT NULL,
+                    Asset text NOT NULL,
+                    Primary_sell_ex text NOT NULL,
+                    Primary_buy_ex text NOT NULL,
+                    Initial_balance real NOT NULL,
+                    End_balance real NOT NULL,
+                    Volume real NOT NULL,
+                    Volume_delta real NOT NULL,
+                    Profit_ratio real NOT NULL,
+                    Profit_ratio_delta real NOT NULL,
+                    Utilization real NOT NULL,
+                    Utilization_delta real NOT NULL, 
+                    Quantity_trades real NOT NULL,
+                    Quantity_trades_delta real NOT NULL)
+                """ % table_name        
+            elif table_name == "AssetFailureMetrics":
+                sql_s = """
+                CREATE TABLE %s (                
+                    Time_stamp text NOT NULL,
+                    Uuid text NOT NULL,
+                    Asset text NOT NULL,
+                    Stage text NOT NULL,
+                    Primary_sell_ex text NOT NULL,
+                    Primary_buy_ex text NOT NULL,
+                    Volume real NOT NULL,
+                    Volume_delta real NOT NULL,
+                    Profit_ratio real NOT NULL,
+                    Profit_ratio_delta real NOT NULL,
+                    Quantity_trades_f real NOT NULL,
+                    Quantity_trades_f_delta real NOT NULL,
+                    Avg_success_rate real NOT NULL,
+                    Avg_success_rate_delta real NOT NULL)
+                """ % table_name
+            else:
+                if table_tuples is None:
+                    table_tuples = []
+                sql_s = """
+                CREATE TABLE %s (
+                    id integer PRIMARY KEY)""" % table_name
+                for tup in table_tuples:
+                    added_s = ",%s %s %s" % tup
+                sql_s += added_s
+            ArbitrageDatabase.table_names.append(table_name)
+            cursor.execute(sql_s)
+
+    
+    class ExchangeRecords():
+        pass
+                
+    class HistoricalDatabase():
+        pass
+
+    class MADatabase():
         pass
 
     class MetricsDatabase():
         pass
 
-    class RuntimeDatabase():
-        pass
-
-    class HistoricalDatabase():
-        pass
-
     class MiningDatabase():
-        pass
-
-    class ExchangeRecords():
         pass
 
     class RunningDatabase():
         pass
 
-    class MADatabase():
+    class RuntimeDatabase():
         pass
-        
+
     # CLASS VARIABLE: database_paths
     # DESCRIPTION:
     #    Dictionary to access the path for a given database.
@@ -420,7 +475,7 @@ class GenDatabaseLibrary(object):
     #    are two options to access the entry. The first is by a unique identifier
     #    (uuid). The second is by a list of variables/values, and the function
     #    attempts to find the entry using these as a key.
-    def getEntry(data_uuid, table_name=None, database_name=None):
+    def getEntry(self, data_uuid, table_name=None, database_name=None):
         # Set database, initializes variables, check table exists
         print(type(data_uuid))
         if data_uuid == 'list':
@@ -431,9 +486,8 @@ class GenDatabaseLibrary(object):
             checkTableNameExists(cursor, table_name, database_name)
         elif data_uuid == 'string':
             # Grab table_name database_name based on uuid
-            table_name = tableNamesUuid[uuid[0]]
-            database_name = databaseNamesUuid[uuid[1]]
-
+            table_name = self.tableNamesUuid[uuid[0]]
+            database_name = self.databaseNamesUuid[uuid[1]]
             database_path = database_paths[database_name]
             timestamp = int(time.time() * 1000)
             uuid = createUuid(table_name, database_name)
@@ -520,12 +574,13 @@ class GenDatabaseLibrary(object):
         return entry[0]
 
     # FUNCTION: updateEntry
-    # INPUT: 
+    # INPUT: data_uuid -
+    #
     # OUTPUT: 
     # DESCRIPTION:
-    #   Effectively replaces an entry with new values. It doesn't necessitate that every value is updated, but it
-    #    will check to update each item.
-    def updateEntry(data_uuid, input, table_name, database_name):
+    #   Effectively replaces an entry with new values. It doesn't necessitate that every value
+    #    is updated, but it will check to update each item.
+    def updateEntry(data_uuid, input_val, table_name, database_name):
         pass
 
     # FUNCTION: updateEntries
@@ -533,39 +588,41 @@ class GenDatabaseLibrary(object):
     # OUTPUT: 
     # DESCRIPTION:
     #   
-    def updateEntries(data_uuid, input, table_name, database_name):
+    def updateEntries(data_uuid, input_val, table_name, database_name):
         pass
 
     # FUNCTION: getItem
     # INPUT:
     # OUTPUT:
     # DESCRIPTION:
-    #   
+    #   Retrieves a single item from a
     def getItem(data_uuid, column, table_name, database_name):
         pass
 
     # FUNCTION: getItems
-    # INPUT: 
-    # OUTPUT: 
+    # INPUT: data_uuid -
+    #
+    # OUTPUT: tuple [data1, ...]
     # DESCRIPTION:
-    #   
-    def getItems(data_uuid, column, table_name, database_name):
+    #   Retrieves multiple items from an entry, designated by the column names.
+    def getItems(data_uuid, columns, table_name, database_name):
         pass
 
-    # FUNCTION: replaceItem
+    # FUNCTION: updateItem
     # INPUT: 
     # OUTPUT: 
     # DESCRIPTION:
-    #   
-    def updateItem(data_uuid, input, column, table_name, database_name):
+    #   Updates an item using UUID or data as a reference to access the entry.
+    def updateItem(data_uuid, input_val, column, table_name, database_name):
         pass
 
-    # FUNCTION: replaceItems
+    # FUNCTION: updateItems
     # INPUT: 
     # OUTPUT: 
     # DESCRIPTION:
-    #   
-    def updateItems(data_uuid, input, columns, table_name, database_name):
+    #   Updates multiple items (column values in an entry) using UUID or data as a reference
+    #    to access the entry.
+    def updateItems(data_uuid, input_val, columns, table_name, database_name):
         pass
 
     # FUNCTION: getColumn
