@@ -654,6 +654,7 @@ class GenDatabaseLibrary(object):
     #   Retrieves multiple entries. Various different methods are possible to
     #    determine what entries to return. TODO
     def getEntries():
+        
         if columns is not None:
             col_s = ",".join(columns)
             sql_s = "SELECT %s FROM %s" % (col_s, table_name)
@@ -687,6 +688,12 @@ class GenDatabaseLibrary(object):
         if order_by is not "":
             sql_s += " ORDER BY %s" % order_by
 
+
+
+    # FUNCTION: selectDistinct
+    def selectDistinct():
+        pass
+    
     # FUNCTION: selectEntry
     # INPUT: table_name - string
     #        data       - list
