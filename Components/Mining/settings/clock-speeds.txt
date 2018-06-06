@@ -1,0 +1,19 @@
+File to keep track of the clock speeds of each GPU in each rig.
+* - Note for future, keep track of this stuff in database.
+* - Values for each GPU like how much they've output so far, the cost and whatever.
+
+GPUs are ordred from LEFT to RIGHT when looking at the BACK of the rig, with the highbar.
+
+#### AMD ####
+N: AMD1 
+
+1 - 570 : PWRCLR
+ID: X
+Base Clock: XX M/s
+Base Memory: XX M/s
+
+OC Clock: XX M/s
+OC Memory: XX M/s
+
+N: AMD2
+...
