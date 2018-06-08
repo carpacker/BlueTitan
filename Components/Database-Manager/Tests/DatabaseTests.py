@@ -54,7 +54,6 @@ def baseTesters():
     GeneralizedDatabase.disconnect(connect)
     PrintLibrary.header("BASE function tests are FINISHED")
     PrintLibrary.delimiter()
-    
 
 # TESTERS: main functions
 # DESCRIPTION:
@@ -62,10 +61,10 @@ def baseTesters():
 def mainTesters():
     PrintLibrary.header("Main functions")
     PrintLibrary.header("storeEntry, storeEntries")
-    GenDatabaseLibrary.storeEntry(("", "", 0, 0), "IntendedFAE", "ArbitrageDatabase")
-    GenDatabaseLibrary.storeEntries([("first", "second", 1, 1), ("third", "fourth", 1, 1)], "IntendedFAE", "ArbitrageDatabase")
-    # GenDatabaseLibrary.storeEntry() . do test database here
-    GenDatabaseLibrary.storeEntries([("fifth", "sixth", 1, 2), ("seventh", "eighth", 3, 4)], "IntendedFAE", "ArbitrageDatabase")
+    GenDatabaseLibrary.storeEntry("TestTable1", "TestDatabase")
+    GenDatabaseLibrary.storeEntries("TestTable1", "TestDatabase")
+    GenDatabaseLibrary.storeEntries("TestTable2", "TestDatabase")
+
 
     PrintLibrary.header("getEntry, getEntries, getLastEntry")
     GenDatabaseLibrary.getEntry("aa1", "ArbitrageTrades", "ArbitrageDatabase")
@@ -78,20 +77,37 @@ def mainTesters():
 
     GenDatabaseLibrary.getLastEntry()
 
-    PrintLibrary.header("getColumn,getColumns")
+
+    PrintLibrary.header("getColumn, getColumns")
+    GenDatabaseLibrary.getColumn()
     GenDatabaseLibrary.getColumn()
 
-    # getItem, getItems
+    GenDatabaseLibrary.getColumns()
+    GenDatabaseLibrary.getColumns
+
+
+    PrintLibrary.header("getItem, getItems")
     GenDatabaseLibrary.getItem()
     GenDatabaseLibrary.getItem()
 
     GenDatabaseLibrary.getItems()
     GenDatabaseLibrary.getItems()
 
-    # updateEntry, updateEntries
+    PrintLibrary.header("updateEntry, updateEntries")
+    GenDatabaseLibrary.updateEntry()
+    GenDatabaseLibrary.updateEntry()
+    GenDatabaseLibrary.updateEntries()
+    GenDatabaseLibrary.updateEntries
     
-    # updateItem, updateItems
+    PrintLibrary.header("updateitem, updateItems")
+    GenDatabaseLibrary.updateItem()
+    GenDatabaseLibrary.updateItem()
+    GenDatabaseLibrary.updateItem()
+    GenDatabaseLibrary.updateItem()
 
+    GenDatabaseLibrary.updateItems()
+    GenDatabaseLibrary.updateItems()
+    
     # deleteEntry, deleteEntries
     GenDatabaseLibrary.deleteEntry()
     GenDatabaseLibrary.deleteEntries()
@@ -102,7 +118,9 @@ def mainTesters():
 #    Tests functions that are not considered part of the generic database suite, they may be accessed but
 #     serve the primary purpose of supporting the main set of calls.
 def secondaryTesters():
+
     pass
+    # buildInitTuple
 
 if __name__ == "__main__":
     initializeTestDatabase()

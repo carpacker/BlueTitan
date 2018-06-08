@@ -23,7 +23,8 @@ from PrintLibrary import PrintLibrary
 import Helpers
 # import ArbitrageDatabaseLib
 
-############################################## HELPERS ###########################################
+'''                                       Helpers                                   
+'''
 
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string
@@ -56,8 +57,6 @@ def connect(path=DEFAULT_PATH):
     except Error as e:
         print(e)
     return None
-
-
 
 # FUNCTION: createUuid
 # INPUT: table_name    - string
@@ -97,27 +96,37 @@ def generalQuery(cursor, query):
     cursor.execute(query)
     return cursor.fetchall()
 
-# ----------------------------- GLOBAL DATABASE DICTIONARIES ----------------------------------------
-# DATABASES:
-#   arbitrage        - Contains all data pertinent to the 'arbitrage' suite of trading algorithms.
-#   moving-ave       - Contains all data pertinent to the 'moving-average' suite of trading
-#                       algorithms.
-# Records & Currency Data
-#   exchange-records - Contains all data that can be classified as a record on an exchange. This
-#                       includes trades, withdrawals, deposits and transfers. Each exchange gets
-#                       three tables, one for withdrawals, one for deposits and one for trades.
-#                       Transfers will be implemented another time.
-#                       
-#   historical-data  - Contains a list of tables that contain historical-data for each currency
-#                       that is designated to be tracked. Each currency has its own table where
-#                       each entry contains data pertinent to a period in time.
-#   running-data     - The same as above, but instead data captured by our own program rather
-#                       than scraped from an external site.
-#   mining-records   - Contains data pertinent to mining, specifically records and performance.
+'''
+                                           Databases
 
-# Metrics & Performance Data
-#   asset-metrics    - Metrics for each asset
-#   metrics          - Global metrics
+ Algorithms
+
+   arbitrage        - Contains all data pertinent to the 'arbitrage' suite of trading algorithms.
+   moving-ave       - Contains all data pertinent to the 'moving-average' suite of trading
+                       algorithms.
+
+
+  Records & Currency Data
+
+   exchange-records - Contains all data that can be classified as a record on an exchange. This
+                       includes trades, withdrawals, deposits and transfers. Each exchange gets
+                       three tables, one for withdrawals, one for deposits and one for trades.
+                       Transfers will be implemented another time.
+                       
+   historical-data  - Contains a list of tables that contain historical-data for each currency
+                       that is designated to be tracked. Each currency has its own table where
+                       each entry contains data pertinent to a period in time.
+   running-data     - The same as above, but instead data captured by our own program rather
+                       than scraped from an external site.
+   mining-records   - Contains data pertinent to mining, specifically records and performance.
+
+ 
+  Metrics & Performance Data
+
+   asset-metrics    - Metrics for each asset
+   metrics          - Global metrics
+
+'''
 
 # CLASS: GenDatabaseLibrary
 # DESCRIPTION:
@@ -125,16 +134,36 @@ def generalQuery(cursor, query):
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
 
+    # TBD: Global dictionary for UUID matchups, possibly not necessary
     tableNamesUUID = {}
     databaseNamesUUID = {}
 
-    
-    def buildInitTuple(table_name, database_name):
-        # 1. Access table, get column types
-        # 2. For each column type, add the init value
 
-        PrintLibrary.displayVariables(init_tuple)
-        return init_tuple
+    # FUNCTION: buildInitTuple
+    # INPUT: table_name    - string
+    #        database_name - string
+    # OUTPUT: tuple
+    # DESCRIPTION:
+    #    Creates an initiliazer tuple based on a given table and name. It provides a generic
+    #     initializer value for eachd data type
+    #  TEXT - ""
+    #  REAL - 0
+    #  TODO TODO
+    def buildInitTuple(table_name, database_name):
+
+        init_list = []
+        for x in range (0, num_columns):
+            type_col = GenDatabaseLibrary.getColumnType(x, table_name, database_name)
+            if type_col == "STRING":
+                pass
+            elif type_col == "REAL":
+                pass
+            else:
+                pass
+
+        # [0, "", ???]
+        PrintLibrary.displayVariables(init_list)
+        return init_list
     
     # DATABASE CONTAINER CLASSES
     # DESCRIPTION:
@@ -371,6 +400,7 @@ class GenDatabaseLibrary(object):
                         errors.append((exchange,asset)) 
             disconnect(connect)
             return errors
+        
         # FUNCTION: getPairings
         # INPUT: exchange - string
         # OUTPUT: list of strings [pairing_one, ...]
