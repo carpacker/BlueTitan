@@ -4,6 +4,8 @@ import os
 import sqlite3
 import time
 import uuid
+
+
 # Windows Main Desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
@@ -25,6 +27,7 @@ import Helpers
 
 '''                                       Helpers                                   
 '''
+
 
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string

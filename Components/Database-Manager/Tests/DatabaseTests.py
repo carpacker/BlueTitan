@@ -25,7 +25,7 @@ from GeneralizedDatabase import GenDatabaseLibrary
 # INPUT: N/A
 # OUTPUT: N/A
 # DESCRIPTION:
-#   Creates a test database to be used for testing GeneralizedDatabase calls. If necessary,
+#   Creates test database to be used for testing GeneralizedDatabase calls. If necessary,
 #    may be expanded to test other parts of the program
 def initializeTestDatabase():
     # 1. Create test database, if its not already created
