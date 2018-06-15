@@ -66,3 +66,28 @@ class TransactionProcesser(Object):
         #     must be contained in a list until a better solution is devised.
         def storeTxs(transactions):
             pass
+
+        # FUNCTION: buildExchangeAddresses
+        # INPUT: exchanges - [string, ...]
+        #        assets    - [string, ...]
+        # OUTPUT: nested dictionary
+        # DESCRIPTION:
+        #    Takes an input of exchanges an assets, creates entry in database to keep track of
+        #     wallet addresses, where static addresses are possible.
+        # NOTE: This function may not be necessary, some other functino does this job perhaps
+        def buildExchangeAddresses(exchanges, assets):
+            pass
+
+# CLASS: ProfitCalculator
+# DESCRIPTION:
+#    Functions used to calculate the profit/loss of transactions using a csv input.
+class ProfitCalculator(Object):
+
+    def calculateProfits():
+        pass
+
+    def matchBuySell():
+        pass
+
+    def buildTxList():
+        pass
