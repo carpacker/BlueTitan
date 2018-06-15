@@ -38,7 +38,7 @@ class TransactionProcesser(Object):
             ticker += 1
         if order_by == 'exchanges':
             # Sort by alphabetical exchange
-            sorted_exchanges = Helpers.sortAlphabetically(chronological_tx)
+            sorted_exchanges = SortingLibrary.sortAlphabetically(chronological_tx)
 
             sorted_tx = []
             ticker = 0

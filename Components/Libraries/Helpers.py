@@ -49,20 +49,37 @@ from GeneralizedDatabase import GenDatabaseLibrary
 #   Returns the BTC value of a specific asset. If an exchange is given, the price used to find
 #    this value is taken fro mthe provided exchange, otherwise coinmarketcap is used.
 def btcValue(asset, quantity, exchange=None):
+
+    # If for some reason it is already in BTC, return the input value
     if asset == "BTC":
         return quantity
+    
     else:
+        # If exchange is provided, access exchange's price
         if exchange:
             pairing = pairingStr(asset)
             price = ExchangeAPI.getPrice(exchange, pairing)
             value = float(price) * quantity
             return value
 
-        else: 
+        # If exchange isn't provide, use coinmarketcap
+        else:
             pairing = pairingStr(asset)
             price = ExchangeAPI.getPrice("coinmarketcap", pairing)
             value = float(price) * quantity
             return value
+
+# FUNCTION: calculateChange
+# INPUT: value_one - float
+#        value_two - float
+# OUTPUT: float
+#    Calcute the formula v1 / v2.
+def calculateChange(value_one, value_two):
+    if value_one != 0:
+        value = (value_two / value_one)
+        return value
+    else: 
+        return value_two
 
 # FUNCTION: calculateOrderFee
 # INPUT: exchange  - string
@@ -223,23 +240,15 @@ def getMinTrade(exchanges, pairing):
     ret_dict["missing_exchanges"] = missing
     return ret_dict
 
-# FUNCTION: quoteAsset
-# INPUT:  quantity - float
-#         price    - float
-# OUTPUT: float
-# DESCRIPTION:
-#   Converts base asset value to quote asset value
-#  * - TODO Figure out where this is called and replace it with quoteValue
-def quoteAsset(quantity, price):
-    return quantity / price
-
 # FUNCTION: quoteAssetStr
 # INPUT: pairing - string
 # OUTPUT: string
 # DESCRIPTION:
-#   Simple wrapper function used to output the quote asset in a pairing.
+#   Simple wrapper function used to output the quote asset in a pairing. Input pairing must be standardize
+#    in base-quote format
 def quoteAssetStr(pairing):
-    return pairing[4:7]
+    base, quote = pairing.split("-")
+    return quote
 
 # FUNCTION: quoteValue
 # INPUT: quantity - float
@@ -268,13 +277,23 @@ def quoteValue(asset, quantity, exchange=None):
             value = quantity / float(price)
             return value
 
-# TODO
+# FUNCTION: mutualAsset
+# INPUT: exchange_list
+# OUTPUT: list
+# DESCRIPTION:
+#    Runs through a list of exchanges, finds mutual assets
 def mutalAssets(exchange_list):
+
+    # TODO: change this
+    connect, cursor = ArbitrageDatabase.connect()
+
+    # Initialize/declare variables
     num = len(exchange_list)
-    connect, cursor = ArbitrageDatabase.connect() 
     curr_list = defaultdict(int)
     mutual_list = []
     i = 1
+
+    # Forloop runs through, grabs currencies, finds mutual assets
     for ex in exchange_list:
         if i == 1:
             ex_currs = GenDatabaseLibrary.getCurrencies(cursor,exchange)
@@ -287,9 +306,12 @@ def mutalAssets(exchange_list):
                 if curr_list[curr] == expected_total:
                     curr_list += 1
         i += 1
+
+    # Build final list
     for k,v in curr_list.items():
         if v == i:
             mutual_list.append(k)
+            
     return mutual_list
 
 # FUNCTION: pairingStr
@@ -303,7 +325,6 @@ def pairingStr(quote):
     else: 
         return "BTC-" + quote
 
-
 # FUNCTION: removeItemsByIndex
 # INPUT: list_items - list to have items altered
 #        list_index - list of indexes
@@ -312,6 +333,8 @@ def pairingStr(quote):
 #   Helper to adaptively remove items from a list using a number of indexes sorted in ascending order.
 def removeItemsByIndex(list_items, list_index):
     ticker = 0
+
+    # TODO: Describe loop
     for value in list_index:
         list_items.pop(value - ticker)
         ticker+=1
@@ -322,7 +345,7 @@ def removeItemsByIndex(list_items, list_index):
 # INPUT: pairings - list of strings "A-B"
 # OUTPUT: same as input, but "B-A"
 # DESCRIPTION:
-#   Reverses pairing order quote<->base 
+#   Reverses pairing order quote<->base. 
 def reversePairings(pairing_list):
     return ["%s-%s" % (v[0],v[1]) for v in [z.split("-") for z in pairing_list] ]
 
@@ -345,9 +368,12 @@ def splitList(listy, parts):
 #    and returns the sum of the list in terms of Bitcoin.
 def sumFAE(fae_list):
     tally = 0
+
+    # Acquire bitcoin value, add to tally
     for value in fae_list:
         btc_value = btcValue(value[0], value[2], value[1])
         tally += btc_value
+        
     return tally
 
 # FUNCTION: sumValues
@@ -355,8 +381,15 @@ def sumFAE(fae_list):
 # OUTPUT: float
 # DESCRIPTION:
 #   Sums the values in a list
-def sumValues():
-    pass
+def sumValues(listy):
+    running_sum = 0
+    ticker = 0
+    
+    for value in listy:
+        running_sum += listy[ticker]
+        ticker += 1
+
+    return running_sum
 
 # Model it/replace below
 # FUNCTION: averageValue
@@ -365,62 +398,17 @@ def sumValues():
 # DESCRIPTION:
 #   Takes an input list of values and averages them
 def averageValue(values):
+
     if values != []:
         average = 0
         for value in values:
+            # Make sure its a float
             average += float(value[0])
         return_value = average / float(len(values))
         return return_value
     else:
+        # empty list :: 0
         return 0
-
-# FUNCTION: calculateChange
-# INPUT: value_one - float
-#        value_two - float
-# OUTPUT: float
-#   TODO (Not sure what to do this with, its a bit too simple)
-def calculateChange(value_one, value_two):
-    if value_one != 0:
-        value = (value_two / value_one)
-        return value
-    else: 
-        return value_two
-
-# FUNCTION: sumBalances
-# INPUT: balances - tuple (asset, exchange, value, BTCvalue)
-# OUTPUT: float
-# DESCRIPTION:
-#   Sums the value of assets in terms of BTC and outputs the final value
-# * - TODO - make this more robust... currently a bit simple and mostly a wrapper
-def sumBalances(balances):
-    total = 0
-    for balance in balances:
-        total += balance[3]
-    return total
-
-# FUNCTION: sumProfit
-# INPUT: profits - TODO
-# OUTPUT: TODO
-# DESCRIPTION:
-#   TODO
-# * - TODO, Input tuple already a list of profits from a period...
-# * - TODO, probably make this more robust...
-def sumProfit(profits):
-    sum_profit = 0
-    for value in profits:
-        sum_profit += float(value[0])
-    return sum_profit
-
-# FUNCTION: sumVolume
-# INPUT: initial_balances - float
-#        final_balances   - [float]
-# OUTPUT: volume[float]
-#   Sums up volume traded for period
-# * - TODO - This isn't right
-def sumVolume(initial_balance, final_balances):
-    final_balance = sum(final_balances)
-    volume = final_balance - initial_balance
-    return volume
 
 # FUNCTION: usdValue
 # INPUT: quantity - float

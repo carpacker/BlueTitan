@@ -1,16 +1,26 @@
 # SortingLibrary.py
 # Carson Packer
-# Summer 2018
 
-# Suite of functions to aid in sorting a list
+# DESCRIPTION:
+#    Suite of functions to aid in sorting either a general list or various types of lists.
 
+# External-imports
+# TODO
+
+# FUNCTION: sortAlphabetically
+# INPUT: TODO
+# OUTPUT: TODO
+# DESCRIPTION:
+#   TODO
+def sortAlphabetically():
+    pass
 # FUNCTION: sortAscending
 # INPUT: listy - list 
 # OUTPUT: list
 # DESCRIPTION:
 #	Uses built in sorting function to sort a list in ascending order.
 def sortAscending():
-	pass
+    pass
 
 # FUNCTION: sortDescending
 # INPUT: listy - list 
@@ -18,7 +28,7 @@ def sortAscending():
 # DESCRIPTION:
 #	Uses built in sorting function to sort a list in descending order.
 def sortDescending():
-	pass
+    pass
 
 # FUNCTION: bubbleSort
 # INPUT: listy - list
@@ -27,4 +37,4 @@ def sortDescending():
 # DESCRIPTION:
 #	Performs bubble sort over a list. Optimal for TODO lists.
 def bubbleSort():
-	pass
+    pass
