@@ -419,12 +419,17 @@ def averageValue(values):
 #   Returns the USD value of a specific asset. If no price is given, it calls binance's
 #    getPrice function and calculates the usd value.
 def usdValue(asset, quantity, exchange=None,):
+
+    # If exchange is provided, used exchange price
     if exchange:        
         pairing = pairingStr(asset)
         usd_price = ExchangeAPI.getPriceUSD(exchange, pairing)
         usd_value = quantity * float(usd_price)
+
+    # Otherwise, use coinmarketcap
     else:
         pairing = pairingStr(asset)
         usd_price = ExchangeAPI.getPriceUSD("coinmarketcap", pairing)
         usd_value = quantity * float(usd_price)
+        
     return usd_value
