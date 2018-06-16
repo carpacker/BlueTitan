@@ -6,6 +6,7 @@ import time
 import requests
 import sys
 
+
 # Windows path
 sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 

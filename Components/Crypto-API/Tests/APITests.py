@@ -52,6 +52,9 @@ def BinanceTesters():
 def BittrexTesters():
     PrintLibrary.header("Bittrex Tests")
 
+# TESTERS: Coinbase
+def CoinbaseTesters():
+    PrintLibrary.header("Coinbase Tests")
 # TESTERS: CoinMarketCap
 def CoinMarketCapTesters():
     PrintLibrary.header("CoinMarketCap Tests")

@@ -7,24 +7,52 @@
 import time
 import md5
 import hashlib
+import requests
+import json
 
 # Internal Imports
 import PrintLibrary
 
-base_url = "https://api.coinbase.com/v2/users/"
+base_url = "https://api.coinbase.com/v2/"
 
-# User calls
 
-def getUserID():
-    # :user_id
-    pass
+######################################## USER CALLS ################################################ 
+####################################################################################################
 
+user_url = base_url + "users/"
+
+# FUNCTION: getUserID
+# INPUT: user_id - string
+# OUTPUT: dictionary
+# DESCRIPTION:
+#    Retrieves user information using id. Need id to access
+def getUserID(user_id):
+    url = user_url + user_id
+    json_var = requests.request('GET', url).json()
+
+    # TODO -] check error
+    
+    # Already in dictionary format because they love us.
+    return json_var["data"]
+
+# FUNCTION: getUser
+# INPUT:
+# OUTPUT:
+# DESCRIPTION:
+# 
 def getUser():
     pass
 
+# INPUT: userAuth
+# OUTPUT:
+# DESCRIPTION:
+# 
 def userAuth():
     pass
-
+# INPUT:
+# OUTPUT:
+# DESCRIPTION:
+#    Update user information,
 def updateUser():
     pass
 ####################################### ACCOUNT CALLS ############################################## 
@@ -192,4 +220,11 @@ def commitWithdrawal():
 
 ########################################## HELPERS #################################################
 ####################################################################################################
-# TODO: auth method
+
+# FUNCTION: encryptRequest
+# INPUT: signature - boolean
+#        method    - string ['POST', 'GET', 'PUT', 'DELETE']
+#        end       - string (url)
+# OUTPUT: Encrypted url used for HTTPS request
+def encryptRequest():
+    pass

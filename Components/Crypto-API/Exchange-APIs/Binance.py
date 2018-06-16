@@ -869,10 +869,10 @@ def withdraw(asset, amount, address, addressTag="", **kwargs):
 
 
 ########################################## HELPERS ################################################
-# * - encryptRequest     :
-# * - quoteSymbol        :
-# * - standardizePairing :
-# * - unscramblePairing  :
+# * - encryptRequest     : Encryption method.                                                     #
+# * - quoteSymbol        : Return quote symbol specifically in Binance's format.                  # 
+# * - standardizePairing : Convert pairing from Binance format to standard format.                # 
+# * - unscramblePairing  : Convert pairing from standard format to Binance format                 #
 ###################################################################################################
 
 # FUNCTION: encryptRequest
@@ -882,7 +882,7 @@ def withdraw(asset, amount, address, addressTag="", **kwargs):
 #        * - Query vars passed in as list of params (a=1,b=2,c=3)
 # OUTPUT: Encrypted url used for HTTPS request
 # DESCRIPTION:
-#   Encrypts an API request to Binance
+#   Encrypts an API request to Binance.
 def encryptRequest(signature, method, end, **query_vars):
     header = {'X-MBX-APIKEY':binance_public_key}
     queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
