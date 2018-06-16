@@ -19,9 +19,9 @@ class FeeScraper(object):
 	# FUNCTION: getFee
 	# simple for now...
 	def getFee(exchange, asset):
-		fee = FeeScraper.grabFeesPage(exchange, asset)
-		PrintLibrary.displayVariable(fee, "fee")
-		return fee
+            fee = FeeScraper.grabFeesPage(exchange, asset)
+	    PrintLibrary.displayVariable(fee, "fee")
+	    return fee
 
 	# FUNCTION: processFeeDict
 	# INPUT: list_i - [dictionary1, ..., dictionaryN]
@@ -29,30 +29,30 @@ class FeeScraper(object):
 	# DESCRIPTION
 	#	Convert's binance's list format for transaction fees into a more easily accessible dictionary format.
 	def processFeeDict(list_i):
-		return_dict = {}
-		for value in list_i:
-			return_dict[value['assetCode']] = value['transactionFee']
-		return return_dict
+	    return_dict = {}
+	    for value in list_i:
+       		return_dict[value['assetCode']] = value['transactionFee']
+	    return return_dict
 
 	# FUNCTION: grabFeesPage
 	# INPUT: exchange - strig
 	# OUTPUT: TODO
 	# DESCRIPTION:
 	#	Grabs the HTML fees page for a given exchange (Currently only necessary for binance)
-	def grabFeesPage(exchange,asset):
-		if exchange == 'binance':
-			url = "https://www.binance.com/assetWithdraw/getAllAsset.html"
-			html = requests.get(url)
-			json = html.json()
-			print(len(json))
-			if len(json) == 0:
-				raise Exception("Page failed to load")
-			fee_dict = FeeScraper.processFeeDict(json)
-			fee = fee_dict[asset]
-		else:
-			raise Exception("Not a Supported Exchange")
+	def grabFeesPage(exchange, asset):
+       	if exchange == 'binance':
+	    url = "https://www.binance.com/assetWithdraw/getAllAsset.html"
+	    html = requests.get(url)
+	    json = html.json()
+	    print(len(json))
+	    if len(json) == 0:
+		raise Exception("Page failed to load")
+	    fee_dict = FeeScraper.processFeeDict(json)
+	    fee = fee_dict[asset]
+	    else:
+		raise Exception("Not a Supported Exchange")
 
-		return fee
+	    return fee
 
 
 

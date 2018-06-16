@@ -35,5 +35,3 @@ def scrapeCurrency(currency, period):
 def scrapeCurrencies(currencies, period):
 	pass
 
-
-
