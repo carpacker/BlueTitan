@@ -172,10 +172,6 @@ def postSell():
 def sellLimit():
     pass
 
-
-
-
-
 ####################################### ACCOUNT CALLS ############################################## 
 ####################################################################################################
 
@@ -219,6 +215,7 @@ def getCompleteBalances():
 # OUTPUT:
 # DESCRIPTION:
 def getDepositAddresses():
+    # TODO
     pass
 
 # FUNCTION:
@@ -226,6 +223,7 @@ def getDepositAddresses():
 # OUTPUT:
 # DESCRIPTION:
 def getDepositAddress():
+    # TODO
     pass
 
 # FUNCTION:
@@ -240,6 +238,7 @@ def generateNewAddress():
 # OUTPUT:
 # DESCRIPTION:
 def getDepositWithdrawals():
+    # TODO
     pass
 
 # FUNCTION:
@@ -247,19 +246,29 @@ def getDepositWithdrawals():
 # OUTPUT:
 # DESCRIPTION:
 def getWithdrawals():
+    # TODO
     pass
 
-# FUNCTION:
-# INPUT:
-# OUTPUT:
+# FUNCTION: getDeposits
+# INPUT: start - int (unix timestamp)
+#        end   - int (unix timestamp)
+# OUTPUT: Dictionary
 # DESCRIPTION:
-def getDeposits():
+#    Retrieves deposit history for all assets, optional input of time period (start, end).
+def getDeposits(start=0, end=0):
+    # TODO
     pass
 
-# FUNCTION:
-# INPUT:
-# OUTPUT:
+def getDepositsAsset():
+    pass
+
+# FUNCTION: withdraw
+# INPUT: exchange - string
+#        asset    - string
+#        quantity - float
+# OUTPUT: Dictionary
 # DESCRIPTION:
+#    Performs a withdraw call to a specified address.
 def withdraw():
     pass
 
