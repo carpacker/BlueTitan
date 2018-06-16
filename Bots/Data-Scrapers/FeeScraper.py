@@ -38,7 +38,7 @@ class FeeScraper(object):
 	# INPUT: exchange - strig
 	# OUTPUT: TODO
 	# DESCRIPTION:
-	#	Grabs the HTML fees page for a given exchange (Currently only necessary for binance)
+	#   Grabs the HTML fees page for a given exchange (Currently only necessary for binance)
 	def grabFeesPage(exchange, asset):
        	if exchange == 'binance':
 	    url = "https://www.binance.com/assetWithdraw/getAllAsset.html"

@@ -9,7 +9,7 @@ import kivy
 # Internal Imports
 
 # Kivy Imports
-from kivy.
+from kivy.app import App
 
 
 # Latest Version: ???
