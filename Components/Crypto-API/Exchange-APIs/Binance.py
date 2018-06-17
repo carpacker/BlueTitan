@@ -24,12 +24,12 @@ V3_URL = "https://api.binance.com/api/v3/"
 WAPI_URL = "https://api.binance.com/wapi/v3/"
 
 ######################################## PUBLIC CALLS ############################################## 
-# * - checkServerTime   : Returns the server's recorded current time
-# * - getCurrencies     : Retrieves a list of currencies being actively traded on Binance
-# * - getExchangeInfo   : Retrieves general information on the exchange and its pairings
-# * - getInfoPairing    : Retrieves information for a specific pairing
-# * - getInfoPairings   : Retrieves information for a list of pairings
-# * - testConnectivity  : Checks the connection to Binance
+# * - checkServerTime   : Returns the server's recorded current time                               #
+# * - getCurrencies     : Retrieves a list of currencies being actively traded on Binance          #
+# * - getExchangeInfo   : Retrieves general information on the exchange and its pairings           # 
+# * - getInfoPairing    : Retrieves information for a specific pairing                             #
+# * - getInfoPairings   : Retrieves information for a list of pairings                             #
+# * - testConnectivity  : Checks the connection to Binance                                         #
 ####################################################################################################
 
 # FUNCTION: checkServerTime

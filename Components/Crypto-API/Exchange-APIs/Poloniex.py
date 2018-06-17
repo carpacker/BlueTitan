@@ -20,27 +20,70 @@ from PrintLibrary import PrintLibrary
 from secret_keys import poloniex_private_key, poloniex_public_key 
 
 # Endpoint URLs
-base_url = ""
+base_url = "https://poloniex.com/"
 
 ######################################## PUBLIC CALLS ##############################################
-#################################################################################################### 
+####################################################################################################
+# getTicker       :
+# getVolume       :
+# getOrderbook    :
+# getTradeHistory :
+# getChartData    :
+# getCurrencies   :
+# getLoanOrders   :
+####################################################################################################
+
+# URL for all public calls
+public_url = base_url + "public?command="
 
 # FUNCTION: getTicker
-# INPUT: N/A
+# INPUT: asset - (OPTIONAL) string
 # OUTPUT: Dictionary
 # DESCRIPTION:
 #    Returns ticker for all markets, optional input to just receive on currency.
-def getTicker():
-    pass
+def getTicker(asset=""):
+    url = public_url + "returnTicker"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
+
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        standardized_pairing = standardizePairing(pairing)
+        nested_dict = {}
+        nested_dict["last_price"] = information["last"]
+        # and so on...
+
+        ret_dict[standardized_pairing] = nested_dict
+
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
+
 
 # FUNCTION: getVolume
 # INPUT: N/A
 # OUTPUT: Dictionary
 # DESCRIPTION:
 #    Returns 24hr volume for all markets, optional input to just receive one currency.
-def getVolume():
-    pass
+def getVolume(asset=""):
+    url = public_url + "return24hVolume"
+    PrintLibrary.displayVariable(url)
     
+    json_var = requests.request('GET', url).json()
+    
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
+
 ######################################## MARKET CALLS ##############################################
 #################################################################################################### 
 
@@ -50,8 +93,21 @@ def getVolume():
 # DESCRIPTION:
 #   Retrieves the orderbook for a given pairing. Output dictionary contains list of asks and bids,
 #    ordered ascending and descending respectively.
-def getOrderbook():
-    pass
+def getOrderbook(pairing):
+    url = public_url + "returnOrderBook"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
+    
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict    pass
 
 # FUNCTION: getTradeHistory
 # INPUT: pairing - string
@@ -61,8 +117,20 @@ def getOrderbook():
 # DESCRIPTION:
 #    Returns the past 200 trades for a given market, or up to 50,000 trades between range specific
 #     in unix timpestamps by stat and end.
-def getMarketHistory():
-    pass
+def getMarketHistory(pairing, start=0, end=0):
+    url = public_url + "returnMarketHistory"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json() 
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
 
 # FUNCTION: getChartData
 # INPUT: pairing - string
@@ -72,8 +140,21 @@ def getMarketHistory():
 # OUTPUT: dictionary
 # DESCRIPTION:
 #    Returns candlestick chart data for a given market pairing.
-def getChartData():
-    pass
+def getChartData(pairing, period, start=0, end=0):
+    url = public_url + "returnChartData"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
+
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
 
 # FUNCTION: getCurrencies
 # INPUT: N/A
@@ -81,7 +162,20 @@ def getChartData():
 # DESCRIPTION:
 #    Returns information about [all] assets.
 def getCurrencies():
-    pass
+    url = public_url + "returnCurrencies"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
+    
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict    pass
 
 # FUNCTION: getCurrency
 # INPUT: asset - string
@@ -97,76 +191,88 @@ def getCurrency():
 # DESCRIPTION:
 #    TODO
 def getLoanOrders():
-    pass
+    url = public_url + "returnLoanOrders"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
 
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
 
 ######################################## ORDER CALLS ###############################################
 ####################################################################################################
 
-# FUNCTION:
+# FUNCTION: getOrderTrades
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getOrderTrades():
     pass
 
-# FUNCTION:
+# FUNCTION: getOrder
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getOrder():
     pass
 
-# FUNCTION:
+# FUNCTION: getOpenOrders
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getOpenOrders():
     pass
 
-# FUNCTION:
+# FUNCTION: moveOrder
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def moveOrder():
     pass
 
-# FUNCTION:
+# FUNCTION: cancelOrder
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def cancelOrder():
     pass
 
-# FUNCTION:
+# FUNCTION: getTradeHistory
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getTradeHistory():
     pass
 
-# FUNCTION:
+# FUNCTION: postBuy
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def postBuy():
     pass
 
-# FUNCTION:
+# FUNCTION: buyLimit
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def buyLimit():
     pass
 
-# FUNCTION:
+# FUNCTION: postSell
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def postSell():
     pass
 
-# FUNCTION:
+# FUNCTION: sellLimit
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
@@ -176,47 +282,69 @@ def sellLimit():
 ####################################### ACCOUNT CALLS ############################################## 
 ####################################################################################################
 
-# FUNCTION:
+trading_url = base_url + "tradingApi?command="
+
+# FUNCTION: getFeeInfo
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getFeeInfo():
     pass
 
-# FUNCTION:
-# INPUT:
-# OUTPUT:
+# FUNCTION: getBalance
+# INPUT: asset - string
+# OUTPUT: Dictionary
 # DESCRIPTION:
+#    Returns the balance for a specific asset.
+# NOTE: Calls returnBalances
+# NOTE: Implement list of assets in the future
 def getBalance():
     pass
 
-# FUNCTION:
-# INPUT:
-# OUTPUT:
+# FUNCTION: getBalances
+# INPUT: N/A 
+# OUTPUT: Dictionary
 # DESCRIPTION:
+#    Retrieves balance for each asset on your account.
 def getBalances():
-    pass
+    url = trading_url + "returnBalances"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
+    # Check to make sure no error
 
-# FUNCTION:
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
+
+# FUNCTION: getAvailableAccountBalances
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getAvailableAccountBalances():
     pass
 
-# FUNCTION:
+# FUNCTION: getCompeleteBalances
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getCompleteBalances():
-    pass
+    url = trading_url + "returnCompleteBalances"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
 
-# FUNCTION:
+# FUNCTION: getDepositAddresses
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getDepositAddresses():
-    # TODO
+    # TO
+    DO
     pass
 
 # FUNCTION:
