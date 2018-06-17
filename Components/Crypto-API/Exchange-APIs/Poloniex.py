@@ -24,8 +24,10 @@ base_url = "https://poloniex.com/"
 
 ######################################## PUBLIC CALLS ##############################################
 ####################################################################################################
-# getTicker       :
-# getVolume       :
+# getTicker       : Returns ticker information for all assets, if provided single asset            #
+#                    then it returns the ticker information for just that asset.                   # 
+# getVolume       : Returns 24hr volume for all assets on exchange, if provied single asset        #
+#                    then it returns the 24hr volume for just that asset.                          # 
 # getOrderbook    :
 # getTradeHistory :
 # getChartData    :
@@ -46,12 +48,12 @@ def getTicker(asset=""):
     PrintLibrary.displayVariable(url)
     
     json_var = requests.request('GET', url).json()
-
     # Check to make sure no error
 
     # JSON standardization
     ret_dict = {}
-    for pairing,information in json_var:
+    for pairing in json_var:
+        print(json_var[pairing])
         standardized_pairing = standardizePairing(pairing)
         nested_dict = {}
         nested_dict["last_price"] = information["last"]
@@ -73,7 +75,7 @@ def getVolume(asset=""):
     PrintLibrary.displayVariable(url)
     
     json_var = requests.request('GET', url).json()
-    
+    print(json_var)
     # Check to make sure no error
 
     # JSON standardization
@@ -107,7 +109,7 @@ def getOrderbook(pairing):
         pass
     
     PrintLibrary.displayDictionary(ret_dict)
-    return ret_dict    pass
+    return ret_dict 
 
 # FUNCTION: getTradeHistory
 # INPUT: pairing - string
@@ -175,7 +177,7 @@ def getCurrencies():
         pass
     
     PrintLibrary.displayDictionary(ret_dict)
-    return ret_dict    pass
+    return ret_dict
 
 # FUNCTION: getCurrency
 # INPUT: asset - string
@@ -337,45 +339,114 @@ def getCompleteBalances():
     PrintLibrary.displayVariable(url)
     
     json_var = requests.request('GET', url).json()
+    
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
 
 # FUNCTION: getDepositAddresses
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getDepositAddresses():
-    # TO
-    DO
-    pass
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
 
 # FUNCTION:
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
 def getDepositAddress():
-    # TODO
-    pass
+    url = trading_url + "returnCompleteBalances"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
+    
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
 
 # FUNCTION:
 # INPUT:
-# OUTPUT:
+# OUTPUT: Dictionary
 # DESCRIPTION:
 def generateNewAddress():
-    pass
+    url = trading_url + "returnCompleteBalances"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = requests.request('GET', url).json()
+    
+    # Check to make sure no error
 
-# FUNCTION:
-# INPUT:
-# OUTPUT:
-# DESCRIPTION:
-def getDepositWithdrawals():
-    # TODO
-    pass
+    # JSON standardization
+    ret_dict = {}
+    for pairing,information in json_var:
+        pass
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
 
-# FUNCTION:
-# INPUT:
-# OUTPUT:
+# FUNCTION: getDepositsWithdrawals
+# INPUT: start - int
+#        end   - int
+# OUTPUT: Dictionary
 # DESCRIPTION:
-def getWithdrawals():
-    # TODO
+#    Returns the deposits and withdrawals of the account, including all associated information.
+#     Start and end optional parameters are used to defin a range.
+def getDepositWithdrawals(start="", end=""):
+    url = trading_url + "getDepositWithdrawals"
+    PrintLibrary.displayVariable(url)
+    
+    json_var = encryptRequest(True, 'POST', url, start=start, end=end)
+    # Check to make sure no error
+
+    # JSON standardization
+    ret_dict = {}
+    deposits = json_var["desposits"]
+
+    withdrawals = json_var["withdrawals"]
+    
+    for value in json_var:
+        print(json_var[pairing])
+        
+        nested_dict = {}
+        nested_dict["last_price"] = information["last"]
+        # and so on...
+
+        ret_dict[standardized_pairing] = nested_dict
+
+    PrintLibrary.displayDictionary(ret_dict)
+        
+    
+    PrintLibrary.displayDictionary(ret_dict)
+    return ret_dict
+
+# FUNCTION: getWithdrawals
+# INPUT: 
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#
+# NOTE: calls getDepositWithdrawals
+def getWithdrawals(start=0, end=0):
     pass
 
 # FUNCTION: getDeposits
@@ -384,10 +455,17 @@ def getWithdrawals():
 # OUTPUT: Dictionary
 # DESCRIPTION:
 #    Retrieves deposit history for all assets, optional input of time period (start, end).
+# NOTE: calls getDepositWithdrawals
 def getDeposits(start=0, end=0):
     # TODO
     pass
 
+# FUNCTION: getDepositsAsset
+# INPUT:
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#
+# NOTE: calls getDeposits
 def getDepositsAsset():
     pass
 
@@ -403,3 +481,20 @@ def withdraw():
 
 ########################################## HELPERS #################################################
 ####################################################################################################
+
+# FUNCTION: standardizePairing
+# INPUT: pairing - string
+# OUTPUT: string
+# DESCRIPTION:
+#    Standardizes pairing format from Poloniex's to generic format.
+
+def standardizePAiring():
+    pass
+
+# FUNCTION: unscramblePairing
+# INPUT: pairing - string
+# OUTPUT: string
+# DESCRIPTION
+#    Converts generic-formatted pairing to Poloniex's format.
+def unscramblePairing():
+    pass

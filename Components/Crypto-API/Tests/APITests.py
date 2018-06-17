@@ -1,8 +1,9 @@
 # External-Imports
 import time
 import sys
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Main')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary
@@ -55,6 +56,7 @@ def BittrexTesters():
 # TESTERS: Coinbase
 def CoinbaseTesters():
     PrintLibrary.header("Coinbase Tests")
+    
 # TESTERS: CoinMarketCap
 def CoinMarketCapTesters():
     PrintLibrary.header("CoinMarketCap Tests")
@@ -79,7 +81,7 @@ def CoinMarketCapTesters():
 # TESTERS: Cryptopia
 # * DEPRECATED
 def CryptopiaTesters():
-	pass
+    pass
 
 # TESTERS: Gdax
 def GdaxTesters():
@@ -93,17 +95,22 @@ def KucoinTesters():
 def PoloniexTesters():
     PrintLibrary.header("Poloniex Tests")
 
+    PrintLibrary.header("Public Calls")
+    PrintLibrary.displayDictionary(Poloniex.getTicker())
+    PrintLibrary.displayDictionary(Poloniex.getVolume())
+    
+    PrintLibrary.header("Accounts calls") 
 # TESTERS: Generic
 def GenericTesters():
     PrintLibrary.header("Generic Tests")
     
 
 if __name__ == "__main__": 
-    BinanceTesters()
-    BittrexTesters()
-    CoinMarketCapTesters()
-    CryptopiaTesters()
-    GdaxTesters()
-    KucoinTesters()
+    # BinanceTesters()
+    # BittrexTesters()
+    # CoinMarketCapTesters()
+    # CryptopiaTesters()
+    # GdaxTesters()
+    # KucoinTesters()
     PoloniexTesters()
-    GenericTesters()
+    # GenericTesters()

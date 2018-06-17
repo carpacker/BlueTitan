@@ -946,9 +946,9 @@ def unscramblePairing(pairing):
 
 
 ######################################### WEB SOCKET ##############################################
-# * - startUsrStrm     :
-# * - keepaliveUsrStrm : 
-# * - closeUsrStrm     :
+# * - startUsrStrm     : Begin a user stream
+# * - keepaliveUsrStrm : Maintain user stream
+# * - closeUsrStrm     : End session
 ###################################################################################################
 # Work in Progress
 
