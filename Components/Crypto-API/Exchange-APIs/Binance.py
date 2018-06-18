@@ -901,7 +901,7 @@ def encryptRequest(signature, method, end, **query_vars):
     else:
         url = end + "?" + queryString
 
-    req = requests.request(method,url,headers=header).json()
+    req = requests.request(method, url, headers=header).json()
     return req
 
 # FUNCTION: quoteSymbol

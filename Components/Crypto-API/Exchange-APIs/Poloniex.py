@@ -351,9 +351,11 @@ def getCompleteBalances():
     return ret_dict
 
 # FUNCTION: getDepositAddresses
-# INPUT:
-# OUTPUT:
+# INPUT: assets - [string, ...]
+# OUTPUT: Dictionary
 # DESCRIPTION:
+#    Retrieves a list of deposit addresses from a list of currencies, returns
+#     a dictionary of currency to deposit address.
 def getDepositAddresses():
     # Check to make sure no error
 
@@ -365,12 +367,13 @@ def getDepositAddresses():
     PrintLibrary.displayDictionary(ret_dict)
     return ret_dict
 
-# FUNCTION:
-# INPUT:
-# OUTPUT:
+# FUNCTION: getDepositAddress
+# INPUT: asset - string
+# OUTPUT: Dictionary
 # DESCRIPTION:
+# 
 def getDepositAddress():
-    url = trading_url + "returnCompleteBalances"
+    url = trading_url + "returnDepositAddress"
     PrintLibrary.displayVariable(url)
     
     json_var = requests.request('GET', url).json()
@@ -385,12 +388,13 @@ def getDepositAddress():
     PrintLibrary.displayDictionary(ret_dict)
     return ret_dict
 
-# FUNCTION:
-# INPUT:
+# FUNCTION: generateNewAddress
+# INPUT: asset - string
 # OUTPUT: Dictionary
 # DESCRIPTION:
+#    Generates a new address for a given asset
 def generateNewAddress():
-    url = trading_url + "returnCompleteBalances"
+    url = trading_url + "generateNewAddress"
     PrintLibrary.displayVariable(url)
     
     json_var = requests.request('GET', url).json()
@@ -417,36 +421,44 @@ def getDepositWithdrawals(start="", end=""):
     PrintLibrary.displayVariable(url)
     
     json_var = encryptRequest(True, 'POST', url, start=start, end=end)
-    # Check to make sure no error
 
-    # JSON standardization
-    ret_dict = {}
+    # * Check to make sure no error
+    # TODO
+    
+    # * Standardization
+    deposit_list = []
     deposits = json_var["desposits"]
-
-    withdrawals = json_var["withdrawals"]
-    
-    for value in json_var:
-        print(json_var[pairing])
-        
-        nested_dict = {}
-        nested_dict["last_price"] = information["last"]
+    for deposit in deposits:
+        deposit_dict = {}
+        deposit_dict[''] = deposit['']
         # and so on...
+        deposit_list.append(deposit_dict)
 
-        ret_dict[standardized_pairing] = nested_dict
+    withdrawal_list = []
+    withdrawals = json_var["withdrawals"]
+    for withdrawal in withdrawals:
+        withdrawal_dict = {}
+        withdrawal_dict[''] = withdrawal['']
+        # and so on...
+        withdrawal_list.append(withdrawal_dict]
 
-    PrintLibrary.displayDictionary(ret_dict)
-        
+    deposit_withdrawals = (deposit_list, withdrawal_list)
     
-    PrintLibrary.displayDictionary(ret_dict)
-    return ret_dict
+    PrintLibrary.displayVariables(deposit_list)
+    PrintLibrary.displayVariables(withdrawal_list)
+    
+    return deposit_withdrawals
 
 # FUNCTION: getWithdrawals
-# INPUT: 
+# INPUT:  start - int [unix timestamp]
+#         end   - int [unix timestamp]
+#         asset - string
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#
+#    Retrieves list of withdrawals. Specifically a wrapper over getDepositWithdrawals. Asset is an
+#     optional parameter used to return only withdrawals of a specific asset.
 # NOTE: calls getDepositWithdrawals
-def getWithdrawals(start=0, end=0):
+def getWithdrawals(start=0, end=0, asset=""):
     pass
 
 # FUNCTION: getDeposits
@@ -458,15 +470,6 @@ def getWithdrawals(start=0, end=0):
 # NOTE: calls getDepositWithdrawals
 def getDeposits(start=0, end=0):
     # TODO
-    pass
-
-# FUNCTION: getDepositsAsset
-# INPUT:
-# OUTPUT: Dictionary
-# DESCRIPTION:
-#
-# NOTE: calls getDeposits
-def getDepositsAsset():
     pass
 
 # FUNCTION: withdraw
@@ -481,6 +484,35 @@ def withdraw():
 
 ########################################## HELPERS #################################################
 ####################################################################################################
+
+# FUNCTION: encryptRequest
+# INPUT: signature - boolean
+#        method    - 'POST' or 'GET'
+#        end       - url (string)
+#        * - Query vars passed in as list of params (a=1,b=2,c=3)
+# OUTPUT: Encrypted url used for HTTPS request
+# DESCRIPTION:
+#   Encrypts an API request to Binance.
+def encryptRequest(signature, method, end, **query_vars):
+    
+    header = { 'X-MBX-APIKEY' : poloniex_public_key}
+    queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
+
+    # Rework this guy
+    if "recvWindow" not in query_vars and "timestamp" not in query_vars:
+        extra = "&recvWindow=5000&timestamp=" + str(int(time.time()*1000))
+    elif "timestamp" not in query_vars:
+        extra = "&timestamp=" + str(int(time.time()*1000))
+    elif "recvWindow" not in query_vars:
+        extra = "&recvWindow=5000"
+    queryString += extra
+    sig = hmac.new(binance_private_key.encode(),queryString.encode(),'sha256')
+    signature = sig.hexdigest()
+    sigstring = "&signature=%s" % (signature)
+    url = end + "?" + queryString + sigstring
+
+    req = requests.request(method, url, headers=header).json()
+    return req
 
 # FUNCTION: standardizePairing
 # INPUT: pairing - string
