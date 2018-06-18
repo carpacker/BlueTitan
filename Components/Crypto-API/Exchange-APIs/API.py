@@ -72,6 +72,8 @@ bittrex = { 'getCurrencies' : Bittrex.getCurrencies,
             'getPriceUSD' : Bittrex.getPriceUSD,
             }
 
+coinbase = {'getDepositWithdrawals' : Coinbase.getDepositWithdrawals}
+
 coinmarketcap = {'getPrice' : CoinMarketCap.getPriceBTC,
                     'getPriceUSD' : CoinMarketCap.getPriceUSD}
 
@@ -117,7 +119,11 @@ exchanges = {'binance' : binance,
 
 # CLASS: ExchangeAPI
 # DESCRIPTION:
-#   Container for all calls to the generic exchange API.
+#   Container for all calls to the generic exchange API. Most functions are top level wrappers that
+#    index into a given dictionary in order to access the desired function from the desired
+#    exchange's specific implementation. In some cases, other actions need to be performed. The
+#    only other thing each function does besides that is verify that the exchange is supported
+#    for the given function.
 class ExchangeAPI():
 
     ##################################### MARKET CALLS #############################################
@@ -183,7 +189,7 @@ class ExchangeAPI():
     #   Generic function call for getPrice. Outputs the last price for a given
     #    market pairing. Return is in terms of bitcoin.
     def getPrice(exchange, pairing):
-        supportedexchanges = ['binance', 'bittrex', 'cryptopia', 'coinmarketcap']
+        supportedexchanges = ['binance', 'bittrex', 'cryptopia', 'coinmarketcap', 'poloniex']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]

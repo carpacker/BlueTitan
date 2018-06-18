@@ -4,7 +4,8 @@
 import sys
 import time
 
-sys.path.append()
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
 # Internal-Imports
 import ExchangeAPI
@@ -16,6 +17,19 @@ import PrintLibrary
 #   Container for suite of functions that process the transactions across various exchanges.
 class TransactionProcesser(Object):
 
+    def main(self):
+        # 1. Build the transaction CSV in chronological order
+        chronological_txs = self.buildTxCSV(exchanges, "time")
+        
+        # 2. Determine which outputs AREN'T sells through deposit addresses
+        adjusted_fifo_txs = self.processTransactions(exchange, chronological_txs)
+        
+        # 3. Calculate FIFO profit loss
+        profit_loss_list = self.calculateFIFOprofit(adjusted_fifo_txs)
+
+        # 4. Build final CSV of all records
+        self.buildFinalCSV(adjust_fifo_txs, profit_loss_list)
+        
     # FUNCTION: buildTxCSV
     # INPUT: exchanges - [string, ...]
     #        order_by  - 'time' or 'exchange'
@@ -31,11 +45,11 @@ class TransactionProcesser(Object):
         ticker = 0
         for exchange in exchanges:
 
-            # TODO: fix input syntax
-            transactions = ExchangeAPI.getTransactionHistory(exchange)
-            processed_transactions = self.processTransactions(exchange, transactions)
-            chronological_tx[ticker] = (exchange, processed_transactions)
-            ticker += 1
+            # Retrieves both deposit and withdrawals from both exchanges, deposits are stored first.
+            transactions = ExchangeAPI.getDepositWithdrawals(exchange, "chronological", "both")
+            chronological = self.processTransactions(exchange, transactions)
+            chronological_tx.append((exchange, processed_transactions))
+
         if order_by == 'exchanges':
             # Sort by alphabetical exchange
             sorted_exchanges = SortingLibrary.sortAlphabetically(chronological_tx)
@@ -55,18 +69,18 @@ class TransactionProcesser(Object):
 
         else:
             # TODO: Error handle
+            print("Error, not supported :order_by: input")
             return -1
 
-        # FUNCTION: storeTxCSV
-        # INPUT: transactions - [(txdata1, ...), ...]
-        # OUTPUT: N/A
-        # DESCRIPTION:
-        #    Takes sorted list of transactinos (chronologically) and stores them in the appropiate
-        #     database. Store each transaction individually. If using a single transaction, it
-        #     must be contained in a list until a better solution is devised.
-        def storeTxs(transactions):
+        def processTransactions():
             pass
 
+        def calculateFIFOprofit():
+            pass
+
+        def buildFinalCSV():
+            pass
+        
         # FUNCTION: buildExchangeAddresses
         # INPUT: exchanges - [string, ...]
         #        assets    - [string, ...]
@@ -76,6 +90,16 @@ class TransactionProcesser(Object):
         #     wallet addresses, where static addresses are possible.
         # NOTE: This function may not be necessary, some other functino does this job perhaps
         def buildExchangeAddresses(exchanges, assets):
+            pass
+
+        # FUNCTION: storeTxCSV
+        # INPUT: transactions - [(txdata1, ...), ...]
+        # OUTPUT: N/A
+        # DESCRIPTION:
+        #    Takes sorted list of transactinos (chronologically) and stores them in the appropiate
+        #     database. Store each transaction individually. If using a single transaction, it
+        #     must be contained in a list until a better solution is devised.
+        def storeTxs(transactions):
             pass
 
 # CLASS: ProfitCalculator

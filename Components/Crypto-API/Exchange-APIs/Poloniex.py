@@ -39,11 +39,11 @@ base_url = "https://poloniex.com/"
 public_url = base_url + "public?command="
 
 # FUNCTION: getTicker
-# INPUT: asset - (OPTIONAL) string
+# INPUT: pairing - (OPTIONAL) string
 # OUTPUT: Dictionary
 # DESCRIPTION:
-#    Returns ticker for all markets, optional input to just receive on currency.
-def getTicker(asset=""):
+#    Returns ticker for all markets, optional input to just receive one market.
+def getTicker(pairing=""):
     url = public_url + "returnTicker"
     PrintLibrary.displayVariable(url)
     
@@ -63,7 +63,6 @@ def getTicker(asset=""):
 
     PrintLibrary.displayDictionary(ret_dict)
     return ret_dict
-
 
 # FUNCTION: getVolume
 # INPUT: N/A
