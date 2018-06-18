@@ -1,1 +1,5 @@
 Printlibrary PrintError function
+CSV wrapper for standard operations
+
+
+buildTXCSV -- work in coinbase buys/sells and work through logic a bit better
