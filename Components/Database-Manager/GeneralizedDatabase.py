@@ -23,7 +23,6 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 import Helpers
-# import ArbitrageDatabaseLib
 
 '''                                       Helpers                                   
 '''
@@ -171,7 +170,9 @@ class GenDatabaseLibrary(object):
     # DATABASE CONTAINER CLASSES
     # DESCRIPTION:
     #    Each database has its own container class which contains functions unique to that
-    #     database.
+    #     database. Each one has specific createTable and initialieTable functions. Auxillary
+    #     functions other than those fill some specific purpose that can't be done through
+    #     one of the generic functions. Path and table_names are kept as class variables.
     class ArbitrageDatabase():
         path = 0
         table_names = []
@@ -285,19 +286,34 @@ class GenDatabaseLibrary(object):
             ArbitrageDatabase.table_names.append(table_name)
             cursor.execute(sql_s)
 
-        # TODO:
-        # Initialize each table in the database
-        def initializeTables():
-            pass
-        
+        # FUNCTION: initializeTables
+        # INPUT: N/A
+        # OUTPUT: N/A
+        # DESCRIPTION:
+        #    Wrapper to initialize each table in the database.
+        # NOTE: What to do about FAE...
+        # NOTE: Future will probably move the two special initializes to separate information
+        #        database, making this initialize call into something that only needs to call
+        #        generic initializes.
+        def initializeTables(self, assets, exchanges):
+            
+            # Initialize special tables
+            self.initializeBalances(exchanges)
+            self.initializeAssetInfo(assets, exchanges)
+
+            # Generic filler initialize
+            for table in self.table_names:
+                # Not the actual call
+                initializeTable(table)
+            
         # FUNCTION: initializeBalances
         # INPUT: exchanges - [string, ...] : (list of exchanges to initialize database with)
         # OUTPUT: 'same kind of dictionary that getDbBalances returns'
         # DESCRIPTION:
         #   Initializes the balances for each asset in the used exchanges. index into balance_dict 
         #    using the notation: dict[exchange][asset].
-        def initializeBalances(exchanges):
-            connect,cursor = ArbitrageDatabase.connect()
+        def initializeBalances(self, exchanges):
+            connect,cursor = connect(self.path)
             balance_dict = {}
             total_value = 0
             total_btc = 0
@@ -452,9 +468,9 @@ class GenDatabaseLibrary(object):
 
         # FUNCTION: getBalances
         # * TODO flip assets and exchange for STOREBALANCE, UPDATEBALANCE, GETBALANCES
-        def getBalances(exchange, assets, cursor=None):
+        def getBalances(self, exchange, assets, cursor=None):
             if cursor == None:
-                connect, cursor = ArbitrageDatabase.connect()
+                connect, cursor = connect(self.path)
                 balance_dict = {}
                 for asset in assets:
                     balance_dict[asset] = ArbitrageDatabase.getBalanceAll(cursor, asset, exchange)
@@ -718,8 +734,8 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
-    def createTable(table_name, database_name, columns=""):
-        database = databases[database_name]
+    def createTable(self, table_name, database_name, columns=""):
+        database = self.databases[database_name]
         for table in tables:
             database.createTable(cursor, table)
 
@@ -731,7 +747,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for creating multiple tables in a database. Iterates over 
-    #    a list of table names and declare the tables in the database
+    #    a list of table names and declare the tables in the database.
     def createTables(cursor, tables, database, columns=""):
         for table in tables:
             database.createTable(cursor, table)
@@ -741,7 +757,7 @@ class GenDatabaseLibrary(object):
     #        table_name - string
     # OUTPUT: N/A
     # DESCRIPTION:
-    #   Deletes a table given a cursor for a databse and the table's name
+    #   Deletes a table given a cursor for a databse and the table's name.
     def deleteTable(cursor, table_name):
         sql_s = 'DROP TABLE %s' % table_name
         cursor.execute(sql_s)
@@ -778,7 +794,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: list of tables cleaned in database
     # DESCRIPTION
     #   Used to clean a database's tables minus exceptions.
-    def cleanDatabase(database_nameles, exceptions=[""]):
+    def cleanDatabase(database_namees, exceptions=[""]):
         connect, cursor = database.connect()
 
         # Use regular expression to find difference of two lists
@@ -864,6 +880,7 @@ class GenDatabaseLibrary(object):
     #    (uuid). The second is by a list of variables/values, and the function
     #    attempts to find the entry using these as a key.
     def getEntry(self, data_uuid, table_name=None, database_name=None):
+
         # Set database, initializes variables, check table exists
         print(type(data_uuid))
         if data_uuid == 'list':

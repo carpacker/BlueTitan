@@ -97,20 +97,63 @@ class TransactionProcesser(Object):
         def processTransactions(exchanges, transactions):
             # 1. Retrieve exchange addresses from supported exchanges
             exchange_addresses = buildAddrDictionary(exchanges)
+
             # 2. Iterate through transactions
             for transaction in transactions:
                 exchange = ""
                 type_trans = ""
+
+                # Check for after 2017
+                if time_stamp >= 0:
+                    # Remove from list
+
+                    
                 # Check for withdrawals on Coinbase
                 if type_trans == "withrawal" and exchange == "coinbase":
                     to_address = ""
 
+                    try exchange_addresses[to_address]:
+                        pass
+                        # Address is exchange address --> TRANSFER
+                        # set type of transaction to transfer
+                        
+                    except KeyError:
+                        pass
+                        # Address is NOT an exchange address --> SELL
+                        # Set type of transaction to sell
+                        
         # FUNCTION: buildAddrDictionary
         # DESCRIPTION:
-        #    Returns a dictionary with addresses as key to an exchange
+        #    Returns a dictionary with addresses as key to an exchange.
+        # NOTE: only grabs addresses for ETH, BTC, LTC                
         def buildAddrDictionary(exchanges):
-            pass
-        
+            # Address Dict
+            addr_dict = {}
+            
+            for exchange in exchanges:
+                # Get addresses
+                eth_addresses = API.getDepositAddresses(exchange, "ETH")
+                ltc_addresses = API.getDepositAddresses(exchange, "LTC")
+                btc_addresses = API.getDepositAddresses(exchange, "BTC")
+                for address in eth_addresses:
+                    addr_dict[address] = ("ETH", exchange)
+                for address in ltc_addresses:
+                    addr_dict[address] = ("LTC", exchange)
+                for address in btc_addresses:
+                    addr_dict[address] = ("BTC", exchange)
+
+                print(addr_dict)
+
+            return addr_dict
+                
+        # FUNCTION: calculateFIFOprofit
+        # INPUT: transactions - [transaction1, ...]
+        # OUTPUT: Dictionary
+        # DESCRIPTION:
+        #    Given a list of chronologically sorted transactions, calculates the profit loss up
+        #     until the last transaction.
+        # NOTE: maybe do it by asset?
+        # NOTE: keep track of final value?
         def calculateFIFOprofit(transactions):
             inputs = []
             outputs = []
