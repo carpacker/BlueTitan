@@ -135,7 +135,7 @@ def listTransactions():
 def listTransactionsID(accountid):
     url = account_url + accountid + "/transactions"
     json_var = encryptRequest(True, 'GET', url)
-
+    print(json_var)
     # OUTPUT STANDARDIZATION
     # TODO
 
@@ -212,7 +212,6 @@ def placeSellOrder():
 def commitSell():
     pass
 
-
 ########################################## DEPOSITS ################################################
 ######################################## WITHDRAWALS ###############################################
 ####################################################################################################
@@ -222,6 +221,11 @@ def deposit():
 def listDeposits():
     pass
 
+# FUNCTION:
+# INPUT:
+# OUTPUT:
+# DESCRIPTION:
+#  
 def showDeposit():
     pass
 
@@ -260,5 +264,22 @@ def getDepositWithdrawals():
 #        method    - string ['POST', 'GET', 'PUT', 'DELETE']
 #        end       - string (url)
 # OUTPUT: Encrypted url used for HTTPS request
-def encryptRequest():
-    pass
+def encryptRequest(signature, method, base_url, **query_vars):
+
+    # Add queries and header
+    header = { 'X-MBX-APIKEY' : coinbase_public_key}
+    queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
+    if "timestamp" not in query_vars:
+        extra = "&timestamp=" + str(int(time.time()*1000))
+    queryString += extra
+
+    # Sign the transaction
+    sig = hmac.new(coinbase_private_key.encode(),queryString.encode(),'sha256')
+    signature = sig.hexdigest()
+    sigstring = "&signature=%s" % (signature)
+    
+    url = base_url + "?" + queryString + sigstring
+    print(url)
+    
+    req = requests.request(method, url, headers=header).json()
+    return req

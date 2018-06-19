@@ -23,12 +23,12 @@ class TransactionProcesser(Object):
     # DESCRIPTION:
     #   Top level function for converting a list of buys and sells into a FIFO
     #    profit loss generator
-    def main(self):
+    def main(self, exchanges):
         # 1. Build the transaction CSV in chronological order
         chronological_txs = self.buildTxCSV(exchanges, "time")
         
         # 2. Determine which outputs AREN'T sells through deposit addresses
-        adjusted_fifo_txs = self.processTransactions(exchange, chronological_txs)
+        adjusted_fifo_txs = self.processTransactions(exchanges, chronological_txs)
         
         # 3. Calculate FIFO profit loss
         profit_loss_list = self.calculateFIFOprofit(adjusted_fifo_txs)
@@ -55,12 +55,11 @@ class TransactionProcesser(Object):
             # Retrieves both deposit and withdrawals from both exchanges, deposits are stored first.
             transactions = ExchangeAPI.getDepositWithdrawals(exchange,
                                                              "as_is", "both")
-            chronological = self.processTransactions(exchange, transactions)
-            chronological_tx.append((exchange, processed_transactions))
+            chronological_tx.append((exchange, transactions))
 
         # Next build Coinbase sells/buys
-
-        # Sort it by the order given
+        coinbase_tx = Coinbase.listTransactions()
+        chronological_tx.append(coinbase_tx)
 
         # Return sorted input/output
         if order_by == 'exchanges':
@@ -68,29 +67,49 @@ class TransactionProcesser(Object):
             # Sort by alphabetical exchange
             sorted_exchanges = SortingLibrary.sortAlphabetically(chronological_tx)
 
-            sorted_tx = []
+            # Next sort each exchange entry chronologically
             ticker = 0
-            for exchange in sorted_exchanges:
-                sorted_tx[ticker] = exchange[1]
+            for value in sorted_exchanges:
+                sorted_exchanges[ticker] = somethingSort(sorted_exchanges[ticker])
                 ticker += 1
 
-            PrintLibrary.displayVariables(sorted_tx)
-            return sorted_tx
-        
+            print(sorted_exchanges)
+            return sorted_exchanges
+            
         elif order_by == 'time':
-            # Same thing but time
-            return 0
-
+            chronological_tx = somethingSort(chronological_tx)
+            print(chronological_tx)
+            return chronological_tx
+        
         else:
             # TODO: Error handle
             print("Error, not supported :order_by: input")
             return -1
 
-        
-        def processTransactions():
-            # Label withdrawals as either SELL or TRANSFER
-            # Use deposit addresses to be able to tell
+        # FUNCTION: processTransactions
+        # INPUT: transactions - list
+        # OUTPUT: same list with entries edited
+        # DESCRIPTION:
+        #    Iterates through chronological list of transactions. Detects when certain withdrawals
+        #     are sent to addresses of another exchange, denoting that it is not a proper sell
+        #     but instead a transfer. Marks any transfer that goes to a random address as a sell
+        #     and any transfer to another exchange as a transfer.
+        def processTransactions(exchanges, transactions):
+            # 1. Retrieve exchange addresses from supported exchanges
+            exchange_addresses = buildAddrDictionary(exchanges)
+            # 2. Iterate through transactions
+            for transaction in transactions:
+                exchange = ""
+                type_trans = ""
+                # Check for withdrawals on Coinbase
+                if type_trans == "withrawal" and exchange == "coinbase":
+                    to_address = ""
 
+        # FUNCTION: buildAddrDictionary
+        # DESCRIPTION:
+        #    Returns a dictionary with addresses as key to an exchange
+        def buildAddrDictionary(exchanges):
+            pass
         
         def calculateFIFOprofit(transactions):
             inputs = []
@@ -204,3 +223,7 @@ class ProfitCalculator(Object):
 
     def buildTxList():
         pass
+
+
+if __name__ == "__main__":
+    TransactionProcessor.main(['Poloniex'])

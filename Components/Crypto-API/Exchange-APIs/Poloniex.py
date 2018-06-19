@@ -234,6 +234,7 @@ def getLoanOrders():
 
     # JSON standardization
     ret_dict = {}
+
     for pairing,information in json_var:
         pass
     
@@ -493,6 +494,7 @@ def getDepositWithdrawals(order_by, start="", end="", asset=""):
 # NOTE: calls getDepositWithdrawals
 def getWithdrawals(order_by, start=0, end=0, asset=""):
     dep_wit = getDepositWithdrawals(order_by, start, end, asset)
+    
     # Filter Withdrawals out
     withdrawals = dep_wit[0]
     return withdrawals
