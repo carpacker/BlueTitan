@@ -115,17 +115,42 @@ def createAddress():
 ######################################## TRANSACTIONS ##############################################
 ####################################################################################################
 
-# GET https://api.coinbase.com/v2/accounts/:account_id/transactions
-# Possibly wrapper that only returns for one currency
+# FUNCTION: listTransactions
+# INPUT: N/A
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Wrapper function to call list transactions without an account id.
 def listTransactions():
-    pass
+    account_id = getAccount()
+    transactions = listTransactionsID(account_id)
+    return transactions
+
+# FUNCTION: listTransactionsID
+# INPUT: N/A
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Returns a list of all transactions made on a given Coinbase account. This includes BUYS, SELLS,
+#     TRANSFERS, DEPOSITS, WITHDRAWALS, etc.
+# NOTE: Assumes one already has the account id through some manner.
+def listTransactionsID(accountid):
+    url = account_url + accountid + "/transactions"
+    json_var = encryptRequest(True, 'GET', url)
+
+    # OUTPUT STANDARDIZATION
+    # TODO
+
+    return ret_dict
 
 # Show single transaction
 # GET https://api.coinbase.com/v2/accounts/:account_id/transactions/:transaction_id
 def showTransaction():
     pass
 
-# TODO
+# FUNCTION: sendMoney
+# INPUT: TBD
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Initiates a transfer to send money to another address or account.
 def sendMoney():
     pass
 
@@ -149,6 +174,11 @@ def cancelMoneyRq():
 ########################################## ORDERS ##################################################
 ####################################################################################################
 
+# FUNCTION: buy
+# INPUT: TBD
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Submits a general buy operation.
 def buy():
     pass
 

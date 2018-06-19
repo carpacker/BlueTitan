@@ -459,7 +459,7 @@ def getDepositWithdrawals(order_by, start="", end="", asset=""):
     
     # * Standardization
     deposit_list = []
-    deposits = json_var["desposits"]
+    deposits = json_var["deposits"]
     for deposit in deposits:
         deposit_dict = {}
         deposit_dict[''] = deposit['']
@@ -491,8 +491,11 @@ def getDepositWithdrawals(order_by, start="", end="", asset=""):
 #    Retrieves list of withdrawals. Specifically a wrapper over getDepositWithdrawals. Asset is an
 #     optional parameter used to return only withdrawals of a specific asset.
 # NOTE: calls getDepositWithdrawals
-def getWithdrawals(start=0, end=0, asset=""):
-    pass
+def getWithdrawals(order_by, start=0, end=0, asset=""):
+    dep_wit = getDepositWithdrawals(order_by, start, end, asset)
+    # Filter Withdrawals out
+    withdrawals = dep_wit[0]
+    return withdrawals
 
 # FUNCTION: getDeposits
 # INPUT: start - int (unix timestamp)
@@ -501,9 +504,11 @@ def getWithdrawals(start=0, end=0, asset=""):
 # DESCRIPTION:
 #    Retrieves deposit history for all assets, optional input of time period (start, end).
 # NOTE: calls getDepositWithdrawals
-def getDeposits(start=0, end=0):
-    # TODO
-    pass
+def getDeposits(order_by, start=0, end=0, asset=""):
+    dep_wit = getDepositWithdrawals(order_by, start, end, asset)
+    # Filter Deposits out
+    deposits = dep_wit[1]
+    return deposits
 
 # FUNCTION: withdraw
 # INPUT: exchange - string
