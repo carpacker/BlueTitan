@@ -435,7 +435,7 @@ def generateNewAddress():
     # JSON standardization
     ret_dict = {}
     for pairing,information in json_var:
-        pass
+        passb
     
     PrintLibrary.displayDictionary(ret_dict)
     return ret_dict
@@ -451,7 +451,7 @@ def getDepositWithdrawals(order_by, dpw, start="", end="", asset=""):
     url = trading_url + "getDepositWithdrawals"
     PrintLibrary.displayVariable(url)
     
-    json_var = encryptRequest(True, 'POST', url, start=start, end=end)
+    json_var = encryptRequest(True, 'POST', url)
 
     # * Check to make sure no error
     # TODO

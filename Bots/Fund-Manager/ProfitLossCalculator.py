@@ -47,16 +47,24 @@ class TransactionProcesser(Object):
     #    is a inner-order by time within exchange. Exchanges are ordered alphabetically.
     def buildTxCSV(self, exchanges, order_by):
 
+        # First build deposits/withdrawals, don't sort them
         chronological_tx = []
         ticker = 0
         for exchange in exchanges:
 
             # Retrieves both deposit and withdrawals from both exchanges, deposits are stored first.
-            transactions = ExchangeAPI.getDepositWithdrawals(exchange, "chronological", "both")
+            transactions = ExchangeAPI.getDepositWithdrawals(exchange,
+                                                             "as_is", "both")
             chronological = self.processTransactions(exchange, transactions)
             chronological_tx.append((exchange, processed_transactions))
 
+        # Next build Coinbase sells/buys
+
+        # Sort it by the order given
+
+        # Return sorted input/output
         if order_by == 'exchanges':
+            
             # Sort by alphabetical exchange
             sorted_exchanges = SortingLibrary.sortAlphabetically(chronological_tx)
 
