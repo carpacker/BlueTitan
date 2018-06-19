@@ -65,9 +65,10 @@ def getTicker(pairing=""):
 
     for pairing in json_var:
         print(json_var[pairing])
+        json_var2 = json_var[pairing]
         standardized_pairing = standardizePairing(pairing)
         nested_dict = {}
-        nested_dict["last_price"] = information["last"]
+        nested_dict["last_price"] = json_var2["last"]
         # and so on...
 
         ret_dict[standardized_pairing] = nested_dict
@@ -348,7 +349,7 @@ def getBalances():
 
     # JSON standardization
     ret_dict = {}
-    for pairing,information in json_var:
+    for pairing in json_var:
         pass
     
     PrintLibrary.displayDictionary(ret_dict)
@@ -447,11 +448,11 @@ def generateNewAddress():
 # DESCRIPTION:
 #    Returns the deposits and withdrawals of the account, including all associated information.
 #     Start and end optional parameters are used to defin a range.
-def getDepositWithdrawals(order_by, dpw, start="", end="", asset=""):
+def getDepositWithdrawals(order_by, start="", end="", asset=""):
     url = trading_url + "getDepositWithdrawals"
     PrintLibrary.displayVariable(url)
     
-    json_var = encryptRequest(True, 'POST', url)
+    json_var = encryptRequest(True, 'POST', url, start=start, end=end)
 
     # * Check to make sure no error
     # TODO
@@ -471,14 +472,15 @@ def getDepositWithdrawals(order_by, dpw, start="", end="", asset=""):
         withdrawal_dict = {}
         withdrawal_dict[''] = withdrawal['']
         # and so on...
-        withdrawal_list.append(withdrawal_dict]
+        withdrawal_list.append(withdrawal_dict)
+        
 
     deposit_withdrawals = (deposit_list, withdrawal_list)
     
     PrintLibrary.displayVariables(deposit_list)
     PrintLibrary.displayVariables(withdrawal_list)
     
-    return deposit_withdrawals
+    return json_var
 
 # FUNCTION: getWithdrawals
 # INPUT:  start - int [unix timestamp]
@@ -524,24 +526,23 @@ def withdraw():
 # OUTPUT: Encrypted url used for HTTPS request
 # DESCRIPTION:
 #   Encrypts an API request to Binance.
-def encryptRequest(signature, method, end, **query_vars):
-    
+def encryptRequest(signature, method, base_url, **query_vars):
+
+    # Add queries and header
     header = { 'X-MBX-APIKEY' : poloniex_public_key}
     queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
-
-    # Rework this guy
-    if "recvWindow" not in query_vars and "timestamp" not in query_vars:
-        extra = "&recvWindow=5000&timestamp=" + str(int(time.time()*1000))
-    elif "timestamp" not in query_vars:
+    if "timestamp" not in query_vars:
         extra = "&timestamp=" + str(int(time.time()*1000))
-    elif "recvWindow" not in query_vars:
-        extra = "&recvWindow=5000"
     queryString += extra
-    sig = hmac.new(binance_private_key.encode(),queryString.encode(),'sha256')
+
+    # Sign the transaction
+    sig = hmac.new(poloniex_private_key.encode(),queryString.encode(),'sha256')
     signature = sig.hexdigest()
     sigstring = "&signature=%s" % (signature)
-    url = end + "?" + queryString + sigstring
-
+    
+    url = base_url + "?" + queryString + sigstring
+    print(url)
+    
     req = requests.request(method, url, headers=header).json()
     return req
 
@@ -550,13 +551,21 @@ def encryptRequest(signature, method, end, **query_vars):
 # OUTPUT: string
 # DESCRIPTION:
 #    Standardizes pairing format from Poloniex's to generic format.
-def standardizePairing():
-    pass
+def standardizePairing(pairing):
+    if "_" in pairing:
+        base, quote = pairing.split("_")
+        s_pairing = base + "-" + quote
+        return s_pairing
+    else:
+        # TODO; fix this
+        print(pairing)
 
 # FUNCTION: unscramblePairing
 # INPUT: pairing - string
 # OUTPUT: string
 # DESCRIPTION
 #    Converts generic-formatted pairing to Poloniex's format.
-def unscramblePairing():
-    pass
+def unscramblePairing(pairing):
+    base, quote = pairing.split("-")
+    s_pairing = base + "_" + quote
+    return s_pairing

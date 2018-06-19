@@ -5,8 +5,8 @@
 
 # External Imports
 import time
-import md5
 import hashlib
+import hmac
 import requests
 import json
 
@@ -49,6 +49,7 @@ def getUser():
 # 
 def userAuth():
     pass
+
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
@@ -57,7 +58,7 @@ def updateUser():
     pass
 ####################################### ACCOUNT CALLS ############################################## 
 ####################################################################################################
-
+account_url = base_url + ""
 # acccounts/:account_id
 # Currency can be used instead of account_id
 def getAccount():
@@ -213,6 +214,9 @@ def withdrawFunds():
     pass
 
 def commitWithdrawal():
+    pass
+
+def getDepositWithdrawals():
     pass
 
 # Data endpoints todo

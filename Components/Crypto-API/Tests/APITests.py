@@ -98,8 +98,10 @@ def PoloniexTesters():
     PrintLibrary.header("Public Calls")
     PrintLibrary.displayDictionary(Poloniex.getTicker())
     PrintLibrary.displayDictionary(Poloniex.getVolume())
-    
-    PrintLibrary.header("Accounts calls") 
+
+    PrintLibrary.header("Accounts calls")
+    PrintLibrary.displayDictionary(Poloniex.getDepositWithdrawals("as-is"))
+                                   
 # TESTERS: Generic
 def GenericTesters():
     PrintLibrary.header("Generic Tests")

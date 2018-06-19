@@ -6,8 +6,11 @@ import time
 import Bittrex
 import Binance
 import Cryptopia 
+import Coinbase
 import CoinMarketCap
 import Gdax
+import Kucoin
+import Poloniex
 
 from PrintLibrary import PrintLibrary
 
