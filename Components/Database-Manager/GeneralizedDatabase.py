@@ -103,7 +103,13 @@ def generalQuery(cursor, query):
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
+    database_paths = {}
 
+    # Lets try this for now, not sure if I totally agree with the underlying structure.
+    def initializeDatabasePaths(name_paths):
+        for value in name_paths:
+            GenDatabaseLibrary.database_paths[value[0]] = value[1]
+            
     # FUNCTION: buildInitTuple
     # INPUT: table_name    - string
     #        database_name - string
@@ -140,7 +146,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
     # NOTE: Not useful yet.
-    def createTable(self, table_name, database_name, columns=""):
+    def createTable(database_name, table_name, columns=""):
         pass
 
     # FUNCTION: deleteTable
@@ -159,8 +165,9 @@ class GenDatabaseLibrary(object):
     # OUTPUT: list of tables cleaned in database
     # DESCRIPTION
     #   Used to clean a database's tables minus exceptions.
-    def cleanDatabase(database_names, exceptions=[""]):
-        connect, cursor = database.connect()
+    def cleanDatabase(database_name, tables, exceptions=[""]):
+        database_path = database_paths[database_name]
+        connection, cursor = connect(database_path)
 
         # Use regular expression to find difference of two lists
         list_clean = list(set(tables).difference(set(exceptions)))
@@ -170,8 +177,8 @@ class GenDatabaseLibrary(object):
             except sqlite3.OperationalError:
                 pass
             database.createTable(cursor, table, database_name)
-        disconnect(connect)
-    return list_clean
+        disconnect(connection)
+        return list_clean
                              
     # HELPER: buildStringStore
     # INPUT: cursor     - *
@@ -207,7 +214,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for storing an entry into a table in a database.
-    def storeEntry(data, table_name, database_name):
+    def storeEntry(database_name, table_name, data):
         # Set database, initializes variables, check table exists
         database_path = database_paths[database_name]
         timestamp = int(time.time() * 1000)
@@ -225,7 +232,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for storing multiple entries into a table in a database.
-    def storeEntries(data, table_name, database_name):
+    def storeEntries(database_name, table_name, data):
 
         # Set database, initializes variables, check table exists
         database_path = database_paths[database_name]
