@@ -806,7 +806,7 @@ def withdraw(currency, quantity, address, paymentid=""):
 def encrypt(url):
     sign = hmac.new(bittrex_private_key.encode(), url.encode(), 'sha512')
     header_digest = sign.hexdigest()
-    header_dic = {'apisign':header_digest}
+    header_dic = {'apisign': header_digest}
     req = requests.get(url, headers=header_dic)
     return req
 

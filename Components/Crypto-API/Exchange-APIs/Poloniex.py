@@ -1,4 +1,5 @@
 # External-Imports
+import urllib
 import hashlib
 import hmac
 import json
@@ -255,13 +256,16 @@ def getOrderTrades():
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
+#    Retrieves a single order and its associated information.
 def getOrder():
     pass
 
 # FUNCTION: getOpenOrders
-# INPUT:
+# INPUT: order_by - string
 # OUTPUT:
 # DESCRIPTION:
+#    Retrieves a list of all open orders.
+# NOTE: orders can be sorted by pairing, size or date opened.
 def getOpenOrders():
     pass
 
@@ -276,6 +280,7 @@ def moveOrder():
 # INPUT:
 # OUTPUT:
 # DESCRIPTION:
+#    Finds and cancels a given order.
 def cancelOrder():
     pass
 
@@ -317,7 +322,7 @@ def sellLimit():
 ####################################### ACCOUNT CALLS ############################################## 
 ####################################################################################################
 
-trading_url = base_url + "tradingApi?command="
+trading_url = base_url + "tradingApi"
 
 # FUNCTION: getFeeInfo
 # INPUT:
@@ -342,10 +347,11 @@ def getBalance():
 # DESCRIPTION:
 #    Retrieves balance for each asset on your account.
 def getBalances():
-    url = trading_url + "returnBalances"
-    PrintLibrary.displayVariable(url)
+    url = trading_url
+    PrintLibrary.displayVariable(url, "YO")
     
-    json_var = requests.request('GET', url).json()
+    json_var = encryptRequest(True, 'POST', url, command="returnBalances")
+    print(json_var)
     # Check to make sure no error
 
     # JSON standardization
@@ -449,12 +455,14 @@ def generateNewAddress():
 # DESCRIPTION:
 #    Returns the deposits and withdrawals of the account, including all associated information.
 #     Start and end optional parameters are used to defin a range.
-def getDepositWithdrawals(order_by, start="", end="", asset=""):
-    url = trading_url + "getDepositWithdrawals"
+def getDepositWithdrawals(order_by, start=0, end=str(int(time.time()*1000) - 1000), asset=""):
+    url = trading_url
     PrintLibrary.displayVariable(url)
-    
-    json_var = encryptRequest(True, 'POST', url, start=start, end=end)
-
+    print(getBalances())
+    json_var = encryptRequest(True, 'POST', url, start=start, end=end, command="returnDepositsWithdrawals")
+    print(json_var)
+    print(poloniex_public_key)
+    print(poloniex_private_key)
     # * Check to make sure no error
     # TODO
     
@@ -474,7 +482,6 @@ def getDepositWithdrawals(order_by, start="", end="", asset=""):
         withdrawal_dict[''] = withdrawal['']
         # and so on...
         withdrawal_list.append(withdrawal_dict)
-        
 
     deposit_withdrawals = (deposit_list, withdrawal_list)
     
@@ -534,23 +541,26 @@ def withdraw():
 # DESCRIPTION:
 #   Encrypts an API request to Binance.
 def encryptRequest(signature, method, base_url, **query_vars):
-
-    # Add queries and header
-    header = { 'X-MBX-APIKEY' : poloniex_public_key}
     queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
-    if "timestamp" not in query_vars:
-        extra = "&timestamp=" + str(int(time.time()*1000))
+    if "nonce" not in query_vars:
+        extra = "&nonce=" + str(int(time.time()*1000))
+        query_vars['nonce'] = str(int(time.time()*1000))
+        
     queryString += extra
-
+    print(query_vars)
+    print(queryString)
     # Sign the transaction
-    sig = hmac.new(poloniex_private_key.encode(),queryString.encode(),'sha256')
+    sig = hmac.new(poloniex_private_key.encode(),urllib.parse.urlencode(query_vars).encode('utf8'),hashlib.sha512)
     signature = sig.hexdigest()
-    sigstring = "&signature=%s" % (signature)
     
-    url = base_url + "?" + queryString + sigstring
-    print(url)
+    # Add queries and header
+    header = { 'Key' : poloniex_public_key,
+               'Sign' : signature}
+#               'Content-Type': 'application/x-www-form-urlencoded'
+    url = base_url + "?" + queryString
+    print(base_url)
     
-    req = requests.request(method, url, headers=header).json()
+    req = requests.post(base_url, data=query_vars, headers=header).json()
     return req
 
 # FUNCTION: standardizePairing

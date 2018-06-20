@@ -28,9 +28,13 @@ from GeneralizedDatabase import GenDatabaseLibrary
 #   Creates test database to be used for testing GeneralizedDatabase calls. If necessary,
 #    may be expanded to test other parts of the program
 def initializeTestDatabase():
-    # 1. Create test database, if its not already created
-    # 2. Create test database tables, if any
-    pass
+    # Set path
+    path = ""
+    connection, cursor = GeneralizeDatabase.connect(path)
+    GeneralizedDatabase.initialize(["TestDatabase", path])
+    GeneralizedDatabase.createTable("TestDatabase")
+    GeneralizedDatabase.initializeTable("TestDatabase")
+    
 
 # TESTERS:
 # TESTERS: base functions
