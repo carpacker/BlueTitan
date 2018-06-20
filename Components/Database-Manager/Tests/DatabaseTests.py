@@ -30,7 +30,7 @@ from GeneralizedDatabase import GenDatabaseLibrary
 def initializeTestDatabase():
     # Set path
     path = ""
-    connection, cursor = GeneralizeDatabase.connect(path)
+    connection, cursor = GeneralizedDatabase.connect(path)
     GeneralizedDatabase.initialize(["TestDatabase", path])
     GeneralizedDatabase.createTable("TestDatabase")
     GeneralizedDatabase.initializeTable("TestDatabase")

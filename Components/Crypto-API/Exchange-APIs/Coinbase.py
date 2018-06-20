@@ -267,18 +267,22 @@ def getDepositWithdrawals():
 def encryptRequest(signature, method, base_url, **query_vars):
 
     # Add queries and header
-    header = { 'X-MBX-APIKEY' : coinbase_public_key}
+            
     queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
     if "timestamp" not in query_vars:
         extra = "&timestamp=" + str(int(time.time()*1000))
-    queryString += extra
-
+        query_vars["timestamp"] = str(int(time.time()*1000))
+    
     # Sign the transaction
+    messsage = str(int(time.time() * 1000)) + method + base_url + queryString
     sig = hmac.new(coinbase_private_key.encode(),queryString.encode(),'sha256')
     signature = sig.hexdigest()
-    sigstring = "&signature=%s" % (signature)
     
-    url = base_url + "?" + queryString + sigstring
+    header = { 'CB-ACCESS-KEY' : coinbase_public_key,
+               'CB-ACCESS-SIGN' : signature,
+               'CB-ACCESS-TIMESTAMP' : str(int(time.time()*1000))}
+               
+    url = base_url + "?" + queryString
     print(url)
     
     req = requests.request(method, url, headers=header).json()

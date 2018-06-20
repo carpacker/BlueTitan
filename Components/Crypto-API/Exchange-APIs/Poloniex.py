@@ -471,22 +471,21 @@ def getDepositWithdrawals(order_by, start=0, end=str(int(time.time()*1000) - 100
     deposits = json_var["deposits"]
     for deposit in deposits:
         deposit_dict = {}
-        deposit_dict[''] = deposit['']
-        # and so on...
+        #deposit_dict[''] = deposit['']
         deposit_list.append(deposit_dict)
 
     withdrawal_list = []
     withdrawals = json_var["withdrawals"]
     for withdrawal in withdrawals:
         withdrawal_dict = {}
-        withdrawal_dict[''] = withdrawal['']
-        # and so on...
+        #withdrawal_dict[''] = withdrawal['']
+
         withdrawal_list.append(withdrawal_dict)
 
-    deposit_withdrawals = (deposit_list, withdrawal_list)
+    deposit_withdrawals = (deposits, withdrawals)
     
-    PrintLibrary.displayVariables(deposit_list)
-    PrintLibrary.displayVariables(withdrawal_list)
+    PrintLibrary.displayVariables(deposits)
+    PrintLibrary.displayVariables(withdrawals)
     
     return json_var
 
