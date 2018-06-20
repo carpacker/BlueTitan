@@ -1,0 +1,31 @@
+'''
+                                           Databases
+
+ Algorithms
+
+   arbitrage        - Contains all data pertinent to the 'arbitrage' suite of trading algorithms.
+   moving-ave       - Contains all data pertinent to the 'moving-average' suite of trading
+                       algorithms.
+
+
+  Records & Currency Data
+
+   exchange-records - Contains all data that can be classified as a record on an exchange. This
+                       includes trades, withdrawals, deposits and transfers. Each exchange gets
+                       three tables, one for withdrawals, one for deposits and one for trades.
+                       Transfers will be implemented another time.
+                       
+   historical-data  - Contains a list of tables that contain historical-data for each currency
+                       that is designated to be tracked. Each currency has its own table where
+                       each entry contains data pertinent to a period in time.
+   running-data     - The same as above, but instead data captured by our own program rather
+                       than scraped from an external site.
+   mining-records   - Contains data pertinent to mining, specifically records and performance.
+
+ 
+  Metrics & Performance Data
+
+   asset-metrics    - Metrics for each asset
+   metrics          - Global metrics
+
+'''

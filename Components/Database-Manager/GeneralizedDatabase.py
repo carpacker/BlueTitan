@@ -98,48 +98,11 @@ def generalQuery(cursor, query):
     cursor.execute(query)
     return cursor.fetchall()
 
-'''
-                                           Databases
-
- Algorithms
-
-   arbitrage        - Contains all data pertinent to the 'arbitrage' suite of trading algorithms.
-   moving-ave       - Contains all data pertinent to the 'moving-average' suite of trading
-                       algorithms.
-
-
-  Records & Currency Data
-
-   exchange-records - Contains all data that can be classified as a record on an exchange. This
-                       includes trades, withdrawals, deposits and transfers. Each exchange gets
-                       three tables, one for withdrawals, one for deposits and one for trades.
-                       Transfers will be implemented another time.
-                       
-   historical-data  - Contains a list of tables that contain historical-data for each currency
-                       that is designated to be tracked. Each currency has its own table where
-                       each entry contains data pertinent to a period in time.
-   running-data     - The same as above, but instead data captured by our own program rather
-                       than scraped from an external site.
-   mining-records   - Contains data pertinent to mining, specifically records and performance.
-
- 
-  Metrics & Performance Data
-
-   asset-metrics    - Metrics for each asset
-   metrics          - Global metrics
-
-'''
-
 # CLASS: GenDatabaseLibrary
 # DESCRIPTION:
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
-
-    # TBD: Global dictionary for UUID matchups, possibly not necessary
-    tableNamesUUID = {}
-    databaseNamesUUID = {}
-
 
     # FUNCTION: buildInitTuple
     # INPUT: table_name    - string
@@ -150,20 +113,23 @@ class GenDatabaseLibrary(object):
     #     initializer value for eachd data type
     #  TEXT - ""
     #  REAL - 0
-    #  TODO TODO
+    #  REST - TODO
     def buildInitTuple(table_name, database_name):
 
+        # Below isn't written yet... instead of getcolumns, it should be getcolumn names or something
+        num_columns = GenDatabaseLibraries.getColumns()
+        
         init_list = []
         for x in range (0, num_columns):
+            # Below hasn't been written
             type_col = GenDatabaseLibrary.getColumnType(x, table_name, database_name)
             if type_col == "STRING":
-                pass
+                init_list.append("")
             elif type_col == "REAL":
-                pass
+                init_list.append(0)
             else:
                 pass
 
-        # [0, "", ???]
         PrintLibrary.displayVariables(init_list)
         return init_list
 
@@ -173,23 +139,9 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
+    # NOTE: Not useful yet.
     def createTable(self, table_name, database_name, columns=""):
-        database = self.databases[database_name]
-        for table in tables:
-            database.createTable(cursor, table)
-
-    # FUNCTION: createTable
-    # INPUT: cursor   - *
-    #        tables   - [string, ...]
-    #        database - Database
-    #        columns  - TODO
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #   Generic function for creating multiple tables in a database. Iterates over 
-    #    a list of table names and declare the tables in the database.
-    def createTables(cursor, tables, database, columns=""):
-        for table in tables:
-            database.createTable(cursor, table)
+        pass
 
     # FUNCTION: deleteTable
     # INPUT: cursor     - *
@@ -201,39 +153,13 @@ class GenDatabaseLibrary(object):
         sql_s = 'DROP TABLE %s' % table_name
         cursor.execute(sql_s)
 
-    # FUNCTION: initializeTables
-    # INPUT: tables   - [string, ...]
-    #        database - either string or database object (TODO)
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #   Executes the initialization of all tables in a given databases.
-    def initializeDatabase(self, database_name):
-        # 1. Connect to database based on name
-        database = self.database_paths[database_name]
-        connect, cursor = connect(database)
-        
-        # 3. Call initialize function using global dictionary
-        database.initializeTables()
-        disconnect(connect)
-
-    # FUNCTION: initializeDatabases
-    # INPUT: tables    - [string, ...]
-    #        assets    - [string, ...]
-    #        exchanges - [string, ...]
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #   Initializes all of the tables in each database in the system.
-    def initializeDatabases(database_names):
-        for database_name in databases_names:
-            GenDatabaseLibrary.initializeDatabase(database_name)
-
     # FUNCTION: cleanDatabase
     # INPUT: tables     - [string, ...]
     #        exceptions - [string, ...] 
     # OUTPUT: list of tables cleaned in database
     # DESCRIPTION
     #   Used to clean a database's tables minus exceptions.
-    def cleanDatabase(database_namees, exceptions=[""]):
+    def cleanDatabase(database_names, exceptions=[""]):
         connect, cursor = database.connect()
 
         # Use regular expression to find difference of two lists
@@ -247,8 +173,14 @@ class GenDatabaseLibrary(object):
         disconnect(connect)
     return list_clean
                              
-    #
-    def buildStringStore(cursor, table_name):
+    # HELPER: buildStringStore
+    # INPUT: cursor     - *
+    #        table_name - string
+    # OUTPUT: string
+    # DESCRIPTION:
+    #    Builds SQL string to store an entry. 
+    def buildStringStore(cursor, table_name, columns="all"):
+        
         # 1. List columns
         columns = GenDatabaseLibrary.listColumns(cursor, table_name)
         num_columns = len(columns)
@@ -398,7 +330,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: string
     # DESCRIPTION:
     #   Builds selection string.
-    def selectEntry(table_name, data):
+    def getEntryString(table_name, data):
         sql_s = "SELECT * FROM %s WHERE " % table_name
         for value in data:
             sql_s += "%s = ? AND " % value
@@ -424,6 +356,9 @@ class GenDatabaseLibrary(object):
         entry = cursor.fetchall()
         return entry[0]
 
+    def updateEntryString():
+        pass
+    
     # FUNCTION: updateEntry 
     # INPUT: data_uuid     - [] OR []
     #        input_val     - [value1, value2, ...]
@@ -448,6 +383,9 @@ class GenDatabaseLibrary(object):
     def updateEntries(data_uuid, input_val, table_name, database_name):
         pass
 
+    def getItemString():
+        pass
+    
     # FUNCTION: getItem
     # INPUT:
     # OUTPUT:
@@ -465,6 +403,9 @@ class GenDatabaseLibrary(object):
     def getItems(data_uuid, columns, table_name, database_name):
         pass
 
+    def updateItemString():
+        pass
+    
     # FUNCTION: updateItem
     # INPUT: 
     # OUTPUT: 
@@ -510,6 +451,9 @@ class GenDatabaseLibrary(object):
     def getColumns(table_name, database_name, **kwargs):
         pass
 
+    def deleteEntryString():
+        pass
+    
     # FUNCTION: deleteEntry
     # INPUT: data_uuid 
     #        table_name    - string
