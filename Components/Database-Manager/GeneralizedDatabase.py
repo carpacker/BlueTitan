@@ -215,6 +215,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Generic function for storing an entry into a table in a database.
     def storeEntry(database_name, table_name, data):
+        
         # Set database, initializes variables, check table exists
         database_path = database_paths[database_name]
         timestamp = int(time.time() * 1000)

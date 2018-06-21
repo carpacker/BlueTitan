@@ -50,17 +50,21 @@ class TransactionProcesser(Object):
         # First build deposits/withdrawals, don't sort them
         chronological_tx = []
         ticker = 0
+
+        # For each exchange we are looking at - grab the dep/with and append it to the running list
         for exchange in exchanges:
 
             # Retrieves both deposit and withdrawals from both exchanges, deposits are stored first.
-            transactions = ExchangeAPI.getDepositWithdrawals(exchange,
-                                                             "as_is", "both")
+            transactions = ExchangeAPI.getDepositsWithdrawals(exchange, "as_is", "both")
             chronological_tx.append((exchange, transactions))
 
+        PrintLibrary.displayVariables(chronological_tx)
+        
         # Next build Coinbase sells/buys
         coinbase_tx = Coinbase.listTransactions()
         chronological_tx.append(coinbase_tx)
 
+        # SORT the transactions into desired order
         # Return sorted input/output
         if order_by == 'exchanges':
             

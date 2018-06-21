@@ -56,6 +56,8 @@ def BittrexTesters():
 # TESTERS: Coinbase
 def CoinbaseTesters():
     PrintLibrary.header("Coinbase Tests")
+    PrintLibrary.displayDictionary(Coinbase.getAccount())
+    PrintLibrary.displayDictionary(Coinbase.listTransactions())
     
 # TESTERS: CoinMarketCap
 def CoinMarketCapTesters():
@@ -115,4 +117,5 @@ if __name__ == "__main__":
     # GdaxTesters()
     # KucoinTesters()
     PoloniexTesters()
+    CoinbaseTesters()
     # GenericTesters()
