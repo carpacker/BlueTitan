@@ -3,6 +3,13 @@
 # DESCRIPTION:
 #    Interface to coinbase's API.
 
+# TODO:
+# - Address access
+# - Address functions
+# - How account ids work and whether need to track multiple account ids
+# - Transaction access
+# - Data structure
+
 # External Imports
 import time
 import hashlib
