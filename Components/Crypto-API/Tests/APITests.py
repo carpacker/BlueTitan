@@ -10,6 +10,7 @@ from PrintLibrary import PrintLibrary
 from API import ExchangeAPI
 import Bittrex
 import Binance
+import Coinbase
 import CoinMarketCap
 import Cryptopia
 import Gdax
@@ -56,7 +57,8 @@ def BittrexTesters():
 # TESTERS: Coinbase
 def CoinbaseTesters():
     PrintLibrary.header("Coinbase Tests")
-    PrintLibrary.displayDictionary(Coinbase.getAccount())
+    PrintLibrary.displayDictionary(Coinbase.getTime())
+    PrintLibrary.displayDictionary(Coinbase.getAccounts())
     PrintLibrary.displayDictionary(Coinbase.listTransactions())
     
 # TESTERS: CoinMarketCap

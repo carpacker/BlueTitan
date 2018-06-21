@@ -8,6 +8,7 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
 # Internal-Imports
+import Coinbase
 import ExchangeAPI
 import Helpers
 import PrintLibrary
@@ -48,7 +49,7 @@ class TransactionProcesser(Object):
     def buildTxCSV(self, exchanges, order_by):
 
         # First build deposits/withdrawals, don't sort them
-        chronological_tx = []
+        agg_tx = []
         ticker = 0
 
         # For each exchange we are looking at - grab the dep/with and append it to the running list
@@ -56,40 +57,40 @@ class TransactionProcesser(Object):
 
             # Retrieves both deposit and withdrawals from both exchanges, deposits are stored first.
             transactions = ExchangeAPI.getDepositsWithdrawals(exchange, "as_is", "both")
-            chronological_tx.append((exchange, transactions))
+            agg_tx.append((exchange, transactions))
 
-        PrintLibrary.displayVariables(chronological_tx)
+        PrintLibrary.displayVariables(agg_tx)
         
         # Next build Coinbase sells/buys
         coinbase_tx = Coinbase.listTransactions()
-        chronological_tx.append(coinbase_tx)
+        agg_tx.append(coinbase_tx)
 
-        # SORT the transactions into desired order
-        # Return sorted input/output
-        if order_by == 'exchanges':
+        # 'as-is' - return list without any alterations
+        if order_by == 'as-is':
+            return agg_tx
+
+        # 'exchange' or 'time' is left: first sort by time with our temp 2017 cut off
+        chrono_tx = sortTransactions(agg_tx)
+        
+        if order_by == 'time':
+            return chrono_tx
+
+        # If order_by is 'exchange', one more sort to separate the transactions up by exchange
+        elif order_by == 'exchanges':
             
             # Sort by alphabetical exchange
             sorted_exchanges = SortingLibrary.sortAlphabetically(chronological_tx)
-
-            # Next sort each exchange entry chronologically
-            ticker = 0
-            for value in sorted_exchanges:
-                sorted_exchanges[ticker] = somethingSort(sorted_exchanges[ticker])
-                ticker += 1
-
-            print(sorted_exchanges)
-            return sorted_exchanges
             
-        elif order_by == 'time':
-            chronological_tx = somethingSort(chronological_tx)
-            print(chronological_tx)
-            return chronological_tx
-        
         else:
             # TODO: Error handle
             print("Error, not supported :order_by: input")
             return -1
 
+        # SORT:
+        #    given input list of form - [(timestamp, ...), ...], sort by first element
+        def sortTransactions():
+            pass
+        
         # FUNCTION: processTransactions
         # INPUT: transactions - list
         # OUTPUT: same list with entries edited
@@ -256,21 +257,6 @@ class TransactionProcesser(Object):
         #     must be contained in a list until a better solution is devised.
         def storeTxs(transactions):
             pass
-
-# CLASS: ProfitCalculator
-# DESCRIPTION:
-#    Functions used to calculate the profit/loss of transactions using a csv input.
-class ProfitCalculator(Object):
-
-    def calculateProfits():
-        pass
-
-    def matchBuySell():
-        pass
-
-    def buildTxList():
-        pass
-
-
+        
 if __name__ == "__main__":
     TransactionProcessor.main(['Poloniex'])

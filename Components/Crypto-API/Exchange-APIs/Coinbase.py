@@ -13,6 +13,7 @@ import json
 # Internal Imports
 import PrintLibrary
 
+from secret_keys import coinbase_public_key, coinbase_private_key
 base_url = "https://api.coinbase.com/v2/"
 
 
@@ -20,6 +21,11 @@ base_url = "https://api.coinbase.com/v2/"
 ####################################################################################################
 
 user_url = base_url + "users/"
+
+def getTime():
+    json_var = requests.request('get', base_url + 'time').json()
+    print(time.time())
+    return json_var
 
 # FUNCTION: getUserID
 # INPUT: user_id - string
@@ -58,11 +64,21 @@ def updateUser():
     pass
 ####################################### ACCOUNT CALLS ############################################## 
 ####################################################################################################
-account_url = base_url + ""
+account_url = base_url + 'accounts'
+
 # acccounts/:account_id
 # Currency can be used instead of account_id
 def getAccount():
     pass
+
+# FUNCTION: getAccounts
+# INPUT: N/A
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Lists current user's accounts to which auth method has access to.
+def getAccounts():
+    json_var = encryptRequest(True, 'GET', account_url)
+    return json_var
 
 # string, name, creates account
 # POST
@@ -265,24 +281,23 @@ def getDepositWithdrawals():
 #        end       - string (url)
 # OUTPUT: Encrypted url used for HTTPS request
 def encryptRequest(signature, method, base_url, **query_vars):
-
+    timestamp = str(int(time.time()))
     # Add queries and header
             
     queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
-    if "timestamp" not in query_vars:
-        extra = "&timestamp=" + str(int(time.time()*1000))
-        query_vars["timestamp"] = str(int(time.time()*1000))
     
     # Sign the transaction
-    messsage = str(int(time.time() * 1000)) + method + base_url + queryString
-    sig = hmac.new(coinbase_private_key.encode(),queryString.encode(),'sha256')
+    message = timestamp + method + '/v2/accounts' + queryString
+    print(message)
+    sig = hmac.new(coinbase_private_key.encode(),message.encode(),'sha256')
     signature = sig.hexdigest()
     
     header = { 'CB-ACCESS-KEY' : coinbase_public_key,
                'CB-ACCESS-SIGN' : signature,
-               'CB-ACCESS-TIMESTAMP' : str(int(time.time()*1000))}
+               'CB-ACCESS-TIMESTAMP' : timestamp,
+               'CB-VERSION' :'2018-06-21'}
                
-    url = base_url + "?" + queryString
+    url = base_url + "" + queryString
     print(url)
     
     req = requests.request(method, url, headers=header).json()
