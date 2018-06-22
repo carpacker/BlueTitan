@@ -1,9 +1,3 @@
-
-Get deposit addresses
-Determine which deposit addresses are for which exchnges
-Match up receives/sends in a specific manner.
-FIFO based on the above.
-
 : Need list of functionalities necessary for bot
 : Testing environment (interpreter)
 : Bots back up

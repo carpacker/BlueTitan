@@ -43,37 +43,29 @@ from GeneralizedDatabase import GenDatabaseLibrary
 # FUNCTION: btcValue
 # INPUT: quantity - float
 #        asset    - string
-#        exchange - string (OPTIONAL)
+#        exchange - string (OPTIONAL) [DEFAULT = 'coinmarketca[[']
 # OUTPUT: float
 # DESCRIPTION:
 #   Returns the BTC value of a specific asset. If an exchange is given, the price used to find
 #    this value is taken fro mthe provided exchange, otherwise coinmarketcap is used.
-def btcValue(asset, quantity, exchange=None):
+def btcValue(asset, quantity, exchange="coinmarketcap"):
 
     # If for some reason it is already in BTC, return the input value
     if asset == "BTC":
         return quantity
     
     else:
-        # If exchange is provided, access exchange's price
-        if exchange:
-            pairing = pairingStr(asset)
-            price = ExchangeAPI.getPrice(exchange, pairing)
-            value = float(price) * quantity
-            return value
-
-        # If exchange isn't provide, use coinmarketcap
-        else:
-            pairing = pairingStr(asset)
-            price = ExchangeAPI.getPrice("coinmarketcap", pairing)
-            value = float(price) * quantity
-            return value
+        # If exchange is provided, access exchange's price... default is coinmarketcap
+        pairing = pairingStr(asset)
+        price = ExchangeAPI.getPrice(exchange, pairing)
+        value = float(price) * quantity
+        return value
 
 # FUNCTION: calculateChange
 # INPUT: value_one - float
 #        value_two - float
 # OUTPUT: float
-#    Calcute the formula v1 / v2.
+#    Calcute the formula [v1 / v2].
 def calculateChange(value_one, value_two):
     if value_one != 0:
         value = (value_two / value_one)
@@ -90,7 +82,6 @@ def calculateChange(value_one, value_two):
 def calculateOrderFee(exchange, btc_value):
     rate = getFee(exchange)
     value = btc_value * rate
-    print("calculateOrderFee", value, rate, btc_value)
     return value
 
 # FUNCTION: calculateProfitRatio
@@ -115,11 +106,12 @@ def calculateProfit(sell_price, buy_price, quantity):
     return profit
 
 # FUNCTION: createTimestamp
-# INPUT: N/A
+# INPUT: scale - int (OPTIONAL) [DEFAULT = 1000]
 # OUTPUT: float
-#   Creates a Unix-based timestamp.
-def createTimestamp():
-    value = int(time.time() * 1000)
+#   Creates a Unix-based timestamp. Optional input to put it in a format other than
+#    millisseconds.
+def createTimestamp(scale=1000):
+    value = int(time.time() * scale)
     return value
 
 # FUNCTION: convertToUnix
