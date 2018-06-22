@@ -1,9 +1,10 @@
-: Need list of functionalities necessary for bot
-: Testing environment (interpreter)
-: Bots back up
-: What needs to be done to properly track bot profitability
-: Taxes on new systemx- Organize text files
-- Clean up misc files
-- More file organization
-- Start market sim/currency tracking/ profit tracking/ fund management proper
+*: Notepad/book system for accompanying work
+*: Rework desk structure if necessary
+*: Research python emacs interpreter
+*: Work on prototyping text doc --> Include all necessary functionality for V1 of bot and to make profit
+*: Calculate tax information
+*: Go downstairs and work on rigs for a time
 
+TOMORROW STUFF:
+*: Clean bird cage
+*: Laundry
