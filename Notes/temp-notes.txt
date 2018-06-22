@@ -8,4 +8,8 @@ FIFO based on the above.
 : Testing environment (interpreter)
 : Bots back up
 : What needs to be done to properly track bot profitability
-: Taxes on new system
+: Taxes on new systemx- Organize text files
+- Clean up misc files
+- More file organization
+- Start market sim/currency tracking/ profit tracking/ fund management proper
+
