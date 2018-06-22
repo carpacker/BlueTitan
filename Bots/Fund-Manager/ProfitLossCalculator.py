@@ -25,8 +25,8 @@ class TransactionProcesser(Object):
     #   Top level function for converting a list of buys and sells into a FIFO
     #    profit loss generator
     def main(self, exchanges):
-        # 1. Build the transaction CSV in chronological order
-        chronological_txs = self.buildTxCSV(exchanges, "time")
+        # 1. Read input Coinbase CSV
+        # TODO
         
         # 2. Determine which outputs AREN'T sells through deposit addresses
         adjusted_fifo_txs = self.processTransactions(exchanges, chronological_txs)
@@ -34,63 +34,9 @@ class TransactionProcesser(Object):
         # 3. Calculate FIFO profit loss
         profit_loss_list = self.calculateFIFOprofit(adjusted_fifo_txs)
 
-        # 4. Build final CSV of all records
+        # 4. Build final CSV of all record
         self.buildFinalCSV(adjust_fifo_txs, profit_loss_list)
-        
-    # FUNCTION: buildTxCSV
-    # INPUT: exchanges - [string, ...]
-    #        order_by  - 'time' or 'exchange'
-    # OUTPUT: list
-    # DESCRIPTION:
-    #   Takes a list of exchanges and builds a list of tuples containing transaction
-    #    history. Each entry is a transaction. order_by input is used to determine
-    #    what order to hold the transactions, if exchange is chosen, then there
-    #    is a inner-order by time within exchange. Exchanges are ordered alphabetically.
-    def buildTxCSV(self, exchanges, order_by):
-
-        # First build deposits/withdrawals, don't sort them
-        agg_tx = []
-        ticker = 0
-
-        # For each exchange we are looking at - grab the dep/with and append it to the running list
-        for exchange in exchanges:
-
-            # Retrieves both deposit and withdrawals from both exchanges, deposits are stored first.
-            transactions = ExchangeAPI.getDepositsWithdrawals(exchange, "as_is", "both")
-            agg_tx.append((exchange, transactions))
-
-        PrintLibrary.displayVariables(agg_tx)
-        
-        # Next build Coinbase sells/buys
-        coinbase_tx = Coinbase.listTransactions()
-        agg_tx.append(coinbase_tx)
-
-        # 'as-is' - return list without any alterations
-        if order_by == 'as-is':
-            return agg_tx
-
-        # 'exchange' or 'time' is left: first sort by time with our temp 2017 cut off
-        chrono_tx = sortTransactions(agg_tx)
-        
-        if order_by == 'time':
-            return chrono_tx
-
-        # If order_by is 'exchange', one more sort to separate the transactions up by exchange
-        elif order_by == 'exchanges':
-            
-            # Sort by alphabetical exchange
-            sorted_exchanges = SortingLibrary.sortAlphabetically(chronological_tx)
-            
-        else:
-            # TODO: Error handle
-            print("Error, not supported :order_by: input")
-            return -1
-
-        # SORT:
-        #    given input list of form - [(timestamp, ...), ...], sort by first element
-        def sortTransactions():
-            pass
-        
+ 
         # FUNCTION: processTransactions
         # INPUT: transactions - list
         # OUTPUT: same list with entries edited
