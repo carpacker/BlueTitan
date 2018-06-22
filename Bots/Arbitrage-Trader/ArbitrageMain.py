@@ -1,25 +1,24 @@
 # ArbitrageMain.py
 # Carson Packer
-# Summer 2018
+# DESCRIPTION:
+#    Top level file for arbitrage, automatically handles and executes arbitrage trading.
 
 # External-Imports
 from copy import deepcopy
-import threading
-import time
 import math 
 import schedule
 import sys
+import threading
+import time
 
-# Windows
+# WINDOWS main-desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Exchange_APIs')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Main')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Database-Manager')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Information_accounting')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Libraries')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Scripts')
+# Rest of these
 
-# Linux
+# WINDOWS laptop
+# sys.path.append()
+
+# LINUX main-server
 # sys.path.append()
 
 # Internal-Imports
@@ -29,21 +28,17 @@ from BalancingLibrary import BalancingLibrary
 import Helpers
 from PrintLibrary import PrintLibrary
 
-# Replace
-from PTrackingLibrary import PTrackingLibrary
-from ProfitTracker import ProfitTracker
-from DatabaseManager import ArbitrageDatabase, MetricsDatabase, AssetMetricsDatabase
-
 # CLASS: LowLiquidityArbitrage
-#   Container arbitrage for the low-liquidity arbitrage component. This is the main loop for arbitrage and can be
-#    considered the top-level.
+# DESCRIPTION:
+#    Container arbitrage for the low-liquidity arbitrage component. This is the main loop for
+#     arbitrage and can be considered the top-level.
 class LowLiquidityArbitrage(object):
 
     # Class Variables [Exchanges, Pairings, Assets, Balances]
-    class_exchanges = ['bittrex', 'binance']
-    class_pairings = ['BTC-KMD', 'BTC-ADA', 'BTC-ARK', 'BTC-XVG']
-    class_assets = ['BTC', 'ARK', 'KMD', 'XVG', 'ADA']
-    class_balance_dict = {}
+    cl_exchanges = ['bittrex', 'binance']
+    cl_pairings = ['BTC-KMD', 'BTC-ADA', 'BTC-ARK', 'BTC-XVG']
+    cl_assets = ['BTC', 'ARK', 'KMD', 'XVG', 'ADA']
+    cl_balance_dict = {}
 
     # INITIALIZATION
     # INPUT: Clean - Used to designate whether to clean databases on initialization. Defaults to True.
@@ -54,10 +49,10 @@ class LowLiquidityArbitrage(object):
         PrintLibrary.header("Initialization")
 
         # Grab arguments and update relevant class variables
-        exchanges = exchanges = LowLiquidityArbitrage.class_exchanges 
-        pairings = LowLiquidityArbitrage.class_pairings 
-        assets = LowLiquidityArbitrage.class_assets
-        print(assets)
+        exchanges = exchanges = LowLiquidityArbitrage.cl_exchanges 
+        pairings = LowLiquidityArbitrage.cl_pairings 
+        assets = LowLiquidityArbitrage.cl_assets
+
         arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
                             "IntendedFAE"]
         metrics_tables = ["Metrics", "FailureMetrics"]
@@ -70,6 +65,7 @@ class LowLiquidityArbitrage(object):
 
         orig_exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
         exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
+
         PrintLibrary.displayVariables(exchanges, "Exchanges")
         PrintLibrary.displayVariables(assets, "Assets")
         PrintLibrary.displayVariables(pairings, "Pairings")
@@ -98,7 +94,7 @@ class LowLiquidityArbitrage(object):
 
                 DatabaseLibrary.initialize(exceptions, assets, exchanges)
 
-        class_balance_dict = DatabaseLibrary.getAllBalances(exchanges)
+        cl_balance_dict = DatabaseLibrary.getAllBalances(exchanges)
         if "IntendedFAE" not in orig_exceptions:
             BalancingLibrary.initializeFAE(assets, exchanges, class_balance_dict)
         # (TODO) - fix this dictionary shit so it can print...
@@ -111,9 +107,9 @@ class LowLiquidityArbitrage(object):
     def Arbitrage(self):
 
         # Local Variable initialization
-        exchanges = LowLiquidityArbitrage.class_exchanges
-        pairings = LowLiquidityArbitrage.class_pairings 
-        assets = LowLiquidityArbitrage.class_assets
+        exchanges = LowLiquidityArbitrage.cl_exchanges
+        pairings = LowLiquidityArbitrage.cl_pairings 
+        assets = LowLiquidityArbitrage.cl_assets
         ticker = 0
         consecutive_fails = 0
 

@@ -1,9 +1,10 @@
+*: Calculate tax information
+*: Go downstairs and work on rigs for a time
+*: Fund movement and all that
 *: Notepad/book system for accompanying work
 *: Rework desk structure if necessary
 *: Research python emacs interpreter
 *: Work on prototyping text doc --> Include all necessary functionality for V1 of bot and to make profit
-*: Calculate tax information
-*: Go downstairs and work on rigs for a time
 
 TOMORROW STUFF:
 *: Clean bird cage
@@ -12,9 +13,15 @@ TOMORROW STUFF:
 SIDE NOTE:
 - Probably want to record or draw how system should work
 - Planning out week starting monday (anti-depressants start)
+- Notes on algorithm decisions
 
 - Possibly significant items :
  - Schedule.md, attempt to schedule out work specifically on github
  - Using github as tool to organize and plan more
  - Layout syllabus for developing master-paper for this project
  - Proper physical note-taking and visualization accompaniment
+
+0. Taxes
+1. Figure out writing/physical shit [be able to write to do work, read to do work, learn to do work [anywhere]]
+2. Basement/rigs workflow and dedicating time to that
+3. File org and bot structuring

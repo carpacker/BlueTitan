@@ -11,11 +11,11 @@ from PrintLibrary import PrintLibrary
 
 # CLASS: ProfitTracker
 # DESCRIPTION:
-#	Top level object for profit tracking component. More comprehensive description to come.
+#   Top level object for profit tracking component. More comprehensive description to come.
 class ProfitTracker(object):
 
-	# INITIALIZATION: 
-	# 	* - TODO, figure out the initialize parameters
+    # INITIALIZATION: 
+    #  * - TODO, figure out the initialize parameters
     def __init__(self, clean=True):
     	PrintLibrary.displayMessage("ProfitTracker Initialized")
 
