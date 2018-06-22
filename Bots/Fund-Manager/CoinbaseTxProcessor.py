@@ -13,9 +13,9 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 
 # Internal-Imports
 import Coinbase
-import ExchangeAPI
+from API import ExchangeAPI
 import Helpers
-import PrintLibrary
+from PrintLibrary import PrintLibrary
 
 # CLASS: TransactionProcessor
 # DESCRIPTION:
@@ -64,13 +64,6 @@ class TransactionProcesser(Object):
             if type_trans == "withdrawal":
                 to_address = ""
 
-                # Transfer
-                try exchange_addresses[to_address]:
-                    pass
-
-                # Sell
-                except KeyError:
-                    pass
             elif type_trans == "":
                 pass
 
@@ -171,10 +164,10 @@ class TransactionProcesser(Object):
                 current_input = inputs.pop()
                 time.sleep(3)
 
-             # CASE: Buy is larger, continue loop 
-             orig_value = float(current_output[4]) * float(current_input[5])
-             sell_value = float(current_output[4]) * float(current_output[5])
-             profit_loss = sell_value - orig_value
+            # CASE: Buy is larger, continue loop 
+            orig_value = float(current_output[4]) * float(current_input[5])
+            sell_value = float(current_output[4]) * float(current_output[5])
+            profit_loss = sell_value - orig_value
 
             # Add to running profit, adjust current output's value for next iteration
             running_profit += profit_loss
@@ -186,6 +179,7 @@ class TransactionProcesser(Object):
             time.sleep(3)           
 
     def buildFinalCSV():
+        pass
         # 1. Build any derivative data
         # 2. Create and write the actual CSV file
 
@@ -199,7 +193,7 @@ class TransactionProcesser(Object):
     # NOTE: This function may not be necessary, some other functino does this job perhaps
     def buildExchangeAddresses(exchanges, assets):
         pass
-
+    
     # FUNCTION: storeTxCSV
     # INPUT: transactions - [(txdata1, ...), ...]
     # OUTPUT: N/A

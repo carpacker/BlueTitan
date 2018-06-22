@@ -3,22 +3,23 @@
 # DESCRIPTION:
 #    Interface to coinbase's API.
 
-# TODO:
-# - Address access
-# - Address functions
-# - How account ids work and whether need to track multiple account ids
-# - Transaction access
-# - Data structure
-
 # External Imports
+import sys
 import time
 import hashlib
 import hmac
 import requests
 import json
 
+# WINDOWS main-desktop
+sys.path.append("U:/Directory/Projects/BlueTitan/Libraries")
+
+# WINDOWS laptop
+
+# LINUX main-server
+
 # Internal Imports
-import PrintLibrary
+from PrintLibrary import PrintLibrary
 
 from secret_keys import coinbase_public_key, coinbase_private_key
 base_url = "https://api.coinbase.com/v2/"

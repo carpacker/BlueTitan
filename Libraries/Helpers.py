@@ -14,6 +14,7 @@ import sys
 
 # WINDOWS main-desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs/')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
 
 # WINDOWS laptop
 # sys.path.append()
@@ -467,4 +468,9 @@ def convertAssetDict(balances):
 # DESCRIPTION:
 #    Reads in a CSV file and passes the data into a list of tuples which is then returned.
 def readCSV(csv_name):
-    
+    with open(csv_name, 'r') as csv_file:
+        reader = csv.reader(csv_file)
+        for row in reader:
+            print(row)
+
+    csv_file.close()

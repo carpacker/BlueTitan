@@ -151,7 +151,8 @@ class ExchangeAPI():
         return result_dict
 
     # FUNCTION: getInfoPairing
-    # INPUT: pairing
+    # INPUT: exchange - string
+    #        pairing  - string
     # OUTPUT: Dictionary
     # DESCRIPTION:
     #   Returns the relevant information for a given pairing on a given exchange.
@@ -166,7 +167,8 @@ class ExchangeAPI():
         return result_dict
 
     # FUNCTION: getInfoPairings
-    # INPUT: pairing
+    # INPUT: exchange - string
+    #        pairings - [string, ...]
     # OUTPUT: Dictionary
     # DESCRIPTION:
     #   Generic function call to get the relevant information for a list of pairings on a given
@@ -181,13 +183,19 @@ class ExchangeAPI():
         return result_dict
 
     # FUNCTION: getMarkets
-    # INPUT:
+    # INPUT: exchange - string
     # OUTPUT: Dictionary
     # DESCRIPTION:
     #   Outputs a list of currently traded markets. Each element is a dictionary containing
     #    relevant information.
     def getMarkets():
-        pass
+        supportedexchanges = ['binance', 'bittrex']
+        if verifySupported(exchange, supportedexchanges) == False:
+            return -1
+        curr_ex = exchanges[exchange]
+        curr_func = curr_ex['getMarkets']
+        result_dict = curr_func()
+        return result_dict
 
     # FUNCTION: getPrice
     # INPUT: exchange - string
