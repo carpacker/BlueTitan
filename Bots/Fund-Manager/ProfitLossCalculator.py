@@ -18,6 +18,9 @@ import PrintLibrary
 #   Container for suite of functions that process the transactions across various exchanges.
 class TransactionProcesser(Object):
 
+    def readCSV():
+        pass
+    
     # FUNCTION: main
     # INPUT: exchanges - [string, ...]
     # OUTPUT: N/A
@@ -26,9 +29,9 @@ class TransactionProcesser(Object):
     #    profit loss generator
     def main(self, exchanges):
         # 1. Read input Coinbase CSV
-        # TODO
+        chronlogical_txs = readCSV('CB2017.csv')
         
-        # 2. Determine which outputs AREN'T sells through deposit addresses
+        # 2. Classify what to do with each transaction
         adjusted_fifo_txs = self.processTransactions(exchanges, chronological_txs)
         
         # 3. Calculate FIFO profit loss
@@ -51,22 +54,28 @@ class TransactionProcesser(Object):
 
         # 2. Iterate through transactions
         for transaction in transactions:
-            exchange = ""
-            type_trans = ""
+            type_trans = transaction[0]
 
-            # Check for withdrawals on Coinbase
-            if type_trans == "withdrawal"
+            # For each type of transaction
+            
+            # WITHDRAWAL: 
+            if type_trans == "withdrawal":
                 to_address = ""
 
+                # Transfer
                 try exchange_addresses[to_address]:
                     pass
-                    # Address is exchange address --> TRANSFER
-                    # set type of transaction to transfer
 
+                # Sell
                 except KeyError:
                     pass
-                    # Address is NOT an exchange address --> SELL
-                    # Set type of transaction to sell
+            elif type_trans == "":
+                pass
+
+            else:
+                pass
+
+        return processed_tx
 
     # FUNCTION: buildAddrDictionary
     # DESCRIPTION:
@@ -183,7 +192,7 @@ class TransactionProcesser(Object):
     #        assets    - [string, ...]
     # OUTPUT: nested dictionary
     # DESCRIPTION:
-    #    Takes an input of exchanges an assets, creates entry in database to keep track of
+    #    Takes an input of exchanges and assets, creates entry in database to keep track of
     #     wallet addresses, where static addresses are possible.
     # NOTE: This function may not be necessary, some other functino does this job perhaps
     def buildExchangeAddresses(exchanges, assets):

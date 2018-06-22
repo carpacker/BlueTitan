@@ -13,6 +13,10 @@ and work-in-progress items.
 
 
 # TODO
+Last thing I was on was most of ArbitrageMain
+Then port those over to ArbitrageTheoretical
+Then move onto work on the libraries
+
 Some notes:
 Thinking about abstracting the init into a higher level object, database stuff doesn't happen in the actual arbitrage, or at least some of it doesn't.
 Definitely going to want to clean up the init and move things
