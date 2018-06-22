@@ -7,10 +7,17 @@
 import sys
 
 # WINDOWS main-desktop
-sys.path.append()
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Web-Scrapers')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
+
+# WINDOWS laptop
+
+# LINUX main-server
 
 # Internal-Imports
 from GeneralizedDatabase import GenDatabaseLibrary
+from API import ExchangeAPI
 import FeeScraper
 
 # Local Variables
@@ -197,7 +204,7 @@ def initializeBalances(exchanges):
 
         GenDatabaseLibrary.storeEntry(exchange, "ALL", "N/A", exchange_btc, exchange_usd)
 
-    DatabaseLibrary.storeBalance("ALL", "ALL", "N/A", total_btc, total_value)
+    GenDatabaseLibrary.storeEntry("ALL", "ALL", "N/A", total_btc, total_value)
     balance_dict["ALL"] = defaultdict(int)
     balance_dict["ALL"]["total_value_usd"] = total_value
     balance_dict["ALL"]["total_value_btc"] = total_btc

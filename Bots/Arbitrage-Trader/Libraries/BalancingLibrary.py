@@ -1,10 +1,14 @@
+# BalancingLibrary.py
+# Carson Packer
+# DESCRIPTION:
+#     File containing all the functions relevant to the balancing component of the Arbitrage system.
+
+# External-Imports
 import sys
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Exchange_APIs')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Crypto-API/Main')
-sys.path.append('C:/C-directory/Projects/Work-i/Components/Database-Manager')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Information_accounting')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Libraries')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Scripts')
+import time
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
+sys.path.append('U:/Directory/Projects/BlueTitan/Libraries')
 
 # External-Imports
 import time
@@ -15,40 +19,10 @@ from API import ExchangeAPI
 import Helpers
 from PrintLibrary import PrintLibrary
 
-# FUNCTION: sortAlphabetically 
-# INPUT: fae - list [asset, exchange, ...]
-# OUTPUT: sorted list
-# DESCRIPTION:
-#	Performs a nested alphabetical sorted (inside first, then outside). Intended purpose is to sort by [asset, exchange] 
-#	 alphabetically, it sorts by exchange first then by asset.
-def sortAlphabetically(fae):
-	def getKey(item):
-		return item[0]
-	def getKey2(item):
-		return item[1]
-
-	return sorted(sorted(fae, key=getKey), key=getKey2)
-
-# FUNCTION: convertAssetDict
-# INPUT: balances - dictionary
-# OUTPUT: dictionary
-# DESCRIPTION:
-#	Converts a balances exchange-key dictionary to a dictionary with ASSET as outer key instead. In general, flips the 
-#	 dictionary (future will re-name function).
-# TODO - move to helpers, rename invert nested dict
-def convertAssetDict(balances):
-	asset_dict = {}
-	for exchange in balances:
-		for asset in balances[exchange]:
-			asset_dict[asset] = {}
-
-	return asset_dict
-
 # CLASS: BalancingLibrary
 # FUNCTION LIST: [balanceAccounts, balancePairing]
 # DESCRIPTION:
-#   Library of functions that represents the set of primary operations used in the account 
-# 	 balancing component.
+#   Library of functions that represents the set of primary operations used in the account balancing component.
 class BalancingLibrary(object):
 
 	# FUNCTION: balanceAccounts
@@ -803,41 +777,3 @@ class BalancingLibrary(object):
 		withdraw_dict = ExchangeAPI.withdraw(from_exchange, asset, quantity, address)
 		withdraw_dict["to_exchange"] = to_exchange
 		return withdraw_dict
-
-	# --------------------------------- FOR THE FUTURE ---------------------------------
-	# FUNCTION: convertToETH
-	# INPUT: size - int [1 to 100 are valid inputs]
-	# OUTPUT: TODO
-	# DESCRIPTION:
-	# 	Converts a portion [or the entirety] of the portfolio to Ethereum. The purpose
-	#	 would be to hold the account over in times of turmoil or transition.
-	def convertToETH(size):
-		# 1. Take the current balances
-		# 2. Sell everything that isn't ETH in each exchange
-		# 3. Buy ETH
-		pass
-
-	# FUNCTION: createFAEProportions
-	# DESCRIPTION:
-	#	To be called intermittently, used to created 'intended_fae' object for each period of time where
-	#	 base balances are getting updated during runtime.
-	# For now, doesn't need to work
-	def createFAEProportions(heuristic_message):
-		pass
-
-	def removeDust():
-		pass
-
-	def buyBNB():
-		pass
-
-if __name__ == '__main__':
-	# 1. Test transfering base, quote individually
-	value  = BalancingLibrary.transferQuote("KMD", 10, "binance", "bittrex")
-	print(value)
-	value = BalancingLibrary.transferBase("BTC", .005, "bittrex", "binance")
-	print(value)
-
-	# 2. Test a 'balance account' action [both together, with a storeTransfer]
-	value = BalancingLibrary.balancePairing("BTC-KMD", .005, 10, "binance", "bittrex")
-	print(value)

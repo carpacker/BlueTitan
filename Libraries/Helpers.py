@@ -425,3 +425,33 @@ def usdValue(asset, quantity, exchange=None,):
         usd_value = quantity * float(usd_price)
         
     return usd_value
+
+# TODO: work these guys
+# FUNCTION: sortAlphabetically 
+# INPUT: fae - list [asset, exchange, ...]
+# OUTPUT: sorted list
+# DESCRIPTION:
+#	Performs a nested alphabetical sorted (inside first, then outside). Intended purpose is to sort by [asset, exchange] 
+#	 alphabetically, it sorts by exchange first then by asset.
+def sortAlphabetically(fae):
+	def getKey(item):
+		return item[0]
+	def getKey2(item):
+		return item[1]
+
+	return sorted(sorted(fae, key=getKey), key=getKey2)
+
+# FUNCTION: convertAssetDict
+# INPUT: balances - dictionary
+# OUTPUT: dictionary
+# DESCRIPTION:
+#	Converts a balances exchange-key dictionary to a dictionary with ASSET as outer key instead. In general, flips the 
+#	 dictionary (future will re-name function).
+# TODO - move to helpers, rename invert nested dict
+def convertAssetDict(balances):
+	asset_dict = {}
+	for exchange in balances:
+		for asset in balances[exchange]:
+			asset_dict[asset] = {}
+
+	return asset_dict

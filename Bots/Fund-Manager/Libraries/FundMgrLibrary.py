@@ -204,3 +204,31 @@ class Liquidator(object):
         # 4. Store the results
         #   ^ -- need a new database for this
 
+
+
+        	# --------------------------------- FOR THE FUTURE ---------------------------------
+	# FUNCTION: convertToETH
+	# INPUT: size - int [1 to 100 are valid inputs]
+	# OUTPUT: TODO
+	# DESCRIPTION:
+	# 	Converts a portion [or the entirety] of the portfolio to Ethereum. The purpose
+	#	 would be to hold the account over in times of turmoil or transition.
+	def convertToETH(size):
+		# 1. Take the current balances
+		# 2. Sell everything that isn't ETH in each exchange
+		# 3. Buy ETH
+		pass
+
+	# FUNCTION: createFAEProportions
+	# DESCRIPTION:
+	#	To be called intermittently, used to created 'intended_fae' object for each period of time where
+	#	 base balances are getting updated during runtime.
+	# For now, doesn't need to work
+	def createFAEProportions(heuristic_message):
+	    pass
+
+	def removeDust():
+            pass
+
+	def buyBNB():
+	    pass
