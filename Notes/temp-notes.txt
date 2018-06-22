@@ -12,3 +12,9 @@ TOMORROW STUFF:
 SIDE NOTE:
 - Probably want to record or draw how system should work
 - Planning out week starting monday (anti-depressants start)
+
+- Possibly significant items :
+ - Schedule.md, attempt to schedule out work specifically on github
+ - Using github as tool to organize and plan more
+ - Layout syllabus for developing master-paper for this project
+ - Proper physical note-taking and visualization accompaniment
