@@ -12,16 +12,20 @@ general purpose functions, used in many places because of their general applicat
 
 import sys
 
-# WINDOWS
+# WINDOWS main-desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs/')
 
-# LINUX
+# WINDOWS laptop
+# sys.path.append()
+
+# LINUX main-server
 # sys.path.append()
 
 # External-Imports
-import time
 from datetime import datetime
 from collections import defaultdict
+import csv
+import time
 
 # Internal-Imports
 from API import ExchangeAPI
@@ -455,3 +459,12 @@ def convertAssetDict(balances):
 			asset_dict[asset] = {}
 
 	return asset_dict
+
+
+# FUNCTION: readCSV
+# INPUT: csv_name - string
+# OUTPUT: [(data), ...]
+# DESCRIPTION:
+#    Reads in a CSV file and passes the data into a list of tuples which is then returned.
+def readCSV(csv_name):
+    

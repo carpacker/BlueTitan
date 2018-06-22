@@ -1,8 +1,12 @@
-import sys
-sys.path.append('C:/Users/Carson/Desktop/Coding Projects/Crypto-API/Exchange_APIs')
-sys.path.append('C:/C-directory/Projects/Work-i/Bots/Arbitrage/Libraries')
+# API.py
+# Carson Packer
+# DESCRIPTION:
+#    Generic wrapper API implementation of cryptocurrency exchanges.
 
+# External-Imports
 import time
+
+# Internal-Imports
 import Bittrex
 import Binance
 import Cryptopia 
@@ -11,8 +15,8 @@ import CoinMarketCap
 import Gdax
 import Kucoin
 import Poloniex
-
 from PrintLibrary import PrintLibrary
+
 
 ############################### Global Function Dictionaries ######################################
 #   Each exchange has a dictionary of functions. There is a key for each generic call and it 

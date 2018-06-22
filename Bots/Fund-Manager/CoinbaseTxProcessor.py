@@ -1,4 +1,8 @@
-# Profit loss calculator
+# CoinbaseTxProcessor.py
+# Carson Packer
+# DESCRIPTION:
+#    Specifically designed to process 2017's Coinbase transactions in order to distinguish profit
+#     loss for taxes.
 
 # External-Imports
 import sys
@@ -17,9 +21,6 @@ import PrintLibrary
 # DESCRIPTION:
 #   Container for suite of functions that process the transactions across various exchanges.
 class TransactionProcesser(Object):
-
-    def readCSV():
-        pass
     
     # FUNCTION: main
     # INPUT: exchanges - [string, ...]
@@ -29,7 +30,7 @@ class TransactionProcesser(Object):
     #    profit loss generator
     def main(self, exchanges):
         # 1. Read input Coinbase CSV
-        chronlogical_txs = readCSV('CB2017.csv')
+        chronological_txs = Helpers.readCSV('CB2017.csv')
         
         # 2. Classify what to do with each transaction
         adjusted_fifo_txs = self.processTransactions(exchanges, chronological_txs)
@@ -49,6 +50,7 @@ class TransactionProcesser(Object):
     #     but instead a transfer. Marks any transfer that goes to a random address as a sell
     #     and any transfer to another exchange as a transfer.
     def processTransactions(exchanges, transactions):
+        
         # 1. Retrieve exchange addresses from supported exchanges
         exchange_addresses = buildAddrDictionary(exchanges)
 
@@ -58,7 +60,7 @@ class TransactionProcesser(Object):
 
             # For each type of transaction
             
-            # WITHDRAWAL: 
+            # WITHDRAWAL: Check the address against exchange addresses
             if type_trans == "withdrawal":
                 to_address = ""
 
@@ -87,9 +89,9 @@ class TransactionProcesser(Object):
 
         for exchange in exchanges:
             # Get addresses
-            eth_addresses = API.getDepositAddresses(exchange, "ETH")
-            ltc_addresses = API.getDepositAddresses(exchange, "LTC")
-            btc_addresses = API.getDepositAddresses(exchange, "BTC")
+            eth_addresses = ExchangeAPI.getDepositAddress(exchange, "ETH")
+            ltc_addresses = ExchangeAPI.getDepositAddress(exchange, "LTC")
+            btc_addresses = ExchangeAPI.getDepositAddress(exchange, "BTC")
             for address in eth_addresses:
                 addr_dict[address] = ("ETH", exchange)
             for address in ltc_addresses:
@@ -97,7 +99,7 @@ class TransactionProcesser(Object):
             for address in btc_addresses:
                 addr_dict[address] = ("BTC", exchange)
 
-            print(addr_dict)
+        PrintLibrary.displayDictionary(addr_dict)
 
         return addr_dict
 
