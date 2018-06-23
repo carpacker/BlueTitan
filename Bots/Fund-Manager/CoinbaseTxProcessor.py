@@ -57,6 +57,7 @@ def processTransactions(exchanges, transactions):
 
         # WITHDRAWAL: Check the address against exchange addresses
         if type_trans == "Send":
+            print(1)
             to_address = ""
 
         elif type_trans == "Receive":
@@ -66,7 +67,8 @@ def processTransactions(exchanges, transactions):
         elif type_trans == "Sell":
             pass
         else:
-            return error
+            print(type_trans)
+            return 'error'
 
     return processed_tx
 

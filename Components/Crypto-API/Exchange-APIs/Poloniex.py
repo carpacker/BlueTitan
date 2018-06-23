@@ -26,7 +26,7 @@ base_url = "https://poloniex.com/"
 ######################################## PUBLIC CALLS ##############################################
 ####################################################################################################
 # getTicker       : Returns ticker information for all assets, if provided single asset            #
-#                    then it returns the ticker information for just that asset.                   # 
+#                    then it returns the ticker information for just that asset.                   #
 # getVolume       : Returns 24hr volume for all assets on exchange, if provied single asset        #
 #                    then it returns the 24hr volume for just that asset.                          # 
 # getOrderbook    : Retrieves the orderbook for a given pairing                                    #
@@ -410,22 +410,13 @@ def getDepositAddresses():
 # INPUT: asset - string
 # OUTPUT: Dictionary
 # DESCRIPTION:
-# 
-def getDepositAddress():
-    url = trading_url + "returnDepositAddress"
-    PrintLibrary.displayVariable(url)
-    
-    json_var = requests.request('GET', url).json()
-    
+#    Retrieves the deposit address for a given asset.
+def getDepositAddress(asset):
+    json_var = encryptRequest(True, 'GET', trading_url, command="returnDepositAddresses")
     # Check to make sure no error
-
-    # JSON standardization
-    ret_dict = {}
-    for pairing,information in json_var:
-        pass
+    # TODO
     
-    PrintLibrary.displayDictionary(ret_dict)
-    return ret_dict
+    return json_var
 
 # FUNCTION: generateNewAddress
 # INPUT: asset - string
@@ -456,13 +447,8 @@ def generateNewAddress():
 #    Returns the deposits and withdrawals of the account, including all associated information.
 #     Start and end optional parameters are used to defin a range.
 def getDepositWithdrawals(order_by, start=0, end=str(int(time.time()*1000) - 1000), asset=""):
-    url = trading_url
-    PrintLibrary.displayVariable(url)
-    print(getBalances())
-    json_var = encryptRequest(True, 'POST', url, start=start, end=end, command="returnDepositsWithdrawals")
-    print(json_var)
-    print(poloniex_public_key)
-    print(poloniex_private_key)
+    json_var = encryptRequest(True, 'POST', trading_url, start=start, end=end, command="returnDepositsWithdrawals")
+    
     # * Check to make sure no error
     # TODO
     
@@ -541,13 +527,12 @@ def withdraw():
 #   Encrypts an API request to Binance.
 def encryptRequest(signature, method, base_url, **query_vars):
     queryString = "&".join(['%s=%s' % (key,value) for (key,value) in query_vars.items()])
+    
     if "nonce" not in query_vars:
         extra = "&nonce=" + str(int(time.time()*1000))
-        query_vars['nonce'] = str(int(time.time()*1000))
-        
+        query_vars['nonce'] = str(int(time.time()*1000))    
     queryString += extra
-    print(query_vars)
-    print(queryString)
+    
     # Sign the transaction
     sig = hmac.new(poloniex_private_key.encode(),urllib.parse.urlencode(query_vars).encode('utf8'),hashlib.sha512)
     signature = sig.hexdigest()
@@ -555,9 +540,6 @@ def encryptRequest(signature, method, base_url, **query_vars):
     # Add queries and header
     header = { 'Key' : poloniex_public_key,
                'Sign' : signature}
-#               'Content-Type': 'application/x-www-form-urlencoded'
-    url = base_url + "?" + queryString
-    print(base_url)
     
     req = requests.post(base_url, data=query_vars, headers=header).json()
     return req

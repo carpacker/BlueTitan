@@ -470,11 +470,13 @@ def convertAssetDict(balances):
 #    Reads in a CSV file and passes the data into a list of tuples which is then returned.
 # NOTE: all CSV files must be kept in resource's CSV directory.
 def readCSV(csv_name):
+    return_csv = []
     script_dir = os.path.dirname(__file__)
     full_path = os.path.join(script_dir, '../resources/CSV/' + csv_name)
     with open(full_path, 'r') as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
-            print(row)
+            return_csv.append(row)
 
     csv_file.close()
+    return return_csv
