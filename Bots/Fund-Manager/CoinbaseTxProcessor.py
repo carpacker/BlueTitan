@@ -32,9 +32,28 @@ def main(exchanges):
 
     # 3. Calculate FIFO profit loss
     profit_loss_list = calculateFIFOprofit(adjusted_fifo_txs)
-
+    print(profit_loss_list)
     # 4. Build final CSV of all record
-    self.buildFinalCSV(adjust_fifo_txs, profit_loss_list)
+    buildFinalCSV(adjust_fifo_txs, profit_loss_list)
+
+
+    
+# FUNCTION: buildAddrDictionary
+# INPUT: exchanges - [string, ...]
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Returns a dictionary with addresses as key to an exchange.
+# NOTE: only grabs addresses for ETH, BTC, LTC                
+def buildAddrDictionary(exchanges, assets):
+    # Address Dict
+    addr_dict = {}
+    for exchange in exchanges:
+        addresses = []
+        for asset in assets:
+            address = ExchangeAPI.getDepositAddress(exchange, asset)
+            addr_dict[address['asset']] = (asset, exchange)
+
+    return addr_dict
 
 # FUNCTION: processTransactions
 # INPUT: transactions - list
@@ -47,19 +66,23 @@ def main(exchanges):
 def processTransactions(exchanges, transactions):
 
     # 1. Retrieve exchange addresses from supported exchanges
-    exchange_addresses = buildAddrDictionary(exchanges)
-
+    exchange_addresses = buildAddrDictionary(exchanges, ["ETH", "LTC", "BTC"])
+    print("hm", exchange_addresses)
     # 2. Iterate through transactions
     for transaction in transactions:
         type_trans = transaction[1]
-
         # For each type of transaction
 
         # WITHDRAWAL: Check the address against exchange addresses
         if type_trans == "Send":
-            print(1)
-            to_address = ""
-
+            to_address = transaction[6]
+            try:
+                test = exchange_addresses[to_address]
+                transaction[6] = "Transfer"
+                print(transaction)
+            except KeyError:
+                pass
+        # RECEIVE: Mark as transfer, possibly ignore
         elif type_trans == "Receive":
             pass
         elif type_trans == "Buy":
@@ -70,33 +93,7 @@ def processTransactions(exchanges, transactions):
             print(type_trans)
             return 'error'
 
-    return processed_tx
-
-# FUNCTION: buildAddrDictionary
-# INPUT: exchanges - [string, ...]
-# OUTPUT: Dictionary
-# DESCRIPTION:
-#    Returns a dictionary with addresses as key to an exchange.
-# NOTE: only grabs addresses for ETH, BTC, LTC                
-def buildAddrDictionary(exchanges):
-    # Address Dict
-    addr_dict = {}
-
-    for exchange in exchanges:
-        # Get addresses
-        eth_addresses = ExchangeAPI.getDepositAddress(exchange, "ETH")
-        ltc_addresses = ExchangeAPI.getDepositAddress(exchange, "LTC")
-        btc_addresses = ExchangeAPI.getDepositAddress(exchange, "BTC")
-        for address in eth_addresses:
-            addr_dict[address] = ("ETH", exchange)
-        for address in ltc_addresses:
-            addr_dict[address] = ("LTC", exchange)
-        for address in btc_addresses:
-            addr_dict[address] = ("BTC", exchange)
-
-    PrintLibrary.displayDictionary(addr_dict)
-
-    return addr_dict
+    return transactions
 
 # FUNCTION: calculateFIFOprofit
 # INPUT: transactions - [transaction1, ...]

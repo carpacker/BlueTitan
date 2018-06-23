@@ -413,11 +413,19 @@ def getDepositAddresses():
 #    Retrieves the deposit address for a given asset.
 def getDepositAddress(asset):
     json_var = encryptRequest(True, 'GET', trading_url, command="returnDepositAddresses")
-    # Check to make sure no error
-    # TODO
-    
-    return json_var
+    try:
+        ret_dict = {'asset' : asset,
+                    'address' : json_var[asset]}
 
+    except KeyError:
+        print("getDepositAddress KEYWERROR: To be implemented")
+                    
+    
+    return ret_dict
+
+# FUNCTION
+def getDepositAddreses(assets):
+    pass
 # FUNCTION: generateNewAddress
 # INPUT: asset - string
 # OUTPUT: Dictionary

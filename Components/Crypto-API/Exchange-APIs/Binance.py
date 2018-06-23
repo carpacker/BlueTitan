@@ -690,13 +690,14 @@ def getAccountStatus(**kwargs):
 def getDepositAddress(asset, **kwargs):
     url = WAPI_URL + 'depositAddress.html'
     json_var = encryptRequest(True, 'GET', url, asset=asset, **kwargs)
-    print(json_var)
+
+    # TODO: error handling
 
     # JSON STANDARDIZATION
     if json_var["success"] == True:
         ret_dict = {
         "success" : True,
-        "currency" : asset,
+        "asset" : asset,
         "address" : json_var["address"],
         "withdrawal_tag" : json_var["addressTag"]
         }

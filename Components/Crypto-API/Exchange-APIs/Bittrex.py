@@ -610,6 +610,8 @@ def getDepositAddress(currency):
     url = "https://bittrex.com/api/v1.1/account/getdepositaddress?apikey=%s&nonce=%s&currency=%s" % (bittrex_public_key, nonce, currency)  
     json_var = encrypt(url).json()
 
+    # TODO: ERROR HANDLING
+    
     # JSON STANDARDIZATION
     if json_var["success"] == True:
         json_var2 = json_var["result"]
@@ -618,7 +620,7 @@ def getDepositAddress(currency):
         if outlier_dict != -1:
             ret_dict = {
             "success" : True,
-            "currency" : currency,
+            "asset" : currency,
             "address" : outlier_dict[0],
             "withdrawal_tag" : outlier_dict[1]
             }
@@ -627,7 +629,7 @@ def getDepositAddress(currency):
             address = json_var2["Address"]
             ret_dict = {
             "success" : True,
-            "currency" : currency,
+            "asset" : currency,
             "address" : address,
             "withdrawal_tag" : None
             }
