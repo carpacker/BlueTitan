@@ -33,8 +33,9 @@ def main(exchanges):
     # 3. Calculate FIFO profit loss
     profit_loss_list = calculateFIFOprofit(adjusted_fifo_txs)
     print(profit_loss_list)
+    
     # 4. Build final CSV of all record
-    buildFinalCSV(adjust_fifo_txs, profit_loss_list)
+    buildFinalCSV(adjusted_fifo_txs, profit_loss_list)
 
 
 
@@ -50,7 +51,7 @@ def processTransactions(exchanges, transactions):
 
     # 1. Retrieve exchange addresses from supported exchanges
     exchange_addresses = Helpers.buildAddrDictionary(exchanges, ["ETH", "LTC", "BTC"])
-    print("hm", exchange_addresses)
+    
     # 2. Iterate through transactions
     for transaction in transactions:
         type_trans = transaction[1]

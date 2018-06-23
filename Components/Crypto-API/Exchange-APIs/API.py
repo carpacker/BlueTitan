@@ -113,7 +113,8 @@ hitbtc = {}
 
 kucoin = {}
 
-poloniex = {'getDepositAddress' : Poloniex.getDepositAddress}
+poloniex = {'getPrice' : Poloniex.getPrice,
+            'getDepositAddress' : Poloniex.getDepositAddress}
 
 exchanges = {'binance' : binance,
              'bittrex' : bittrex,
@@ -133,20 +134,33 @@ exchanges = {'binance' : binance,
 #    for the given function.
 class ExchangeAPI():
 
-    ##################################### MARKET CALLS #############################################
+    ###################################### PUBLC CALLS #############################################
 
+    def getTime():
+        pass
+    
+    ##################################### MARKET CALLS #############################################
+    # * - getAssets             :
+    # * - getInfoPairing        :
+    # * - getInfoPairings       :
+    # * - getMarkets            :
+    # * - getPrice              :
+    # * - getOrderbook          :
+    # * - getRecentMarketTrades :
+    ################################################################################################
+    
     # FUNCTION: getCurrencies
     # INPUT: exchange - string
     # OUTPUT: dictionary
     # DESCRIPTION:
     #   Generic function call for getCurrencies. Outputs a list of currencies
     #    for each exchanges and relevant information for the currencies.
-    def getCurrencies(exchange):
+    def getAssets(exchange):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
-        curr_func = curr_ex['getCurrencies']
+        curr_func = curr_ex['getAssets']
         result_dict = curr_func()
         return result_dict
 
@@ -203,48 +217,16 @@ class ExchangeAPI():
     # OUTPUT: float
     #   Generic function call for getPrice. Outputs the last price for a given
     #    market pairing. Return is in terms of bitcoin.
-    def getPrice(exchange, pairing):
+    def getPrice(exchange, pairing, asset="BTC"):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia', 'coinmarketcap', 'poloniex']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getPrice']
         pairing_u = unscramblePairing(exchange, pairing)
-        result_dict = curr_func(pairing_u)
+        result_dict = curr_func(pairing_u, asset)
         return result_dict
-
-    # FUNCTION: getPriceBTC
-    # INPUT: exchange - string
-    #        pairing  - string
-    # OUTPUT: float
-    #   Generic function call for getPrice. Outputs the last price for a given
-    #    market pairing in terms of BTC.
-    def getPriceBTC(exchange, pairing):
-        supportedexchanges = ['coinmarketcap', 'binance', 'bittrex']
-        if verifySupported(exchange, supportedexchanges) == False:
-            return -1
-        curr_ex = exchanges[exchange]
-        curr_func = curr_ex['getPriceBTC']
-        pairing_u = unscramblePairing(exchange, pairing)
-        result_dict = curr_func(pairing_u)
-        return result_dict
-
-    # FUNCTION: getPriceUSD
-    # INPUT: exchange - string
-    #        pairing  - string
-    # OUTPUT: float
-    #   Generic function call for getPrice. Outputs the last price for a given
-    #    market pairing in terms of USD. 
-    def getPriceUSD(exchange, pairing):
-        supportedexchanges = ['coinmarketcap']
-        if verifySupported(exchange, supportedexchanges) == False:
-            return -1
-        curr_ex = exchanges[exchange]
-        curr_func = curr_ex['getPriceUSD']
-        pairing_u = unscramblePairing(exchange, pairing)
-        result_dict = curr_func(pairing_u)
-        return result_dict
-
+    
     # FUNCTION: getOrderbook
     # INPUT: exchange - string
     #        pairing  - string
@@ -269,14 +251,14 @@ class ExchangeAPI():
     # DESCRIPTION:
     #   Generic function call that outputs a list of the most recent trades for
     #    a given market symbol.
-    def getRecentTrades(exchange, pairing):
+    def getRecentMarketTrades(exchange, pairing, quantity=100):
         supportedexchanges = ['binance', 'bittrex']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
         pairing_u = unscramblePairing(exchange, pairing)
-        curr_func = curr_ex['getRecentTrades']
-        result_json = curr_func(pairing_u)
+        curr_func = curr_ex['getRecentMarketTrades']
+        result_json = curr_func(pairing_u, quantity)
         return result_json
 
     #################################### ACCOUNT CALLS ############################################
@@ -368,20 +350,20 @@ class ExchangeAPI():
     # FUNCTION: getDepositHistory
     # INPUT: exchange - string
     #        period   - TODO
-    #        max      - TODO [Maximum number of deposits to return]
+    #        max_num  - TODO [Maximum number of deposits to return]
     # OUTPUT: dictionary
     # DESCRIPTION: 
     #   Generic function call for getDepositHistory. Retrieves the withdrawal
     #    history of either a single currency or all currencies for a given period 
     #    of time.
-    def getDepositHistory(exchange):
+    def getDepositHistory(exchange, pairing, period, max_num):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
-        symbol_u = unscramblePairing(exchange, symbol)
+        pairing_u = unscramblePairing(exchange, symbolpairing)
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getDepositHistory']
-        result_dict = curr_func()
+        result_dict = curr_func(pairing, period, max_num)
         return result_dict
 
     # FUNCTION: getDepositHistoryAsset

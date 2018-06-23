@@ -1,33 +1,52 @@
-*: Calculate tax information
-*: Go downstairs and work on rigs for a time
-*: Fund movement
+OX: Calculate tax information
+ - Add in other sells
+ - Possibly deal with receives differently
+ - Final testing
+ - Provide final tuple, add to CSV
+ - Light verification
+
+C: Fund movement
+ - Get Passwords/logins
+ - Assess current balances for all accounts
+ - Move funds from Bittrex/Binance
+ - Switch API keys
+ - Plan balance management and staying up to date
+
+*: Bot work
+ - Review older to-dos, projects and everything on GitHub
+ - New general project tab
+ - Finish READMEs
+ - Re-create Wiki
 *: Notepad/book system for accompanying work
-*: Rework desk structure if necessary
-*: Research python emacs interpreter
-*: Work on prototyping text doc --> Include all necessary functionality for V1 of bot and to make profit
+ - Rework desk structure if necessary
+ - Aggregate pads/notebooks
+ - MAIN desk note taking structure
+ - New chair for upstairs
+ - PORTABLE note taking structure
+ - BASEMENT workflow, note taking structure
+ - Thoughts on using secondary desk consistently
+ 
+*: Go downstairs and work on rigs for a time
+ - Bare bones, just start hacking away
+ - Sort away wood
+ - Fix PWRCLR gpu and get OC back on track
+ - Update each rig
+ - Take notes and plan how to estimate power usage and all that
 
-TOMORROW STUFF:
-X: Clean bird cage
-*: Laundry
+*: Conceptual Work
+ - Prototyping text doc : necessary functionality for V1 bot [profit focus]
+ - Algorithm design and decisions
+ - Visual accompaniment to trading system, automated fund management and analysis tools
+ - Starting paper & theory development for system [latex]
 
-SIDE NOTE:
-- Probably want to record or draw how system should work
-- Planning out week starting monday (anti-depressants start)
-- Notes on algorithm decisions
-- Possibly significant items :
+*: Scheduling
+ - Planning out week starting monday (anti-depressants start)
  - Schedule.md, attempt to schedule out work specifically on github
- X Using github as tool to organize and plan more
  - Layout syllabus for developing master-paper for this project
- - Proper physical note-taking and visualization accompaniment
+ - Google calendar or physical
 
+CODE
 - Store withdrawal fee in btc terms
-0. Taxes
-1. Figure out writing/physical shit [be able to write to do work, read to do work, learn to do work [anywhere]]
-2. Basement/rigs workflow and dedicating time to that
-3. File org and bot structuring
-
-- Getting file to run
-- Checking/testing getDepositAddress
-- Testing readCSV, buildAddrDictionary
-- Workin in ProcessTransaction classificatinos
-- Adapting FIFO
+- Alphabetize, add on to generic API dictionaries
+- Reworking getPriceBTC/USD across board (where implemented, specific exchanges)
+- Reworking getAssets --> getCurrencies

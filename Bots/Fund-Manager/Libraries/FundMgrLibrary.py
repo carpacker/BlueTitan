@@ -2,11 +2,11 @@
 import sys
 import time
 
-# Windows Main Desktop
+# WINDOWS main-desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/DatabaseManager')
 
-# Linux Main Server
+# LINUX main-server
 
 # Internal Imports
 from API import ExchangeAPI
@@ -14,10 +14,9 @@ import Helpers
 from GeneralizedDatabase import GenDatabaseLibrary
 from PrintLibrary import PrintLibrary
 
-# CLASS: Helpers
-# FUNCTION LIST: [calculateMetrics, averageValue, calculateChange, sumBalances, sumProfit, sumVolume]
+# CLASS: MetricsCalculator
 # DESCRIPTION:
-#   Function library for the profit tracking components. More comprehensive description to come.
+#   Function library for the profit tracking components.
 class MetricsCalculator(object):
 
     # FUNCTION: calculateMetrics
