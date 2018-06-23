@@ -1,23 +1,24 @@
-OX: Calculate tax information
+SUNDAY: Calculate tax information
  - Add in other sells
  - Possibly deal with receives differently
  - Final testing
  - Provide final tuple, add to CSV
  - Light verification
 
-C: Fund movement
+TODAY: Fund movement
  - Get Passwords/logins
  - Assess current balances for all accounts
  - Move funds from Bittrex/Binance
  - Switch API keys
  - Plan balance management and staying up to date
 
-*: Bot work
+TODAY, SUNDAY, TUESDAY: Bot work
  - Review older to-dos, projects and everything on GitHub
  - New general project tab
  - Finish READMEs
  - Re-create Wiki
-*: Notepad/book system for accompanying work
+ 
+TOMORROW: Notepad/book system for accompanying work
  - Rework desk structure if necessary
  - Aggregate pads/notebooks
  - MAIN desk note taking structure
@@ -26,20 +27,20 @@ C: Fund movement
  - BASEMENT workflow, note taking structure
  - Thoughts on using secondary desk consistently
  
-*: Go downstairs and work on rigs for a time
+MONDAY: Go downstairs and work on rigs for a time
  - Bare bones, just start hacking away
  - Sort away wood
  - Fix PWRCLR gpu and get OC back on track
  - Update each rig
  - Take notes and plan how to estimate power usage and all that
 
-*: Conceptual Work
+WEDNESDAY: Conceptual Work
  - Prototyping text doc : necessary functionality for V1 bot [profit focus]
  - Algorithm design and decisions
  - Visual accompaniment to trading system, automated fund management and analysis tools
  - Starting paper & theory development for system [latex]
 
-*: Scheduling
+SUNDAY: Scheduling
  - Planning out week starting monday (anti-depressants start)
  - Schedule.md, attempt to schedule out work specifically on github
  - Layout syllabus for developing master-paper for this project

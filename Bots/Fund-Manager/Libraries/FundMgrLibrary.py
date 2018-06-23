@@ -6,7 +6,11 @@ import time
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/DatabaseManager')
 
+# WINDOWS laptop
+# sys.path.append()
+
 # LINUX main-server
+# sys.path.append()
 
 # Internal Imports
 from API import ExchangeAPI
@@ -19,6 +23,7 @@ from PrintLibrary import PrintLibrary
 #   Function library for the profit tracking components.
 class MetricsCalculator(object):
 
+    def calculateMiningMetrics
     # FUNCTION: calculateMetrics
     # INPUTS: period              - int
     #         balances            - TODO
@@ -29,12 +34,13 @@ class MetricsCalculator(object):
     # DESCRIPTION:
     #   Calculates metric based on time period, grabs values from successful trades and from
     #    unsuccessful trades and then stores them in a new database.
-    def calculateMetrics(balances, supported_exchanges, supported_assets, running_algos):
+    def calculateTradeMetrics(balances, supported_exchanges, supported_assets, running_algos):
 
+        balances = Helpers.retrieveAccountBalances(exchanges, assets)
+        
         # 1. Retrieve the last entry
-        # TODO: change inputs here
-        previous_tuple_metric = GeneralizedDatabase.getLastEntry(MetricsDatabase, "Metrics")
-        previous_tuple_failure_metric = GeneralizedDatabase.getLastEntry(MetricsDatabase, "FailureMetrics")
+        previous_tuple_metric = GenDatabaseLibrary.getLastEntry(MetricsDatabase, "Metrics")
+        previous_tuple_failure_metric = GenDatabaseLibrary.getLastEntry(MetricsDatabase, "FailureMetrics")
         period = float(previous_tuple_metric[0])
 
         PrintLibrary.displayVariables(previous_tuple_metric, "Previous Metrics")
@@ -43,44 +49,43 @@ class MetricsCalculator(object):
         # 2. Calculate derivative variables current period vs previous period
         balance_list = []
         for balance_a in balances:
-            # TODO: Figure out these
             something = balance_a[0]
-            something1 = balance_a[1]
-            # TODO: change getBalance inputs
-            previous_balance = GeneralizedDatabase.getBalance(balance_a[1], balance_a[0])
+            something_one = balance_a[1]
+            PrintLibrary.displayVariables(balance_a)
+
+            # Something here is wrong
+            previous_balance = GenDatabaseLibrary.getItem(balance_a[1], balance_a[0])
             balance = balance_a[2]
             btc_balance = balance_a[3]
             final_balance = balance_a[2]
-            if final_balance != 0:
-                delta_balance = Helpers.calculateChange(previous_balance, final_balance)
-            else:
-                delta_balance = 0
+            
+            delta_balance = Helpers.calculateChange(previous_balance, final_balance)
+            delta_balance = 0
 
             balance_tuple = (balance_a[0], balance_a[1], final_balance, delta_balance)
             balance_list.append(balance_tuple)
         
         PrintLibrary.displayVariables(balance_list, "Balances")
 
-        # Get dictionary of lists --> profit_t["BTC"] --> [profit1, profit2, ...]
+        columns = ["Pairing", "Profit", "Profit_ratio", "Total_btc", "Total_usd"]
 
-        # TODO: make this a bit more efficient, perhaps selectColumns
-        columns = ["Profit", "Profit_ratio", "Total_btc"]
-        columns_mining = [""]
-        arbitrage_columns = GeneralizedDatabase.selectColumns("ArbitrageTrades", columns, period)
-        failure_columns = GeneralizedDatabase.selectColumns("FailureTrades", columns, period)
+        # FOR each RUNNING ALGORITHM :: grab the relevant columns in both trades and faile trades
+        # Running algo = [algo_name, ...]
+        for algo in running_algos:
+            trade_table = algo_name + "Trades"
+            failure_table = algo_name + "FailureTrades"
+            database_name = algo_name + "Database"
 
-        quantity_t = float(len(profit_t))
-        quantity_f = float(len(profit_ratio_f))
+            trade_columns = GenDatabaseLibrary.selectColumns(database_name, trade_table, columns, period)
+            failure_columns = GenDatabaseLibrary.selectColumns(database_name, failure_table, columns, period)
 
-        # FOR WHEN I GET AROUND TO THIS
-        #     each asset should probably have its own table in the assetmetric database. Each call would then
-        #      be indexing into the table with the asset name as the identifier. This portion should mimic
-        #      the general
+        PrintLibrary.displayVariables(trade_columns)
+        PrintLibrary.displayVariables(failure_columns)
+        
+        # Each asset has its own table                          
         # 3. Calculate individual asset metrics
-        for asset in supportedassets:
-
-            # Replacing getAssetMEtrics
-            asset_tuple = GeneralizedDatabase.getEntry(asset)
+        for asset in supported_assets:
+            
 
             # Below needs correct inputs and needs to pull the asset metrics properly, need to work out how to implement this.
             pr = Helpers.averageValue()
@@ -159,18 +164,9 @@ class MetricsCalculator(object):
         GenDatabaseLibrary.storeEntry(success_values, "table", "MetricsDatabase")
         GenDatabaseLibrary.storeEntry(failure_values)
 
-    # FUNCTION: runHourly
-    # INPUT: exchanges  - [string]
-    #        assets     - [string]
-    #        balances   - TODO
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #   Top level function for profit tracking on the hour
-    def runHourly(exchanges, assets):
-        balances = Helpers.retrieveAccountBalances(exchanges, assets)
-        hourly_metrics = PTrackingLibrary.calculateMetrics(balances, exchanges, assets)
-        PrintLibrary.displayVariable(hourly_metrics)
-
+# CLASS: Liquidator
+# DESCRIPTION:
+#    Contanier object containing functinoality pertinent 
 class Liquidator(object):
 
     # FUNCTION: assessProfitPeriod

@@ -12,5 +12,8 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Libraries')
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 
-# TODO
-# Skeleton and theory to come
+# CLASS: FundAllocator
+# DESCRIPTION:
+#  TODO
+class FundAllocator(object):
+    pass
