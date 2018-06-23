@@ -14,6 +14,6 @@ from PrintLibrary import PrintLibrary
 
 # CLASS: FundAllocator
 # DESCRIPTION:
-#  TODO
+#  
 class FundAllocator(object):
     pass

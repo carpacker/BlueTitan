@@ -78,9 +78,14 @@ class MetricsCalculator(object):
 
             trade_columns = GenDatabaseLibrary.selectColumns(database_name, trade_table, columns, period)
             failure_columns = GenDatabaseLibrary.selectColumns(database_name, failure_table, columns, period)
+            
+            PrintLibrary.displayVariables(trade_columns)
+            PrintLibrary.displayVariables(failure_columns)
 
-        PrintLibrary.displayVariables(trade_columns)
-        PrintLibrary.displayVariables(failure_columns)
+            # Store results
+            GenDatabaseLibrary.storeEntry(success_values, "table", "MetricsDatabase")
+            GenDatabaseLibrary.storeEntry(failure_values)
+
         
         # Each asset has its own table                          
         # 3. Calculate individual asset metrics
@@ -158,11 +163,7 @@ class MetricsCalculator(object):
                     ("Utilization", agg_utilization), ("Quantity Trades", agg_quantity))
         PrintLibrary.displayKeyVariables(Plist)
 
-        # Store values
-        # Storing metric and failure metric
-        DatabaseLibrary.storeMetricsValue(success_values)
-        GenDatabaseLibrary.storeEntry(success_values, "table", "MetricsDatabase")
-        GenDatabaseLibrary.storeEntry(failure_values)
+
 
 # CLASS: Liquidator
 # DESCRIPTION:
