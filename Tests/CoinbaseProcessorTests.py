@@ -1,7 +1,7 @@
 import sys
 sys.path.append("U:/Directory/Projects/BlueTitan/Bots/Fund-Manager/")
 
-from CoinbaseTxProcessor import TransactionProcessor
+import CoinbaseTxProcessor as TransactionProcessor
 
 if __name__ == "__main__":
-    TransactionProcessor.main(["Poloniex"])
+    TransactionProcessor.main(["poloniex", "binance", "bittrex"])

@@ -27,6 +27,7 @@ from datetime import datetime
 from collections import defaultdict
 import csv
 import time
+import os
 
 # Internal-Imports
 from API import ExchangeAPI
@@ -467,8 +468,11 @@ def convertAssetDict(balances):
 # OUTPUT: [(data), ...]
 # DESCRIPTION:
 #    Reads in a CSV file and passes the data into a list of tuples which is then returned.
+# NOTE: all CSV files must be kept in resource's CSV directory.
 def readCSV(csv_name):
-    with open(csv_name, 'r') as csv_file:
+    script_dir = os.path.dirname(__file__)
+    full_path = os.path.join(script_dir, '../resources/CSV/' + csv_name)
+    with open(full_path, 'r') as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
             print(row)

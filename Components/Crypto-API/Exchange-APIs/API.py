@@ -113,7 +113,7 @@ hitbtc = {}
 
 kucoin = {}
 
-poloniex = {}
+poloniex = {'getDepositAddress' : Poloniex.getDepositAddress}
 
 exchanges = {'binance' : binance,
              'bittrex' : bittrex,
@@ -357,7 +357,7 @@ class ExchangeAPI():
     #   Generic function call for getDepositAddress. Returns a dictionary which
     #    contains the deposit address of the queried asset.
     def getDepositAddress(exchange, asset):
-        supportedexchanges = ['binance', 'bittrex', 'cryptopia']
+        supportedexchanges = ['binance', 'bittrex', 'cryptopia', 'poloniex']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         curr_ex = exchanges[exchange]
@@ -409,7 +409,13 @@ class ExchangeAPI():
     #   Returns the trade history for an account on the given exchange for all 
     #    assets.
     def getTradeHistory(exchange, quantity=100):
-        pass
+        supportedexchanges = []
+        if verifySupported(exchange, supportedexchanges) == False:
+            return -1
+        curr_ex = exchanges[exchange]
+        curr_func = curr_ex['getTradeHistory']
+        result_dict = curr_func(quantity)
+        return result_dict
 
     # FUNCTION: getTradeHistoryAsset
     # INPUT: exchange - string
@@ -420,37 +426,43 @@ class ExchangeAPI():
     #   Returns the trade history for an account on the given exchange for
     #    a given asset.
     def getTradeHistoryAsset(exchange, asset, quantity=100):
+        supportedexchanges = []
+        if verifySupported(exchange, supportedexchanges) == False:
+            return -1
+        curr_ex = exchanges[exchange]
+        curr_func = curr_ex['getTradeHistoryAsset']
+        result_dict = curr_func(asset, quantity)
+        return result_dict
         pass
 
     # FUNCTION: getWithdraw
-    # INPUT: TODO
-    # OUTPUT: TODO
+    # INPUT: exchange - string
+    # OUTPUT: Dictionary
     # DESCRIPTION:
-    #   retrieves a withdraw record from a given exchange.
-    def getWithdraw():
+    #   Retrieves a withdraw record from a given exchange.
+    def getWithdrawal():
         pass
 
     # FUNCTION: getWithdrawalHistory
     # INPUT: exchange - string
     #        asset    - string
     #        period   - TODO
-    # OUTPUT: dictionary
+    # OUTPUT: Dictionary
     # DESCRIPTION: 
     #   Generic function call for getWithdrawalHistory. Retrieves the withdrawal
     #    history of either a single currency or all currencies for a given period 
     #    of time.
-    def getWithdrawalHistory():
+    def getWithdrawalHistory(exchange, period):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
         symbol_u = unscramblePairing(exchange, symbol)
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['getWithdrawalHistory']
-        # Inputs: pairing, quantity, rate [kwarg1, kwarg2, ..., kwargN]
         result_dict = curr_func(symbol_u)
         return result_dict
 
-    def getWithdrawalHistoryAsset():
+    def getWithdrawalHistoryAsset(exchange, asset):
         pass
 
     # FUNCTION: withdraw
@@ -473,55 +485,77 @@ class ExchangeAPI():
 
     ##################################### ORDER CALLS #############################################
     # FUNCTION: buyLimit
-    # INPUT: TODO
+    # INPUT: exchange - string
+    #        pairing  - string
+    #        quantity - float
+    #        rate     - float
     # OUTPUT: dictionary
     # DESCRIPTION:
-    #   Generic wrapper for a buy-limit call. TODO, describe what buy limit is
-    def buyLimit(exchange, symbol, quantity, rate):
+    #   Generic wrapper for a buy-limit call.
+    def buyLimit(exchange, pairing, quantity, rate):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
-        symbol_u = unscramblePairing(exchange, symbol)
+        symbol_u = unscramblePairing(exchange, pairing)
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['buyLimit']
-        result_dict = curr_func(symbol_u, quantity, rate)
+        result_dict = curr_func(pairing_u, quantity, rate)
         return result_dict
 
     # FUNCTION: sellLimit
-    # INPUTS: exchange(string), symbol(string), quantity(float), rate(float)
-    def sellLimit(exchange, symbol, quantity, rate):
+    # INPUTS: exchange - string
+    #         pairing  - string
+    #         quantity - float
+    #         rate     - float
+    # OUTPUT: Dictionary
+    # DESCRIPTION:
+    #    Generic wrapper for sell-limit call.
+    def sellLimit(exchange, pairing, quantity, rate):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
-        symbol_u = unscramblePairing(exchange, symbol) 
+        pairing_u = unscramblePairing(exchange, pairing) 
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['sellLimit']
-        # Inputs: symbol, quantity, rate [kwarg1, kwarg2, ..., kwargN] 
-        result_dict = curr_func(symbol_u, quantity, rate)
+        result_dict = curr_func(pairing_u, quantity, rate)
         return result_dict
 
-    # TODO NOT IMPLEMENTED
-    def stopLoss(exchange, symbol, quantity, rate):
+    # FUNCTION: stopLoss
+    # INPUT: exchange - string
+    #        symbol   - string
+    #        quantity - float
+    #        rate     - float
+    # OUTPUT: Dictionary
+    # DESCRIPTION:
+    #     Submit a stop-loss order.
+    def stopLoss(exchange, pairing, quantity, rate):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
-        symbol_u = unscramblePairing(exchange, symbol)
+        pairing_u = unscramblePairing(exchange, symbol)
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['stopLoss']
-        # Inputs: order_id [kwarg1, kwarg2, ..., kwargN] 
-        result_dict = curr_func(symbol_u, side, quantity, rate)
+        result_dict = curr_func(pairing_u, side, quantity, rate)
         return result_dict
 
-    # TODO NOT IMPLEMENTED
-    def stopLossLimit(exchange, side, symbol, quantity, rate_one, rate_two):
+    # FUNCTION: stopLossLimit
+    # INPUT: exchange - string
+    #        side     - 'buy' or 'sell'
+    #        pairing  - string
+    #        quantity - float
+    #        rate_one - float
+    #        rate_two - float
+    # OUTPUT: Dictionary
+    # DESCRIPTION:
+    #    Submit a stop-loss/limit order
+    def stopLossLimit(exchange, side, pairing, quantity, rate_one, rate_two):
         supportedexchanges = ['binance', 'bittrex', 'cryptopia']
         if verifySupported(exchange, supportedexchanges) == False:
             return -1
-        symbol_u_u = unscramblePairing(exchange, symbol)
+        pairing_u = unscramblePairing(exchange, pairing)
         curr_ex = exchanges[exchange]
         curr_func = curr_ex['stopLossLimit']
-        # Inputs: order_id [kwarg1, kwarg2, ..., kwargN] 
-        result_dict = curr_func(symbol_u, side, quantity, rate_one, rate_two)
+        result_dict = curr_func(pairing_u, side, quantity, rate_one, rate_two)
         return result_dict
 
     def getOrder(exchange, order_id, pairing):

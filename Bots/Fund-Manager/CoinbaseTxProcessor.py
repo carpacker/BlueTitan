@@ -16,193 +16,190 @@ import Coinbase
 from API import ExchangeAPI
 import Helpers
 from PrintLibrary import PrintLibrary
-
-# CLASS: TransactionProcessor
-# DESCRIPTION:
-#   Container for suite of functions that process the transactions across various exchanges.
-class TransactionProcesser(Object):
     
-    # FUNCTION: main
-    # INPUT: exchanges - [string, ...]
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #   Top level function for converting a list of buys and sells into a FIFO
-    #    profit loss generator
-    def main(self, exchanges):
-        # 1. Read input Coinbase CSV
-        chronological_txs = Helpers.readCSV('CB2017.csv')
-        
-        # 2. Classify what to do with each transaction
-        adjusted_fifo_txs = self.processTransactions(exchanges, chronological_txs)
-        
-        # 3. Calculate FIFO profit loss
-        profit_loss_list = self.calculateFIFOprofit(adjusted_fifo_txs)
+# FUNCTION: main
+# INPUT: exchanges - [string, ...]
+# OUTPUT: N/A
+# DESCRIPTION:
+#   Top level function for converting a list of buys and sells into a FIFO
+#    profit loss generator
+def main(exchanges):
+    # 1. Read input Coinbase CSV
+    chronological_txs = Helpers.readCSV('CB2017.csv')
 
-        # 4. Build final CSV of all record
-        self.buildFinalCSV(adjust_fifo_txs, profit_loss_list)
- 
-    # FUNCTION: processTransactions
-    # INPUT: transactions - list
-    # OUTPUT: same list with entries edited
-    # DESCRIPTION:
-    #    Iterates through chronological list of transactions. Detects when certain withdrawals
-    #     are sent to addresses of another exchange, denoting that it is not a proper sell
-    #     but instead a transfer. Marks any transfer that goes to a random address as a sell
-    #     and any transfer to another exchange as a transfer.
-    def processTransactions(exchanges, transactions):
-        
-        # 1. Retrieve exchange addresses from supported exchanges
-        exchange_addresses = buildAddrDictionary(exchanges)
+    # 2. Classify what to do with each transaction
+    adjusted_fifo_txs = processTransactions(exchanges, chronological_txs)
 
-        # 2. Iterate through transactions
-        for transaction in transactions:
-            type_trans = transaction[0]
+    # 3. Calculate FIFO profit loss
+    profit_loss_list = calculateFIFOprofit(adjusted_fifo_txs)
 
-            # For each type of transaction
-            
-            # WITHDRAWAL: Check the address against exchange addresses
-            if type_trans == "withdrawal":
-                to_address = ""
+    # 4. Build final CSV of all record
+    self.buildFinalCSV(adjust_fifo_txs, profit_loss_list)
 
-            elif type_trans == "":
-                pass
+# FUNCTION: processTransactions
+# INPUT: transactions - list
+# OUTPUT: same list with entries edited
+# DESCRIPTION:
+#    Iterates through chronological list of transactions. Detects when certain withdrawals
+#     are sent to addresses of another exchange, denoting that it is not a proper sell
+#     but instead a transfer. Marks any transfer that goes to a random address as a sell
+#     and any transfer to another exchange as a transfer.
+def processTransactions(exchanges, transactions):
 
-            else:
-                pass
+    # 1. Retrieve exchange addresses from supported exchanges
+    exchange_addresses = buildAddrDictionary(exchanges)
 
-        return processed_tx
+    # 2. Iterate through transactions
+    for transaction in transactions:
+        type_trans = transaction[1]
 
-    # FUNCTION: buildAddrDictionary
-    # DESCRIPTION:
-    #    Returns a dictionary with addresses as key to an exchange.
-    # NOTE: only grabs addresses for ETH, BTC, LTC                
-    def buildAddrDictionary(exchanges):
-        # Address Dict
-        addr_dict = {}
+        # For each type of transaction
 
-        for exchange in exchanges:
-            # Get addresses
-            eth_addresses = ExchangeAPI.getDepositAddress(exchange, "ETH")
-            ltc_addresses = ExchangeAPI.getDepositAddress(exchange, "LTC")
-            btc_addresses = ExchangeAPI.getDepositAddress(exchange, "BTC")
-            for address in eth_addresses:
-                addr_dict[address] = ("ETH", exchange)
-            for address in ltc_addresses:
-                addr_dict[address] = ("LTC", exchange)
-            for address in btc_addresses:
-                addr_dict[address] = ("BTC", exchange)
+        # WITHDRAWAL: Check the address against exchange addresses
+        if type_trans == "Send":
+            to_address = ""
 
-        PrintLibrary.displayDictionary(addr_dict)
+        elif type_trans == "Receive":
+            pass
+        elif type_trans == "Buy":
+            pass
+        elif type_trans == "Sell":
+            pass
+        else:
+            return error
 
-        return addr_dict
+    return processed_tx
 
-    # FUNCTION: calculateFIFOprofit
-    # INPUT: transactions - [transaction1, ...]
-    # OUTPUT: Dictionary
-    # DESCRIPTION:
-    #    Given a list of chronologically sorted transactions, calculates the profit loss up
-    #     until the last transaction.
-    # NOTE: maybe do it by asset?
-    # NOTE: keep track of final value?
-    def calculateFIFOprofit(transactions):
-        inputs = []
-        outputs = []
+# FUNCTION: buildAddrDictionary
+# INPUT: exchanges - [string, ...]
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Returns a dictionary with addresses as key to an exchange.
+# NOTE: only grabs addresses for ETH, BTC, LTC                
+def buildAddrDictionary(exchanges):
+    # Address Dict
+    addr_dict = {}
 
-        for row in transactions:
-            if row[1] == 'buy':
-                inputs.append(row)
-            elif row[1] == 'sell':
-                outputs.append(row) 
+    for exchange in exchanges:
+        # Get addresses
+        eth_addresses = ExchangeAPI.getDepositAddress(exchange, "ETH")
+        ltc_addresses = ExchangeAPI.getDepositAddress(exchange, "LTC")
+        btc_addresses = ExchangeAPI.getDepositAddress(exchange, "BTC")
+        for address in eth_addresses:
+            addr_dict[address] = ("ETH", exchange)
+        for address in ltc_addresses:
+            addr_dict[address] = ("LTC", exchange)
+        for address in btc_addresses:
+            addr_dict[address] = ("BTC", exchange)
 
-        # 2. While there are outputs still left to be acted over, calculate
-        #     profit loss using FIFO methodology.
-        running_profit = 0
-        running_loss = 0
+    PrintLibrary.displayDictionary(addr_dict)
 
-        total_in = 0
-        total_out = 0
+    return addr_dict
 
-        ctr_flag = 2
+# FUNCTION: calculateFIFOprofit
+# INPUT: transactions - [transaction1, ...]
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Given a list of chronologically sorted transactions, calculates the profit loss up
+#     until the last transaction.
+# NOTE: maybe do it by asset?
+# NOTE: keep track of final value?
+def calculateFIFOprofit(transactions):
+    inputs = []
+    outputs = []
 
-        while len(outputs) > 0:
+    for row in transactions:
+        if row[1] == 'buy':
+            inputs.append(row)
+        elif row[1] == 'sell':
+            outputs.append(row) 
 
-            # Control flag determines what elements to pop:
-            # 2 - both
-            # 1 - inputs
-            # 0 - outputs
-            if ctr_flag == 2:
-                current_output = outputs.pop()
-                current_input = inputs.pop()
+    # 2. While there are outputs still left to be acted over, calculate
+    #     profit loss using FIFO methodology.
+    running_profit = 0
+    running_loss = 0
 
-            elif ctr_flag == 1:
-                current_input = inputs.pop()
+    total_in = 0
+    total_out = 0
 
-            elif ctr_flag == 0:
-                current_output = outputs.pop()
+    ctr_flag = 2
 
-            print("---- ITERATION " + str(len(outputs)) + "----")
-            print("OUT:", outputs)
-            print("IN:", inputs)
-            print("CURRENT PROFIT:", running_profit)
+    while len(outputs) > 0:
 
-            # CASE: Sell is larger - work through buys
-            curr_value = float(current_output[2])
-            print(current_input, current_output)
-            while curr_value > float(current_input[2]):
-                # Calculate the profit FILO
-                orig_value = float(current_input[4]) * float(current_input[5])
-                sell_value = float(current_input[4]) * float(current_output[5])
-                profit_loss = sell_value - orig_value
+        # Control flag determines what elements to pop:
+        # 2 - both
+        # 1 - inputs
+        # 0 - outputs
+        if ctr_flag == 2:
+            current_output = outputs.pop()
+            current_input = inputs.pop()
 
-                # Add to running profit, adjust current output's value for next iteration
-                running_profit += profit_loss
-                current_output[4] = float(current_output[4]) - float(current_input[4])
-                curr_value = float(current_output[2]) - sell_value
-                print(orig_value,sell_value,profit_loss,running_profit,curr_value)
+        elif ctr_flag == 1:
+            current_input = inputs.pop()
 
-                # Set control flag to pop input
-                current_input = inputs.pop()
-                time.sleep(3)
+        elif ctr_flag == 0:
+            current_output = outputs.pop()
 
-            # CASE: Buy is larger, continue loop 
-            orig_value = float(current_output[4]) * float(current_input[5])
-            sell_value = float(current_output[4]) * float(current_output[5])
+        print("---- ITERATION " + str(len(outputs)) + "----")
+        print("OUT:", outputs)
+        print("IN:", inputs)
+        print("CURRENT PROFIT:", running_profit)
+
+        # CASE: Sell is larger - work through buys
+        curr_value = float(current_output[2])
+        print(current_input, current_output)
+        while curr_value > float(current_input[2]):
+            # Calculate the profit FILO
+            orig_value = float(current_input[4]) * float(current_input[5])
+            sell_value = float(current_input[4]) * float(current_output[5])
             profit_loss = sell_value - orig_value
 
             # Add to running profit, adjust current output's value for next iteration
             running_profit += profit_loss
-            current_input[4] = float(current_input[4]) - float(current_output[4])
-            print(orig_value,sell_value,profit_loss,running_profit)
+            current_output[4] = float(current_output[4]) - float(current_input[4])
+            curr_value = float(current_output[2]) - sell_value
+            print(orig_value,sell_value,profit_loss,running_profit,curr_value)
 
-            # Pop new input
-            ctr_flag = 0
-            time.sleep(3)           
+            # Set control flag to pop input
+            current_input = inputs.pop()
+            time.sleep(3)
 
-    def buildFinalCSV():
-        pass
-        # 1. Build any derivative data
-        # 2. Create and write the actual CSV file
+        # CASE: Buy is larger, continue loop 
+        orig_value = float(current_output[4]) * float(current_input[5])
+        sell_value = float(current_output[4]) * float(current_output[5])
+        profit_loss = sell_value - orig_value
 
-    # FUNCTION: buildExchangeAddresses
-    # INPUT: exchanges - [string, ...]
-    #        assets    - [string, ...]
-    # OUTPUT: nested dictionary
-    # DESCRIPTION:
-    #    Takes an input of exchanges and assets, creates entry in database to keep track of
-    #     wallet addresses, where static addresses are possible.
-    # NOTE: This function may not be necessary, some other functino does this job perhaps
-    def buildExchangeAddresses(exchanges, assets):
-        pass
-    
-    # FUNCTION: storeTxCSV
-    # INPUT: transactions - [(txdata1, ...), ...]
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #    Takes sorted list of transactinos (chronologically) and stores them in the appropiate
-    #     database. Store each transaction individually. If using a single transaction, it
-    #     must be contained in a list until a better solution is devised.
-    def storeTxs(transactions):
-        pass
-        
-if __name__ == "__main__":
-    TransactionProcessor.main(['Poloniex'])
+        # Add to running profit, adjust current output's value for next iteration
+        running_profit += profit_loss
+        current_input[4] = float(current_input[4]) - float(current_output[4])
+        print(orig_value,sell_value,profit_loss,running_profit)
+
+        # Pop new input
+        ctr_flag = 0
+        time.sleep(3)           
+
+def buildFinalCSV():
+    pass
+    # 1. Build any derivative data
+    # 2. Create and write the actual CSV file
+
+# FUNCTION: buildExchangeAddresses
+# INPUT: exchanges - [string, ...]
+#        assets    - [string, ...]
+# OUTPUT: nested dictionary
+# DESCRIPTION:
+#    Takes an input of exchanges and assets, creates entry in database to keep track of
+#     wallet addresses, where static addresses are possible.
+# NOTE: This function may not be necessary, some other functino does this job perhaps
+def buildExchangeAddresses(exchanges, assets):
+    pass
+
+# FUNCTION: storeTxCSV
+# INPUT: transactions - [(txdata1, ...), ...]
+# OUTPUT: N/A
+# DESCRIPTION:
+#    Takes sorted list of transactinos (chronologically) and stores them in the appropiate
+#     database. Store each transaction individually. If using a single transaction, it
+#     must be contained in a list until a better solution is devised.
+def storeTxs(transactions):
+    pass

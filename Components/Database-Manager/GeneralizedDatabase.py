@@ -443,6 +443,7 @@ class GenDatabaseLibrary(object):
     #    be used to restrict the number of values to return.
     # WARNING: heavy load on time, very slow
     def getColumn(table_name, database_name, **kwargs):
+        pass
         # 1. Check if attempting use period
         # 2. Check the quantity of entries to grab
         # 3. If neither, grab all

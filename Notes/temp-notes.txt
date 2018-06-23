@@ -25,3 +25,9 @@ SIDE NOTE:
 1. Figure out writing/physical shit [be able to write to do work, read to do work, learn to do work [anywhere]]
 2. Basement/rigs workflow and dedicating time to that
 3. File org and bot structuring
+
+- Getting file to run
+- Checking/testing getDepositAddress
+- Testing readCSV, buildAddrDictionary
+- Workin in ProcessTransaction classificatinos
+- Adapting FIFO
