@@ -37,23 +37,6 @@ def main(exchanges):
     buildFinalCSV(adjust_fifo_txs, profit_loss_list)
 
 
-    
-# FUNCTION: buildAddrDictionary
-# INPUT: exchanges - [string, ...]
-# OUTPUT: Dictionary
-# DESCRIPTION:
-#    Returns a dictionary with addresses as key to an exchange.
-# NOTE: only grabs addresses for ETH, BTC, LTC                
-def buildAddrDictionary(exchanges, assets):
-    # Address Dict
-    addr_dict = {}
-    for exchange in exchanges:
-        addresses = []
-        for asset in assets:
-            address = ExchangeAPI.getDepositAddress(exchange, asset)
-            addr_dict[address['asset']] = (asset, exchange)
-
-    return addr_dict
 
 # FUNCTION: processTransactions
 # INPUT: transactions - list
@@ -66,7 +49,7 @@ def buildAddrDictionary(exchanges, assets):
 def processTransactions(exchanges, transactions):
 
     # 1. Retrieve exchange addresses from supported exchanges
-    exchange_addresses = buildAddrDictionary(exchanges, ["ETH", "LTC", "BTC"])
+    exchange_addresses = Helpers.buildAddrDictionary(exchanges, ["ETH", "LTC", "BTC"])
     print("hm", exchange_addresses)
     # 2. Iterate through transactions
     for transaction in transactions:

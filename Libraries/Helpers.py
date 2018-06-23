@@ -480,3 +480,21 @@ def readCSV(csv_name):
 
     csv_file.close()
     return return_csv
+
+# FUNCTION: buildAddrDictionary
+# INPUT: exchanges - [string, ...]
+# OUTPUT: Dictionary
+# DESCRIPTION:
+#    Returns a dictionary with addresses as key to an exchange.
+# NOTE: only grabs addresses for ETH, BTC, LTC                
+def buildAddrDictionary(exchanges, assets):
+    # Address Dict
+    addr_dict = {}
+    for exchange in exchanges:
+        addresses = []
+        for asset in assets:
+            address = ExchangeAPI.getDepositAddress(exchange, asset)
+            addr_dict[address['address']] = (asset, exchange)
+
+    return addr_dict
+
