@@ -280,9 +280,6 @@ class GenDatabaseLibrary(object):
             connection, cursor = connect(database_path)
             checkTableNameExists(cursor, table_name, database_name)
         elif data_uuid == 'string':
-            # Grab table_name database_name based on uuid
-            table_name = self.tableNamesUuid[uuid[0]]
-            database_name = self.databaseNamesUuid[uuid[1]]
             database_path = database_paths[database_name]
             timestamp = int(time.time() * 1000)
             uuid = createUuid(table_name, database_name)
@@ -297,49 +294,6 @@ class GenDatabaseLibrary(object):
         
         cursor.execute(sql_s, data_uuid)
 
-    # FUNCTION: getEntries
-    # INPUT: database_name - string
-    #        table_name    - string
-    #        data_uuids    - list or string
-    # OUTPUT: [(*entry), ...]
-    # DESCRIPTION:
-    #   Retrieves multiple entries. Various different methods are possible to
-    #    determine what entries to return. 
-    def getEntries(database_name, table_name, data_uuids, period):
-        
-        if columns is not None:
-            col_s = ",".join(columns)
-            sql_s = "SELECT %s FROM %s" % (col_s, table_name)
-            if limit > -1:
-                sql_s += " LIMIT %s" % limit
-            if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
-            cursor.execute(sql_s)
-            result = cursor.fetchall()
-            return result
-        sql_s ="SELECT * FROM %s" % table_name
-        if limit > -1:
-                sql_s += " LIMIT %S" % limit
-        if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
-        cursor.execute(sql_s)
-        result = cursor.fetchall()
-        return result
-    # def selectFromTablePeriod(cursor, table_name, period, order_by, columns=None):
-        print("TIMESTAMP BASE", period)
-        if columns is not None:
-            col_s = ",".join(columns)
-            sql_s = "SELECT %s FROM %s WHERE Time_stamp > %s" % (col_s,table_name,period)
-            print(sql_s, "SQL string")
-            if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
-            cursor.execute(sql_s)
-            result = cursor.fetchall()
-            return result
-        sql_s = "SELECT FROM %s WHERE Time_stamp > %s" % (col_s,table_name, period)
-        if order_by is not "":
-            sql_s += " ORDER BY %s" % order_by
-
     # FUNCTION: getEntryString
     # INPUT: table_name - string
     #        data       - list
@@ -347,10 +301,58 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Builds selection string.
     def getEntryString(table_name, data):
-        sql_s = "SELECT * FROM %s WHERE " % table_name
+        sql_s ="SELECT * FROM %s WHERE" % table_name
         for value in data:
             sql_s += "%s = ? AND " % value
         sql_s = sql_s[:-4]
+        return sql_s
+    
+    # FUNCTION: getEntries
+    # INPUT: database_name - string
+    #        table_name    - string
+    #        data_uuids    - list or string
+    #        period        - (OPTIONAL) int [DEFAULT=0]
+    #        limit         - (OPTIONAL) int [DEFAULT=-1]
+    #        order_by      - (OPTIONAL) string [DEFAULT=""]
+    # OUTPUT: [(*entry), ...]
+    # DESCRIPTION:
+    #   Retrieves multiple entries. Various different methods are possible to
+    #    determine what entries to return. 
+    def getEntries(database_name, table_name, data_uuids, period=0, limit=-1, order_by=""):
+        database_path = database_paths[database_name]
+        connection, cursor = connect(database_path)
+    
+                
+        cursor.execute(sql_s)
+        result = cursor.fetchall()
+        disconnect(connection)
+        return result
+
+    # FUNCTION: getEntriesString
+    # INPUT: table_name - string
+    #        data       - list
+    #        period     - int (unix timestamp, beginning)
+    #        limit      - int
+    #        order_by   - string
+    # OUTPUT: string
+    # DESCRIPTION:
+    #   Builds selection string.
+    def getEntriesString(table_name, data, period, limit, order_by):
+
+        # Initial select
+        sql_s ="SELECT * FROM %s WHERE" % table_name
+        for value in data:
+            sql_s += "%s = ? AND " % value
+        # Add period
+        sql_s += "Time_stamp > %s" % (period)
+        # Add limit
+        if limit > -1:
+                sql_s += " LIMIT %S" % limit
+        # Add ordering
+        if order_by is not "":
+                sql_s += " ORDER BY %s" % order_by
+
+        PrintLibrary.displayVariable(sql_s, "execution string")
         return sql_s
     
     # FUNCTION: selectDistinct
@@ -358,14 +360,13 @@ class GenDatabaseLibrary(object):
         pass
 
     # FUNCTION: getLastEntry
-    # INPUT: cursor     - *
-    #        table_name - string
+    # INPUT: database_name - string
+    #        table_name    - string
     # OUTPUT: desired entry
     # DESCRIPTION:
     #   Retrieves the last entry in a database. Uses timestamp instead of internal
     #    id, assumes ascending order based on timestamp.
-    def getLastEntry(table_name, database_name):
-        # Edit/fix this
+    def getLastEntry(database_name, table_name):
         database_path = database_paths[database_name]
         timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
@@ -421,8 +422,17 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Retrieves multiple items from an entry, designated by the column names.
     def getItems(data_uuid, columns, table_name, database_name):
-        pass
-
+        if columns is not None:
+            col_s = ",".join(columns)
+            sql_s = "SELECT %s FROM %s" % (col_s, table_name)
+            
+        if limit > -1:
+                sql_s += " LIMIT %s" % limit
+        if order_by is not "":
+                sql_s += " ORDER BY %s" % order_by
+            cursor.execute(sql_s)
+            result = cursor.fetchall()
+            return result
     def updateItemString():
         pass
     
