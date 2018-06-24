@@ -28,8 +28,8 @@ from GeneralizedDatabase import GenDatabaseLibrary
 #   Creates test database to be used for testing GeneralizedDatabase calls. If necessary,
 #    may be expanded to test other parts of the program
 def initializeTestDatabase():
-    # Set path
-    path = ""
+
+    path = os.path.join(os.path.dirname(__file__), 'TestDatabase.sqlite3')
     connection, cursor = GeneralizedDatabase.connect(path)
     GeneralizedDatabase.initialize(["TestDatabase", path])
     GeneralizedDatabase.createTable("TestDatabase")

@@ -126,10 +126,9 @@ def createTable(cursor, table_name, table_tuples=None):
         sql_s = """
         CREATE TABLE %s (
             id integer PRIMARY KEY)""" % table_name
-        for tup in table_tuples:
-            added_s = ",%s %s %s" % tup
+        for col_tuple in columns:
+            added_s = ",%s %s %s" % col_tuple
         sql_s += added_s
-    ArbitrageDatabase.table_names.append(table_name)
     cursor.execute(sql_s)
 
 # FUNCTION: initializeTables

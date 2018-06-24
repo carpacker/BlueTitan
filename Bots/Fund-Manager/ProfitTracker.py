@@ -1,12 +1,11 @@
 import sys
-sys.path.append('C:/Users/Carson/Desktop/Coding Projects/Arbitrage/Libraries')
+sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Fund-Manager')
 
 # External-Import 
 import time
 from random import randint
 
 # Internal-Import
-from PTrackingLibrary import PTrackingLibrary
 from PrintLibrary import PrintLibrary
 
 # CLASS: ProfitTracker

@@ -145,9 +145,17 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
-    # NOTE: Not useful yet.
-    def createTable(database_name, table_name, columns=""):
-        pass
+    def createTable(database_name, table_name, columns):
+        sql_s = """
+            CREATE TABLE %s (
+            id integer PRIMARY KEY""" % table_name
+
+        for col_tuple in columns:
+            added_s = ",%s %s %s" % tupcol_tuple
+            sql_s += added_s
+        sql_s += ")"
+
+        cursor.execute(sql_s)
 
     # FUNCTION: deleteTable
     # INPUT: cursor     - *
@@ -173,7 +181,7 @@ class GenDatabaseLibrary(object):
         list_clean = list(set(tables).difference(set(exceptions)))
         for table in list_clean:
             try:
-                deleteTable(cursor, table, database_name)
+                GenDatabaseLibrary.deleteTable(cursor, table, database_name)
             except sqlite3.OperationalError:
                 pass
             database.createTable(cursor, table, database_name)
@@ -246,19 +254,22 @@ class GenDatabaseLibrary(object):
         for value in data:
             sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
             PrintLibrary.displayVariable(sql_s, "SQL string")
-            print(value)
+            PrintLibrary.displayVariable(value, "Value")
             cursor.execute(sql_s,value)
+            
         disconnect(connection)
 
     # FUNCTION: retrieveEntry
-    # INPUT: TBD
+    # INPUT: database_name - string
+    #        table_name    - string
+    #        data_uuid     - list or string
     # OUTPUT: (V1, ..., Vn) where n is number of columns
     # DESCRIPTION:
     #	Accesses a table in a database and pulls a row from the database. There
     #    are two options to access the entry. The first is by a unique identifier
     #    (uuid). The second is by a list of variables/values, and the function
     #    attempts to find the entry using these as a key.
-    def getEntry(self, data_uuid, table_name=None, database_name=None):
+    def getEntry(database_name, table_name, data_uuid):
 
         # Set database, initializes variables, check table exists
         print(type(data_uuid))
@@ -281,17 +292,20 @@ class GenDatabaseLibrary(object):
         else:
             # TODO, better error handling
             return 'error'
-        sql_s = GenDatabaseLibrary.selectEntry(table_name, data_uuid)
-        print(sql_s)
+        sql_s = GenDatabaseLibrary.getEntryString(table_name, data_uuid)
+        PrintLibrary.displayVariable(sql_s, "execution string")
+        
         cursor.execute(sql_s, data_uuid)
 
     # FUNCTION: getEntries
-    # INPUT:
+    # INPUT: database_name - string
+    #        table_name    - string
+    #        data_uuids    - list or string
     # OUTPUT: [(*entry), ...]
     # DESCRIPTION:
     #   Retrieves multiple entries. Various different methods are possible to
-    #    determine what entries to return. TODO
-    def getEntries():
+    #    determine what entries to return. 
+    def getEntries(database_name, table_name, data_uuids, period):
         
         if columns is not None:
             col_s = ",".join(columns)
@@ -326,13 +340,7 @@ class GenDatabaseLibrary(object):
         if order_by is not "":
             sql_s += " ORDER BY %s" % order_by
 
-
-
-    # FUNCTION: selectDistinct
-    def selectDistinct():
-        pass
-    
-    # FUNCTION: selectEntry
+    # FUNCTION: getEntryString
     # INPUT: table_name - string
     #        data       - list
     # OUTPUT: string
@@ -344,6 +352,10 @@ class GenDatabaseLibrary(object):
             sql_s += "%s = ? AND " % value
         sql_s = sql_s[:-4]
         return sql_s
+    
+    # FUNCTION: selectDistinct
+    def selectDistinct():
+        pass
 
     # FUNCTION: getLastEntry
     # INPUT: cursor     - *
