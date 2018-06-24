@@ -32,7 +32,8 @@ import Helpers
 # INPUT: table_name - string
 # OUTPUT: N/A
 #   Wrapper function to ensure that the table exists before performing an operation.
-def checkTableNameExists(cursor, table_name, database):
+# TODO: TRY/CATCH block in case database doesn't have default table or something like that.
+def checkTableNameExists(cursor, table_, database, table_name):
     table_names = GenDatabaseLibrary.listTables(cursor)
     if table_name not in table_names:
         database.createTable(cursor, table_name)
@@ -146,26 +147,53 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
     def createTable(database_name, table_name, columns):
-        sql_s = """
-            CREATE TABLE %s (
-            id integer PRIMARY KEY""" % table_name
+        database_path = GenDatabaseLibrary.database_paths[database_name]
+        connection, cursor = connect(database_path)
 
-        for col_tuple in columns:
-            added_s = ",%s %s %s" % tupcol_tuple
+        # Check if table name exists already
+        table_names = GenDatabaseLibrary.listTables(cursor)
+        exists = table_name in table_names
+        if exists:
+            disconnect(connect)
+        else: 
+            sql_s = """
+               CREATE TABLE %s (
+               id integer PRIMARY KEY""" % table_name
+
+            for col_tuple in columns:
+                print(col_tuple)
+                added_s = ",%s %s %s" % col_tuple
             sql_s += added_s
-        sql_s += ")"
+            sql_s += ")"
 
-        cursor.execute(sql_s)
+            PrintLibrary.displayVariable(sql_s)
+            cursor.execute(sql_s)
+            disconnect(connection)
 
+    # FUNCTION: initializeTable
+    # INPUT: database_name - string
+    #        table_name    - string
+    # OUTPUT: N/A
+    # DESCRIPTION:
+    #    Generic table initializer, looks through columns in table and fills it with default values
+    #     based on the type of data stored there.
+    def initializeTable(database_name, table_name):
+        pass
+    
     # FUNCTION: deleteTable
-    # INPUT: cursor     - *
-    #        table_name - string
+    # INPUT: database_name - string
+    #        table_name    - string
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Deletes a table given a cursor for a databse and the table's name.
-    def deleteTable(cursor, table_name):
+    def deleteTable(database_name, table_name):
+        print(GenDatabaseLibrary.database_paths)
+        database_path = GenDatabaseLibrary.database_paths[database_name]
+        connection, cursor = connect(database_path)
+        # TODO: Add better check
         sql_s = 'DROP TABLE %s' % table_name
         cursor.execute(sql_s)
+        disconnect(connection)
 
     # FUNCTION: cleanDatabase
     # INPUT: tables     - [string, ...]
@@ -174,17 +202,17 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION
     #   Used to clean a database's tables minus exceptions.
     def cleanDatabase(database_name, tables, exceptions=[""]):
-        database_path = database_paths[database_name]
+        database_path = GenDatabaseLibrary.database_paths[database_name]
         connection, cursor = connect(database_path)
 
         # Use regular expression to find difference of two lists
         list_clean = list(set(tables).difference(set(exceptions)))
         for table in list_clean:
             try:
-                GenDatabaseLibrary.deleteTable(cursor, table, database_name)
+                GenDatabaseLibrary.deleteTable(cursor, table)
             except sqlite3.OperationalError:
                 pass
-            database.createTable(cursor, table, database_name)
+            database.createTable(cursor, table)
         disconnect(connection)
         return list_clean
                              
@@ -228,8 +256,8 @@ class GenDatabaseLibrary(object):
         database_path = database_paths[database_name]
         timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
-        connection, cursor = connect(database_path)
-        checkTableNameExists(cursor, table_name, database_name)
+        connection, cursor = connect(database_path) 
+        checkTableNameExists(cursor, database_name, table_name)
         # Build SQL execution string, execute and then disconnect
         sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
         PrintLibrary.displayVariable(sql_s, "SQL string")
@@ -430,9 +458,11 @@ class GenDatabaseLibrary(object):
                 sql_s += " LIMIT %s" % limit
         if order_by is not "":
                 sql_s += " ORDER BY %s" % order_by
-            cursor.execute(sql_s)
-            result = cursor.fetchall()
-            return result
+        cursor.execute(sql_s)
+        result = cursor.fetchall()
+        return result
+
+
     def updateItemString():
         pass
     

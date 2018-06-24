@@ -44,7 +44,7 @@ public_url = base_url + "public?command="
 # OUTPUT: Dictionary
 # DESCRIPTION:
 #    Returns ticker for all markets, optional input to just receive one market.
-def getTicker(pairing=""):
+def getPrice(pairing=""):
     url = public_url + "returnTicker"
     PrintLibrary.displayVariable(url)
     

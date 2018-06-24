@@ -5,8 +5,7 @@ import sqlite3
 import time
 
 # Windows Main Desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
-sys.path.append('U:/Directory/Projects/BlueTitan/Bots/Arbitrage/Librarise')
+sys.path.append('U:/Directory/Projects/BlueTitan/Libraries')
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
 
 # Windows Laptop
@@ -17,7 +16,6 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 import Helpers
-import ArbitrageDatabaseLib
 import GeneralizedDatabase
 from GeneralizedDatabase import GenDatabaseLibrary
 
@@ -28,12 +26,17 @@ from GeneralizedDatabase import GenDatabaseLibrary
 #   Creates test database to be used for testing GeneralizedDatabase calls. If necessary,
 #    may be expanded to test other parts of the program
 def initializeTestDatabase():
-
+    PrintLibrary.header("Initializing Test Database")
+    
     path = os.path.join(os.path.dirname(__file__), 'TestDatabase.sqlite3')
     connection, cursor = GeneralizedDatabase.connect(path)
-    GeneralizedDatabase.initialize(["TestDatabase", path])
-    GeneralizedDatabase.createTable("TestDatabase")
-    GeneralizedDatabase.initializeTable("TestDatabase")
+    GenDatabaseLibrary.initializeDatabasePaths([("TestDatabase", path)])
+    
+    GenDatabaseLibrary.deleteTable("TestDatabase", "RandomTable")
+    GenDatabaseLibrary.createTable("TestDatabase", "RandomTable", [("Column1", "real", "NOT NULL")])
+    GenDatabaseLibrary.initializeTable("TestDatabase", "RandomTable")
+
+    PrintLibrary.header("Test Database Initialized")
     
 
 # TESTERS:
@@ -127,5 +130,6 @@ def secondaryTesters():
     # buildInitTuple
 
 if __name__ == "__main__":
+    GenDatabaseLibrary.deleteTable("TestDatabase", "RandomTable")
     initializeTestDatabase()
     mainTesters()
