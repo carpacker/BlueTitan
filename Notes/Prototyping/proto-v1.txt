@@ -2,7 +2,8 @@ This document contains all information pertaining to the release of the first ve
 
 ARBITRAGE FINISHING TOUCHES:
  * GENERAL
-  -
+  - READMEs and file org
+  
  * BALANCING
   - Guarantees no loss
   - Option not balance at startup

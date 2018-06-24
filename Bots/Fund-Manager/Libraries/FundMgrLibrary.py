@@ -90,7 +90,6 @@ class MetricsCalculator(object):
         # Each asset has its own table                          
         # 3. Calculate individual asset metrics
         for asset in supported_assets:
-            
 
             # Below needs correct inputs and needs to pull the asset metrics properly, need to work out how to implement this.
             pr = Helpers.averageValue()
