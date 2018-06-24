@@ -30,11 +30,10 @@ def initializeTestDatabase():
     
     path = os.path.join(os.path.dirname(__file__), 'TestDatabase.sqlite3')
     connection, cursor = GeneralizedDatabase.connect(path)
-    GenDatabaseLibrary.initializeDatabasePaths([("TestDatabase", path)])
     
-    GenDatabaseLibrary.deleteTable("TestDatabase", "RandomTable")
-    GenDatabaseLibrary.createTable("TestDatabase", "RandomTable", [("Column1", "real", "NOT NULL")])
-    GenDatabaseLibrary.initializeTable("TestDatabase", "RandomTable")
+    GenDatabaseLibrary.deleteTable(path, "RandomTable")
+    GenDatabaseLibrary.createTable(path, "RandomTable", [("Column1", "real", "NOT NULL")])
+    GenDatabaseLibrary.initializeTable(path, "RandomTable")
 
     PrintLibrary.header("Test Database Initialized")
     
@@ -130,6 +129,6 @@ def secondaryTesters():
     # buildInitTuple
 
 if __name__ == "__main__":
-    GenDatabaseLibrary.deleteTable("TestDatabase", "RandomTable")
+    # GenDatabaseLibrary.deleteTable("TestDatabase", "RandomTable")
     initializeTestDatabase()
     mainTesters()

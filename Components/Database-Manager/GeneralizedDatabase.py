@@ -84,9 +84,9 @@ def createUuid(table_name, database_name):
 # OUTPUT: N/A
 # DESCRIPTION:
 #   Wrapper for disconnecting from a database
-def disconnect(connect):
-    connect.commit()
-    connect.close()
+def disconnect(connection):
+    connection.commit()
+    connection.close()
 
 # FUNCTION: generalQuery
 # INPUT: cursor - *
@@ -104,13 +104,6 @@ def generalQuery(cursor, query):
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
-    database_paths = {}
-
-    # Lets try this for now, not sure if I totally agree with the underlying structure.
-    def initializeDatabasePaths(name_paths):
-        for value in name_paths:
-            GenDatabaseLibrary.database_paths[value[0]] = value[1]
-            
     # FUNCTION: buildInitTuple
     # INPUT: table_name    - string
     #        database_name - string
@@ -121,7 +114,7 @@ class GenDatabaseLibrary(object):
     #  TEXT - ""
     #  REAL - 0
     #  REST - TODO
-    def buildInitTuple(table_name, database_name):
+    def buildInitTuple(database_path, table_name):
 
         # Below isn't written yet... instead of getcolumns, it should be getcolumn names or something
         num_columns = GenDatabaseLibraries.getColumns()
@@ -146,15 +139,14 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
-    def createTable(database_name, table_name, columns):
-        database_path = GenDatabaseLibrary.database_paths[database_name]
+    def createTable(database_path, table_name, columns):
         connection, cursor = connect(database_path)
 
         # Check if table name exists already
         table_names = GenDatabaseLibrary.listTables(cursor)
         exists = table_name in table_names
         if exists:
-            disconnect(connect)
+            disconnect(connection)
         else: 
             sql_s = """
                CREATE TABLE %s (
@@ -177,7 +169,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #    Generic table initializer, looks through columns in table and fills it with default values
     #     based on the type of data stored there.
-    def initializeTable(database_name, table_name):
+    def initializeTable(database_path, table_name):
         pass
     
     # FUNCTION: deleteTable
@@ -186,9 +178,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Deletes a table given a cursor for a databse and the table's name.
-    def deleteTable(database_name, table_name):
-        print(GenDatabaseLibrary.database_paths)
-        database_path = GenDatabaseLibrary.database_paths[database_name]
+    def deleteTable(database_path, table_name):
         connection, cursor = connect(database_path)
         # TODO: Add better check
         sql_s = 'DROP TABLE %s' % table_name
@@ -201,8 +191,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: list of tables cleaned in database
     # DESCRIPTION
     #   Used to clean a database's tables minus exceptions.
-    def cleanDatabase(database_name, tables, exceptions=[""]):
-        database_path = GenDatabaseLibrary.database_paths[database_name]
+    def cleanDatabase(database_path, tables, exceptions=[""]):
         connection, cursor = connect(database_path)
 
         # Use regular expression to find difference of two lists
@@ -250,10 +239,9 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for storing an entry into a table in a database.
-    def storeEntry(database_name, table_name, data):
+    def storeEntry(database_path, table_name, data):
         
         # Set database, initializes variables, check table exists
-        database_path = database_paths[database_name]
         timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
         connection, cursor = connect(database_path) 
@@ -287,7 +275,7 @@ class GenDatabaseLibrary(object):
             
         disconnect(connection)
 
-    # FUNCTION: retrieveEntry
+    # FUNCTION: getEntry
     # INPUT: database_name - string
     #        table_name    - string
     #        data_uuid     - list or string
@@ -297,18 +285,16 @@ class GenDatabaseLibrary(object):
     #    are two options to access the entry. The first is by a unique identifier
     #    (uuid). The second is by a list of variables/values, and the function
     #    attempts to find the entry using these as a key.
-    def getEntry(database_name, table_name, data_uuid):
+    def getEntry(database_path, table_name, data_uuid):
 
         # Set database, initializes variables, check table exists
         print(type(data_uuid))
         if data_uuid == 'list':
-            database_path = database_paths[database_name]
             timestamp = int(time.time() * 1000)
             uuid = createUuid(table_name, database_name)
             connection, cursor = connect(database_path)
             checkTableNameExists(cursor, table_name, database_name)
         elif data_uuid == 'string':
-            database_path = database_paths[database_name]
             timestamp = int(time.time() * 1000)
             uuid = createUuid(table_name, database_name)
             connection, cursor = connect(database_path)
@@ -346,10 +332,8 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Retrieves multiple entries. Various different methods are possible to
     #    determine what entries to return. 
-    def getEntries(database_name, table_name, data_uuids, period=0, limit=-1, order_by=""):
-        database_path = database_paths[database_name]
+    def getEntries(database_path, table_name, data_uuids, period=0, limit=-1, order_by=""):
         connection, cursor = connect(database_path)
-    
                 
         cursor.execute(sql_s)
         result = cursor.fetchall()
@@ -394,8 +378,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Retrieves the last entry in a database. Uses timestamp instead of internal
     #    id, assumes ascending order based on timestamp.
-    def getLastEntry(database_name, table_name):
-        database_path = database_paths[database_name]
+    def getLastEntry(database_path, table_name):
         timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
         connection, cursor = connect(database_path)
@@ -417,7 +400,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Effectively replaces an entry with new values. It doesn't necessitate that every value
     #    is updated, but it will check to update each item.
-    def updateEntry(data_uuid, input_val, table_name, database_name):
+    def updateEntry(database_path, data_uuid, input_val, table_name):
         pass
 
     # FUNCTION: updateEntries
@@ -429,7 +412,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Replaces multiple entries with new values. Similar to update entry, but with lists
     #    as inputs.
-    def updateEntries(data_uuid, input_val, table_name, database_name):
+    def updateEntries(database_path, data_uuid, input_val, table_name, database_name):
         pass
 
     def getItemString():
