@@ -62,10 +62,10 @@ def processTransactions(exchanges, transactions):
             to_address = transaction[6]
             try:
                 test = exchange_addresses[to_address]
-                transaction[6] = "Transfer"
-                print(transaction)
+                transaction[1] = "Transfer"
             except KeyError:
-                pass
+                print(transaction)
+                transaction[1] = "Sell"
             
         # RECEIVE: Mark as transfer, possibly ignore
         elif type_trans == "Receive":
@@ -112,55 +112,60 @@ def calculateFIFOprofit(transactions):
     total_in = 0
     total_out = 0
     ctr_flag = 2
-
+    print("LENGTH OUTPUT", len(outputs))
+    print(inputs[0])
+    ticker = 0
     while len(outputs) > 0:
-
+        print("tick", ticker)
         # Control flag determines what elements to pop:
         #  2 - both
         #  1 - inputs
         #  0 - outputs
         if ctr_flag == 2:
-            current_output = outputs.pop()
-            current_input = inputs.pop()
+            current_output = outputs[ticker]
+            current_input = inputs[ticker]
 
         elif ctr_flag == 1:
             current_input = inputs.pop()
 
         elif ctr_flag == 0:
-            current_output = outputs.pop()
+            current_output = outputs[ticker]
 
         print("---- ITERATION " + str(len(outputs)) + "----")
-        print("OUT:", outputs)
-        print("IN:", inputs)
         print("CURRENT PROFIT:", running_profit)
-
+        
         # CASE: Sell is larger - work through buys
+        orig_value = float(current_output[5])
         curr_value = float(current_output[5])
         print(current_input, current_output)
-        while curr_value > float(current_output[5]):
+        ticker_t = 0
+        while curr_value >= orig_value:
+            print(current_output)
             profit_loss = float(current_output[5]) - float(current_input[5])
-
+            print("CURRENT INPUT", current_input[5])
             # Add to running profit, adjust current output's value for next iteration
             running_profit += profit_loss
             current_output[5] = float(current_output[5]) - float(current_input[5])
             curr_value = float(current_output[5])
-
+            print(curr_value, "curr_value")
             # Set control flag to pop input
-            current_input = inputs.pop()
+            ticker_t += 1
+            current_input = inputs[ticker_t]
             time.sleep(3)
 
         # CASE: Buy is larger, continue loop 
         profit_loss = float(current_output[5]) - float(current_input[5])
-
+        print("output - input", profit_loss)
         # Add to running profit, adjust current output's value for next iteration
         running_profit += profit_loss
         current_input[5] = float(current_input[5]) - float(current_output[5])
         
         # Pop new input
         ctr_flag = 0
+        ticker+=1
         time.sleep(3)
 
-        return running_profit
+    return running_profit
 
 def buildFinalCSV():
     pass
