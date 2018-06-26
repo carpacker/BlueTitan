@@ -172,7 +172,8 @@ class Liquidator(object):
     # FUNCTION: assessProfitPeriod
     # INPUT: TBD
     # OUTPUT: TBD
-    # DESCRIPTION:
+    # DESCRIPTI
+    ON:
     #   Looks at the account balances for a period of time and determines how much
     #    profit there was. 
     def assessProfitPeriod():

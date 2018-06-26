@@ -1,4 +1,4 @@
-# DatbaseLibrary.py (MARKET TRACKER)
+# DatbaseLibrary.py (PERFORMANCE TRACKER)
 # Carson Packer
 # DESCRIPTION:
 #    Specialized library of database calls for the performance tracking system.
@@ -17,12 +17,9 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/DatabaseManager')
 
 # Internal Imports
 import Helpers
-from GeneralizedDatabase import GenDatabaseLibrary
-from PrintLibrary import PrintLibrary
+from GeneralizedDatabase import GenData
 
-# CLASS: HistoricalDatabase
-# DESCRIPTION:
-#    TODO
-class HistoricalDatabase():
+# CLASS: ExchangeRecords
+class ExchangeRecords():
     path = 0
     table_names = []

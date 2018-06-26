@@ -1,5 +1,28 @@
+# DatbaseLibrary.py (PERFORMANCE TRACKER)
+# Carson Packer
+# DESCRIPTION:
+#    Specialized library of database calls for the performance tracking system.
 
-# ProfiT Tracking Database stuff
+# External-Imports
+import sys
+
+# WINDOWS main-desktop
+sys.path.append('U:/Directory/Projects/BlueTitan/Components/DatabaseManager')
+
+# WINDOWS laptop
+# sys.path.append()
+
+# LINUX main-server
+# sys.path.append()
+
+# Internal Imports
+import Helpers
+from GeneralizedDatabase import GenDatabaseLibrary
+from PrintLibrary import PrintLibrary
+
+# CLASS: AssetMetricsDatabase
+# DESCRIPTION:
+#    Contain specific calls for the AssetMetrics database.
 class AssetMetricsDatabase():
     path = os.path.join(os.path.dirname(__file__), 'AssetMetricsDB.sqlite3')
 
@@ -55,6 +78,8 @@ class AssetMetricsDatabase():
 
         
 # CLASS: MetricsDatabase
+# DESCRIPTION:
+#    Contains specific calls for the Metrics database    
 class MetricsDatabase():
 
     def createTable(cursor, table_name, table_tuples=None):
@@ -116,16 +141,7 @@ class MetricsDatabase():
     def initializeTables(self):
         for table in self.table_names:
             pass
-        
-# CLASS: ExchangeRecords
-class ExchangeRecords():
-    path = 0
-    table_names = []
 
-# CLASS: HistoricalDatabase
-class HistoricalDatabase():
-    path = 0
-    table_names = []
         
 # CLASS: RunningDatabase
 class RunningDatabase():
