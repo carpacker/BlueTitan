@@ -141,12 +141,3 @@ class MetricsDatabase():
     def initializeTables(self):
         for table in self.table_names:
             pass
-
-        
-# CLASS: RunningDatabase
-class RunningDatabase():
-    pass
-
-# CLASS: RuntimeDatabase
-class RuntimeDatabase():
-    pass
