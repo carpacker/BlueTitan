@@ -1,3 +1,4 @@
+
 # ProfiT Tracking Database stuff
 class AssetMetricsDatabase():
     path = os.path.join(os.path.dirname(__file__), 'AssetMetricsDB.sqlite3')

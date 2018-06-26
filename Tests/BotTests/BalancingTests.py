@@ -1,10 +1,40 @@
-if __name__ == '__main__':
-	# 1. Test transfering base, quote individually
-	value  = BalancingLibrary.transferQuote("KMD", 10, "binance", "bittrex")
-	print(value)
-	value = BalancingLibrary.transferBase("BTC", .005, "bittrex", "binance")
-	print(value)
+# BalancingTests.py
+# Carson Packer
+# DESCRIPTION:
 
-	# 2. Test a 'balance account' action [both together, with a storeTransfer]
-	value = BalancingLibrary.balancePairing("BTC-KMD", .005, 10, "binance", "bittrex")
-	print(value)
+# External-Imports
+import sys
+import time
+
+# WINDOWS main-desktop
+sys.path.append()
+
+# WINDOWS laptop
+# sys.path.append()
+
+# LINUX main-server
+# sys.path.append()
+
+# Test-Imports
+from PrintLibrary import PrintLibrary
+from BalancingLibrary import BalancingLibrary
+
+# TESTERS: Base functions
+# DESCRIPTION:
+#    Tests for functions that are considered low-level or base units for top-level.
+def baseTesters():
+    PrintLibrary.header("Base Functions")
+    
+    PrintLibrary.headerTwo("Transfer Quote")
+    PrintLibrary.headerTwo("Transfer Base")
+
+# TESTERS: Main functinos
+# DESCRIPTION:
+#    Tests for top-level functions.
+def mainTesters():
+    PrintLibrary.header("Main Tester")
+        
+        
+if __name__ == '__main__':
+    baseTesters()
+    mainTesters()
