@@ -1,0 +1,16 @@
+OrderOfOperations
+
+[ ] - Calculate profit loss for june
+[ ] - 
+
+flow for calculation up until june
+- Sends that match up to address that isnt exchange is calculated fifo
+- Sends that match up to exchange address is treated in a separate FIFO with the sells
+
+CASE: send on non exchange address-sell
+CASE: send on exchange address - sell, add to input list
+CASE: RECEIVE - count as buy, add value to OUTPUT list
+at the end, sum(output) - sum(input) = profit off exchange
+
+TODO:
+- Add GDAX exchange address
