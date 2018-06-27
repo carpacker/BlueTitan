@@ -9,6 +9,7 @@ import json
 
 # Internal-Imports
 from DatabaseLibrary import DatabaseLibrary
+# TODO
 
 
 # 					Historical Data Scraper
@@ -34,4 +35,3 @@ def scrapeCurrency(currency, period):
 #	 and stores it in the historical-data-db.
 def scrapeCurrencies(currencies, period):
 	pass
-

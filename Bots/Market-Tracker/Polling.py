@@ -37,7 +37,15 @@ import CurrencyPolling
 # DESCRIPTION:
 #    TODO
 class Polling(object):
-    pass
+
+    # FUNCTION: main
+    # INPUT: TBD
+    # OUTPUT: N/A
+    # DESCRIPTION:
+    #    Absolute top level script for polling. Rotates between polling various different sources
+    #     using an algorithm. See more at this bot's README.md.
+    def main():
+        pass
 
 if __name__ == "__main__":
-    Polling().Arbitrage()
+    Polling().main()
