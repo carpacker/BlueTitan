@@ -25,14 +25,16 @@ sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
 from API import ExchangeAPI
 from ArbitrageLibrary import ArbitrageLibrary
 from BalancingLibrary import BalancingLibrary
+from GeneralizedDatabase import GenDatabaseLibrary
 import Helpers
 from PrintLibrary import PrintLibrary
 
-# CLASS: LowLiquidityArbitrage
+# CLASS: [B]lue[T]itanArbitrage
 # DESCRIPTION:
 #    Container arbitrage for the low-liquidity arbitrage component. This is the main loop for
-#     arbitrage and can be considered the top-level.
-class LowLiquidityArbitrage(object):
+#     arbitrage and can be considered the top-level. Manages all arbitrage events and activities,
+#     which includes both market and limit arbitrage.
+class BTArbitrage(object):
 
     # Class Variables [Exchanges, Pairings, Assets, Balances]
     cl_exchanges = ['bittrex', 'binance']
@@ -214,10 +216,10 @@ class LowLiquidityArbitrage(object):
     # INPUT: TODO
     # OUTPUT:  TODO
     # DESCRIPTION:
-    #   Main function for executing market-based arbitrage
-    def executeArbitrage(self, input_tuple):
+    #     Main function for executing market-based arbitrage
+    def executeArbitrage(input_tuple):
         PrintLibrary.header("Execute Arbitrage")
-
+        PrintLibrary.delimiter()
         # Initialize Variables
         quantity, sell_exchange, sell_price, buy_exchange, buy_price, pairing  = input_tuple
         base, quote = pairing.split("-")
@@ -235,11 +237,8 @@ class LowLiquidityArbitrage(object):
         quantity_buy = ArbitrageLibrary.convertMinQuantity(buy_exchange, quantity, pairing)
         quantity_sell = ArbitrageLibrary.convertMinQuantity(sell_exchange, quantity, pairing)
 
-        stage = 1
-        stage = PrintLibrary.stageHeader("First Order", stage)
-
-        # ----------------------------- ONLINE WORKING VERSION -----------------------------------
         result = ArbitrageLibrary.decideOrder(buy_exchange, sell_exchange)
+        PrintLibrary.displayVariables([sell_balance_quote, sell_balance_base, buy_balance_quote], "Sell quote/base, buy quote/base going into arbitrage")
         if result == True:
             sell_id_one = ExchangeAPI.sellLimit(sell_exchange, pairing, quantity_sell, sell_price)
             if sell_id_one["success"] != True:

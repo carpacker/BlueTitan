@@ -20,12 +20,15 @@ from PrintLibrary import PrintLibrary
 # DESCRIPTION:
 #   Set of functions that primarily [or are exclusively written] for the Arbitrage component of the program.
 ####################################### FUNCTION LIST ##############################################
-# * - assessProfitRatio
-# * - checkMinOrder
-# * - decideOrder
-# * - determineOrderSize
-# * - evaluatePairing
-# * - handleIncompleteArbitrage
+# * - assessProfitRatio         : Used to determine the profitability of a given profit ratio     #
+# * - checkMinOrder             : Checks to ensure the minimum order size is reached for trades   #
+#                                  on two exchanges, for arbitrage.                               # 
+# * - decideOrder               : TO BE REWORKED                                                  #
+# * - determineOrderSize        : Provides the order, or bet, size for a given trade              #
+# * - evaluatePairing           : One of the main functions for market arbitrage, evaluates       #
+#                                  whether there is profitable arbitrage available for a given    #
+#                                  pairing.                                                       #
+# * - handleIncompleteArbitrage : Executes when there is an incomplete arbitrage event.           #
 ####################################################################################################
 class ArbitrageLibrary(object):
 
@@ -68,17 +71,6 @@ class ArbitrageLibrary(object):
         #                                     ("Quantity", quantity)))
         # if balance_BTC != 0:
         return fees 
-
-    # FUNCTION: assessProfitRatio
-    # INPUT: profit_ratio -float
-    # OUTPUT: boolean
-    # DESCRIPTION: 
-    #   Used to assess whether the profit ratio is suitable in runtime to execute arbitrage.
-    def assessProfitRatio(profit_ratio, pairing):
-        # TODO: the big rework
-        if profit_ratio > .5:
-            return True
-        return False
 
     # FUNCTION: checkMinOrder
     # INPUT: pairing      - string
@@ -129,7 +121,8 @@ class ArbitrageLibrary(object):
     #        quantity     - float
     # OUTPUT: quantity [float]
     # DESCRIPTION:
-    #   Determines the order size for an arbitrage trade based on profit ratio.
+    #   Determines the order size for an arbitrage trade based on profit ratio. Implicit check on
+    #    whether or not to perform arbitrage
     def determineOrderSize(profit_ratio, quantity, price):
 
         # Case 1: Profit ratios is huge

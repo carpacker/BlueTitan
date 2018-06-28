@@ -21,6 +21,15 @@ from PrintLibrary import PrintLibrary
 from ExchangeAPI import ExchangeAPI
 import Helpers
 
+
+####################################### FUNCTION LIST ##############################################
+# * - convertMinPrice
+# * - convertMinQuantity
+# * - checkMinOrder
+# * - findCommonPairings
+# * - getOrders
+####################################################################################################
+
 # FUNCTION: convertMinPrice
 # INPUT: exchange - string
 #        price    - float
