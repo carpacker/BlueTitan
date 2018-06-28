@@ -18,17 +18,18 @@ from PrintLibrary import PrintLibrary
 
 # CLASS: ArbitrageLibrary
 # DESCRIPTION:
-#   Set of functions that primarily [or are exclusively written] for the Arbitrage component of the program.
+#   Set of functions that primarily [or are exclusively written] for the Arbitrage component of the
+#    program.
 ####################################### FUNCTION LIST ##############################################
-# * - assessProfitRatio         : Used to determine the profitability of a given profit ratio     #
-# * - checkMinOrder             : Checks to ensure the minimum order size is reached for trades   #
-#                                  on two exchanges, for arbitrage.                               # 
-# * - decideOrder               : TO BE REWORKED                                                  #
-# * - determineOrderSize        : Provides the order, or bet, size for a given trade              #
-# * - evaluatePairing           : One of the main functions for market arbitrage, evaluates       #
-#                                  whether there is profitable arbitrage available for a given    #
-#                                  pairing.                                                       #
-# * - handleIncompleteArbitrage : Executes when there is an incomplete arbitrage event.           #
+# * - assessProfitRatio         : Used to determine the profitability of a given profit ratio      #
+# * - checkMinOrder             : Checks to ensure the minimum order size is reached for trades    #
+#                                  on two exchanges, for arbitrage.                                # 
+# * - decideOrder               : TO BE REWORKED                                                   #
+# * - determineOrderSize        : Provides the order, or bet, size for a given trade               #
+# * - evaluatePairing           : One of the main functions for market arbitrage, evaluates        #
+#                                  whether there is profitable arbitrage available for a given     #
+#                                  pairing.                                                        #
+# * - handleIncompleteArbitrage : Executes when there is an incomplete arbitrage event.            #
 ####################################################################################################
 class ArbitrageLibrary(object):
 
@@ -88,21 +89,20 @@ class ArbitrageLibrary(object):
         notional_one = notional_dict_one["min_trade_size"]
         notional_two = notional_dict_two["min_trade_size"]
         notional = min(notional_one, notional_two)
-        
-        PrintLibrary.displayVariable(notional, "Notional")
-        PrintLibrary.displayVariable(order_size, "Order Size")
 
+        # Return 0 IF order size is too small
         if order_size < notional:
-            print("ORDER IS BELOW THRESHOLD: " + str(order_size))
+            # Maybe print out the exchange in the future
+            PrintLibrary.displayVariable(order_size, "Order is below theshold for one of the exchanges")
             return 0
+
+        # If order size is ok, perform step size conversion
         else:
             # Perform Lotsize conversion
             step_size = max(notional_dict_one["step_size"], notional_dict_two["step_size"])
             qty_trim = order_size % step_size
             quantity = quantity - qty_trim
-            PrintLibrary.displayKeyVariables((("Step size", step_size),
-                                                ("Trim quantity", qty_trim),
-                                                ("quantity", quantity)))
+            
         return quantity
 
     # FUNCTION: decideOrder
@@ -112,7 +112,6 @@ class ArbitrageLibrary(object):
     # DESCRIPTION:
     #   Decides which exchange to attempt to arbitrage on first
     def decideOrder(buy_exchange, sell_exchange):
-        # TODO: In future decide by some complex means
         temp_dict = {'binance': 3, 'bittrex': 2, 'cryptopia': 1}
         return temp_dict[sell_exchange] < temp_dict[buy_exchange]
 
@@ -157,12 +156,12 @@ class ArbitrageLibrary(object):
     #   Top level function for evaluating whether a pairing has profitable arbitrage available.
     def evaluatePairing(order_list, pairing, buy_num):
 
-        # ERROR CHECK
+        # Error check incase of api issue, to be replaced in future.
         if order_list[buy_num][1] == None:
-            print("ERROR IN EVALUATE PAIRING: BREAKING")
+            PrintLibrary.message("Part of order_list in evaluatePairing turned up null, breaking")
             return (0)
 
-        # 1: VARIABLE SET UP
+        # VARIABLE SET UP
         base, quote = pairing.split("-")
         ask_num = int(not(buy_num))
 
