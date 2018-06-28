@@ -17,11 +17,16 @@ from GeneralizedDatabase import GenDatabaseLibrary
 from PrintLibrary import PrintLibrary
 
 # CLASS: ArbitrageLibrary
-# FUNCTION LIST: [assessProfitRatio, checkMinimumOrderm checkPairingExchanges, convertMinPrice, 
-#                  convertMinQuantity, decideOrder, determineOrderSize, evalutePairing, 
-#                  findCommonPairings, getOrders, handleIncompleteArbitrage]
 # DESCRIPTION:
 #   Set of functions that primarily [or are exclusively written] for the Arbitrage component of the program.
+####################################### FUNCTION LIST ##############################################
+# * - assessProfitRatio
+# * - checkMinOrder
+# * - decideOrder
+# * - determineOrderSize
+# * - evaluatePairing
+# * - handleIncompleteArbitrage
+####################################################################################################
 class ArbitrageLibrary(object):
 
     # FUNCTION: getAggregateWFees
@@ -75,7 +80,7 @@ class ArbitrageLibrary(object):
             return True
         return False
 
-    # FUNCTION: checkMinimumOrder
+    # FUNCTION: checkMinOrder
     # INPUT: pairing      - string
     #        exchange_one - string
     #        exchange_two - string
@@ -106,34 +111,6 @@ class ArbitrageLibrary(object):
             PrintLibrary.displayKeyVariables((("Step size", step_size),
                                                 ("Trim quantity", qty_trim),
                                                 ("quantity", quantity)))
-        return quantity
-
-    # FUNCTION: convertMinPrice
-    # INPUT: exchange - string
-    #        price    - float
-    #        pairing  - string
-    # OUTPUT: price(float)
-    # DESCRIPTION:
-    #   Converts a given price to the minimum price for a pairing/exchange.
-    def convertMinPrice(exchange, price, pairing): 
-        trim_value = ExchangeAPI.getInfoPairing(exchange, pairing)
-        precision = Helpers.determinePrecision(trim_value["min_price"])
-        temp_string = "{:." + str(precision) + "f}"
-        price = temp_string.format(price)
-        return price
-
-    # FUNCTION: convertMinQuantity
-    # INPUT: exchange - string
-    #        quantity - float
-    #        pairing  - string
-    # OUTPUT: quantity (float)
-    # DESCRIPTION:
-    #   Converts input parameters for a trade to the appropiate minimum quantity float value
-    def convertMinQuantity(exchange, quantity, pairing):
-        trim_value = ExchangeAPI.getInfoPairing(exchange, pairing)
-        precision = Helpers.determinePrecision(trim_value["min_quantity"])
-        temp_string = "{:." + str(precision) + "f}"
-        quantity = temp_string.format(quantity)
         return quantity
 
     # FUNCTION: decideOrder
@@ -367,62 +344,6 @@ class ArbitrageLibrary(object):
         # Needs to OUTPUT :
         return (arbitrage_quantity, sell_exchange, sell_price_limit, buy_exchange, buy_price_limit, profit, profit_ratio, return_bool)
 
-    # FUNCTION: findCommonPairings
-    # INPUT: exchange_one - string
-    #        exchange_two - string
-    # OUTPUT: list of pairings
-    # DESCRIPTION:
-    #   Goes through two exchange's list of pairings in order to find common pairings
-    def findCommonPairings(exchange_one, exchange_two):
-        exchange_one_p = DatabaseLibrary.getPairings(exchange_one)
-        exchange_two_p = DatabaseLibrary.getPairings(exchange_two)
-        return_list = []
-        for pairing in exchange_one_p:
-                return_list.append(pairing)
-        return return_list
-
-    # FUNCTION: getOrders
-    # INPUT: exchange - string
-    #        pairing  - string
-    #        ask_list - passed in by reference
-    #        bid_list - passed in by reference
-    # OUTPUT: N/A
-    # DESCRIPTION:
-    #   Retrieves order books for a given pairing on a given exchange and builds a list
-    #    of the combined asks and bids for each exchange. Each list is a list of lists,
-    #    [[price, quantity, exchange, btc_value], ...].
-    def getOrders(exchange, pairing, ask_list, bid_list):
-
-        # NOTE: Temporary workaround to make sure the program doesn't go over rate limit
-        time.sleep(1)
-
-        dict1 = ExchangeAPI.getOrderbook(exchange, pairing)
-
-        # Build our bid and ask lists
-        if dict1["success"] == True:
-            bids = dict1["bids"]
-            asks = dict1["asks"]
-            bids_length = len(bids)
-            asks_length = len(asks)
-
-            for bid in bids:
-                price = float(bid[0])
-                quantity = float(bid[1])
-                btc_value = price * quantity
-                bid_l = [price, quantity, exchange, btc_value]
-                bid_list.append(bid_l)
-
-            for ask in asks:
-                price = float(ask[0])
-                quantity = float(ask[1])
-                btc_value = price * quantity
-                ask_l = [price, quantity, exchange, btc_value]
-                ask_list.append(ask_l)
-
-            # Sort bids and asks
-            ask_list.sort(key=lambda x: x[0], reverse=False) # Ascending [lowest first]
-            bid_list.sort(key=lambda x: x[0], reverse=True)  # Descending [highest first]
-
     # FUNCTION: handle_incomplete_arbitrage
     # INPUT: sell_dict     - TODO
     #        sell_exchange - string
@@ -446,12 +367,3 @@ class ArbitrageLibrary(object):
             # TODO: record difference between prices
             ret_dict["incomplete_arbitrage"] = False
             return ret_dict
-
-# CLASS: LimitArbitrage
-# DESCRIPTION:
-#   Container for all functions related to performing limit based arbitrage
-class LimitArbitrage(object):
-
-    def main():
-        pass
-
