@@ -84,15 +84,15 @@ def calculateFIFOprofit(transactions, assets):
         # Places BUYs and SELLs into their own lists.
         for row in transactions:
             print(row)
-            if row[1] == 'Buy':
+            if row[1] == 'Buy' and row[2] == asset:
                 inputs.append(row)
-            elif row[1] == 'Sell':
+            elif row[1] == 'Sell' and row[2] == asset:
                 outputs.append(row)
-            elif row[1] == 'Transfer':
+            elif row[1] == 'Transfer' and row[2] == asset:
                 print(row)
                 outputs.append(row)
                 exchange_in.append(float(row[5]))
-            elif row[1] == 'Receive':
+            elif row[1] == 'Receive' and row[2] == asset:
                 print(row)
                 inputs.append(row)
                 exchange_out.append(float(row[5]))
@@ -105,7 +105,9 @@ def calculateFIFOprofit(transactions, assets):
 
         ticker = 0
         while len(outputs) > 0:
-            print("Iteration #", ticker)
+            PrintLibrary.delimiter()
+            print("* Iteration #", ticker)
+            print("- Running Profit:", running_profit)
 
             # Control flag determines what elements to pop:
             if ctr_flag == 1:
@@ -114,46 +116,43 @@ def calculateFIFOprofit(transactions, assets):
 
             elif ctr_flag == 0:
                 current_output = outputs[ticker]
-
-            print("CURRENT PROFIT:", running_profit)
-
             # CASE: Sell is larger - work through buys
+            
             curr_value = float(current_output[3])
-            print("Current inputs, outputs", current_input, current_output)
+            PrintLibrary.displayVariables(current_input, "Current INPUT")
+            PrintLibrary.displayVariables(current_output, "Current OUTPUT")
             ticker_t = 0
             while curr_value >= float(current_input[3]):
-                print(" --- ITERATION ", ticker_t, "----")
-                print("curr_value", curr_value)
-                print("Current inputs, outputs", current_input, current_output)
+                print("** INNER ITERATION ", ticker_t)
+                
+                PrintLibrary.displayVariables(current_input, "Current INPUT")
+                PrintLibrary.displayVariables(current_output, "Current OUTPUT")
                 # Multiply asset by price, subtract asset from running
                 orig_value = float(current_input[3]) * float(current_input[4])
                 sell_value = float(current_input[3]) * float(current_output[4])
-                print("Orig value, sell_value", orig_value, sell_value)
                 profit_loss = sell_value - orig_value
                 running_profit += profit_loss
                 current_output[3]  = float(current_output[3]) - float(current_input[3])
                 curr_value = current_output[3]
-                print(curr_value)
-                time.sleep(10)
+                PrintLibrary.displayVariables([orig_value, sell_value, profit_loss, curr_value], "orig/sell/profit/curr")
                 try:
                     ticker_t += 1
                     current_input = inputs[ticker_t]
-                    print("Current input after index", current_input)
                 except IndexError:
-                    print(inputs, outputs)
+                    PrintLibrary.displayVariables(inputs)
                     time.sleep(10)
 
             # CASE: Buy is larger, continue loop
-
             # Multiple asset by price, subtract asset from running
+            print("Exiting inner iteration OR buy initially larger")
+            PrintLibrary.displayVariables(current_input, "Current INPUT")
+            PrintLibrary.displayVariables(current_output, "Current OUTPUT")
             orig_value = float(current_output[3]) * float(current_input[4])
             sell_value = float(current_output[3]) * float(current_output[4])
             profit_loss = sell_value - orig_value
-            running_profit += profit_loss
             current_input[3]  = float(current_input[3]) - float(current_output[3])
             running_profit += profit_loss
-            print(orig_value, sell_value, profit_loss)
-            # Pop new input
+            PrintLibrary.displayVariables([orig_value, sell_value, profit_loss], "orig/sell/profit")
             ctr_flag = 0
             ticker+=1
 
