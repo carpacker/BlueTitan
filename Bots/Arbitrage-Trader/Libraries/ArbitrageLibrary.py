@@ -1,13 +1,22 @@
+# ArbitrageLibrary.py
+# Carson Packer
+# DESCRIPTION:
+#    Library of functions used in the arbitrage system. Each function is pertinent to arbitrage
+#     in some specific awy. This includes applications to market and limit arbitrage.
+
 # External-Imports
 import time 
 import sys
 
-# Windows
+# WINDOWS main-desktop
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
 sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
 
-# Linux
+# WINDOWS laptop
+# sys.path.append()
+
+# LINUX main-server
 # sys.path.append()
 
 # Internal-Imports
@@ -44,33 +53,20 @@ class ArbitrageLibrary(object):
     #    'per trade' withdrawal fee.
     def getAggregateWFees(quote, exchange_one, exchange_two, quantity):
 
-        # Down here somewhere usdt error
+        # Rework this
         fee_one_orig = DatabaseLibrary.getWithdrawalFee(quote, exchange_one, "BTC")
         fee_two_orig = DatabaseLibrary.getWithdrawalFee("BTC", exchange_two, "BTC")
         total_balance = DatabaseLibrary.getBalanceTotal("BTC")
         pairing = Helpers.pairingStr(quote)
         fae = DatabaseLibrary.getFAEProportion(quote, exchange_one)
-
         alloc_prop = total_balance * fae
         print(alloc_prop, "Allocated value in BTC")
-
         btc_value = Helpers.btcValue(quote, quantity, exchange_one)
         size = btc_value / alloc_prop
         fee_one = fee_one_orig * (size / 2)
         fee_two = fee_two_orig * (size / 2)
         fees = fee_one + fee_two
         print(fees, fee_one, fee_two, size, btc_value)
-        # PrintLibrary.displayKeyVariables((("Fees", fees),
-        #                                     ("Fee_one_orig", fee_one_orig),
-        #                                     ("Fee_one", fee_one),
-        #                                     ("Fee_two_orig", fee_two_orig),
-        #                                     ("Fee_two", fee_two),
-        #                                     ("Balance BTC_buy", balance_BTC_one),
-        #                                     ("Balance BTC_sell", balance_BTC_two)
-        #                                     ("Balance BTC", balance_BTC),
-        #                                     ("Quantity BTC", quantity_BTC),
-        #                                     ("Quantity", quantity)))
-        # if balance_BTC != 0:
         return fees 
 
     # FUNCTION: checkMinOrder
@@ -124,22 +120,25 @@ class ArbitrageLibrary(object):
     #    whether or not to perform arbitrage
     def determineOrderSize(profit_ratio, quantity, price):
 
-        # Case 1: Profit ratios is huge
+        # Case 1: Profit ratio is in huge range [?]
         if profit_ratio > 1.25:
-            # Use 25% of allocated portfolio (large sizing)
             final_quantity = quantity * .25
-
-        # Case 2: Profit ratio is within the regular range (.3 to 1.25); attempt a very specific order_size
+        # Case 2: Profit ratio is within the regular range [?]
         elif profit_ratio > .65:
-            btc_value = quantity * price
+            adjusted_quant = quantity * .1
+            btc_value = adjusted_quantity * price
+
+            # Check to make sure the BTC value of the trade is more than a specified minimum
             if btc_value > .01:
-                final_quantity = .01 / price
+                # wtf is this
+                #final_quantity = .01 / price
+                final_quantity = quantity * .1
             else:
                 final_quantity = 0
             PrintLibrary.displayKeyVariables((("Final_quantity", final_quantity),
                                                 ("BTC value", btc_value),
                                                 ("Original quantity", quantity),
-                                                ("Profit_ratio", profit_ratio)))
+                                                ("Profit_ratio", profit_ratio)), "Final Order Size")
             
         # Case 3: Profit ratio is not profitable
         else: 
@@ -328,7 +327,6 @@ class ArbitrageLibrary(object):
                                                 ("Profit", profit),
                                                 ("Price", buy_price_limit)))
 
-        # Temporary workaround for 0 quantity error [3/21/18]
         if arbitrage_quantity == 0:
             return_bool = True
         else: 
@@ -349,13 +347,11 @@ class ArbitrageLibrary(object):
     #    sells or buys the currency o nthe same exchange, and takes a loss if it needs.
     def handleIncompleteArbitrage(sell_dict, sell_exchange, buy_dict, buy_exchange, order_type, pairing):
 
-        # Just try to buy/sell it back
         if order_type == 'Buy':
             ret_dict = ExchangeAPI.buyLimitAbs(buy_exchange, pairing, buy_dict["quantity"], buy_dict["rate"])
         if order_type == 'Sell':
             ret_dict = ExchangeAPI.sellLimitAbs(sell_exchange, pairing, sell_dict["quantity"], sell_dict["rate"])
 
-        if ret_dict['success'] == 'True':
-            # TODO: record difference between prices
-            ret_dict["incomplete_arbitrage"] = False
-            return ret_dict
+        # TODO: record difference between prices
+        # TODO: error checking
+        return ret_dict
