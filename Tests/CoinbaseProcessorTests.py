@@ -1,5 +1,5 @@
 import sys
-sys.path.append("U:/Directory/Projects/BlueTitan/Components/Performance-Analysis")
+sys.path.append("U:/Directory/Projects/BlueTitan/Bots/Fund-Manager")
 
 import CoinbaseTxProcessor as TransactionProcessor
 

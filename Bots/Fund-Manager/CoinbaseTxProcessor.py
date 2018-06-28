@@ -32,7 +32,7 @@ def main(exchanges):
     adjusted_fifo_txs = processTransactions(exchanges, chronological_txs)
 
     # 3. Calculate FIFO profit loss
-    profit_loss_list = calculateFIFOprofit(adjusted_fifo_txs)
+    profit_loss_list = calculateFIFOprofit(adjusted_fifo_txs, ["ETH", "LTC", "BTC"])
     print(profit_loss_list)
     
     # 4. Build final CSV of all record
@@ -64,16 +64,7 @@ def processTransactions(exchanges, transactions):
                 transaction[1] = "Transfer"
                 
             except KeyError:
-                print(transaction)
                 transaction[1] = "Sell"
-
-        elif type_trans == "Receive":
-            pass
-
-        # ERROR CASE: TODO
-        else:
-            print(type_trans)
-            return 'error'
 
     return transactions
 
@@ -84,84 +75,97 @@ def processTransactions(exchanges, transactions):
 #    Given a list of chronologically sorted transactions, calculates the profit loss up
 #     until the last transaction.
 # NOTE: maybe do it by asset?
-def calculateFIFOprofit(transactions):
-    inputs = []
-    outputs = []
+def calculateFIFOprofit(transactions, assets):
     exchange_in = []
     exchange_out = []
-    
-    # Places BUYs and SELLs into their own lists.
-    for row in transactions:
-        if row[1] == 'Buy':
-            inputs.append(row)
-        elif row[1] == 'Sell':
-            outputs.append(row)
-        elif row[1] == 'Transfer':
+    for asset in assets: 
+        inputs = []
+        outputs = []       
+        # Places BUYs and SELLs into their own lists.
+        for row in transactions:
             print(row)
-            outputs.append(row)
-            exchange_in.append(row[5])
-        elif row[1] == 'Receive':
-            print(row)
-            inputs.append(row)
-            exchange_out.append(row[5])
-    exchange_profit = sum(exchange_out) - sum(exchange_in)
-    
-    print(exchange_profit)
-    
-    # 2. While there are outputs still left to be acted over, calculate
-    #     profit loss using FIFO methodology.
-    running_profit = 0
-    running_loss = 0
-    ctr_flag = 1
-    
-    ticker = 0
-    while len(outputs) > 0:
-        print("Iteration #", ticker)
-        
-        # Control flag determines what elements to pop:
-        if ctr_flag == 1:
-            current_output = outputs[ticker]
-            current_input = inputs[ticker]
+            if row[1] == 'Buy':
+                inputs.append(row)
+            elif row[1] == 'Sell':
+                outputs.append(row)
+            elif row[1] == 'Transfer':
+                print(row)
+                outputs.append(row)
+                exchange_in.append(float(row[5]))
+            elif row[1] == 'Receive':
+                print(row)
+                inputs.append(row)
+                exchange_out.append(float(row[5]))
 
-        elif ctr_flag == 0:
-            current_output = outputs[ticker]
+        # 2. While there are outputs still left to be acted over, calculate
+        #     profit loss using FIFO methodology.
+        running_profit = 0
+        running_loss = 0
+        ctr_flag = 1
 
-        print("CURRENT PROFIT:", running_profit)
-        
-        # CASE: Sell is larger - work through buys
-        curr_value = float(current_output[5])
-        print("Current inputs, outputs", current_input, current_output)
-        
-        ticker_t = 0
-        while curr_value >= current_input[5]:
-            # Multiply asset by price, subtract asset from running
-            orig_value = float(current_input[quantity]) * float(current_input[price])
-            sell_value = float(current_input[quantity]) * float(current_output[price])
+        ticker = 0
+        while len(outputs) > 0:
+            print("Iteration #", ticker)
+
+            # Control flag determines what elements to pop:
+            if ctr_flag == 1:
+                current_output = outputs[ticker]
+                current_input = inputs[ticker]
+
+            elif ctr_flag == 0:
+                current_output = outputs[ticker]
+
+            print("CURRENT PROFIT:", running_profit)
+
+            # CASE: Sell is larger - work through buys
+            curr_value = float(current_output[3])
+            print("Current inputs, outputs", current_input, current_output)
+            ticker_t = 0
+            while curr_value >= float(current_input[3]):
+                print(" --- ITERATION ", ticker_t, "----")
+                print("curr_value", curr_value)
+                print("Current inputs, outputs", current_input, current_output)
+                # Multiply asset by price, subtract asset from running
+                orig_value = float(current_input[3]) * float(current_input[4])
+                sell_value = float(current_input[3]) * float(current_output[4])
+                print("Orig value, sell_value", orig_value, sell_value)
+                profit_loss = sell_value - orig_value
+                running_profit += profit_loss
+                current_output[3]  = float(current_output[3]) - float(current_input[3])
+                curr_value = current_output[3]
+                print(curr_value)
+                time.sleep(10)
+                try:
+                    ticker_t += 1
+                    current_input = inputs[ticker_t]
+                    print("Current input after index", current_input)
+                except IndexError:
+                    print(inputs, outputs)
+                    time.sleep(10)
+
+            # CASE: Buy is larger, continue loop
+
+            # Multiple asset by price, subtract asset from running
+            orig_value = float(current_output[3]) * float(current_input[4])
+            sell_value = float(current_output[3]) * float(current_output[4])
+            profit_loss = sell_value - orig_value
             running_profit += profit_loss
-            current_output[4]  = float(current_output[quantity]) - float(current_input[quantity])
-            curr_value = float(current_output[totalvalue]) - sell_value
-            current_input = inputs.pop()
-            time.sleep(1)
-        
-        # CASE: Buy is larger, continue loop
+            current_input[3]  = float(current_input[3]) - float(current_output[3])
+            running_profit += profit_loss
+            print(orig_value, sell_value, profit_loss)
+            # Pop new input
+            ctr_flag = 0
+            ticker+=1
 
-        # Multiple asset by price, subtract asset from running
-        orig_value = float(current_output[quantity]) * float(current_input[price])
-        sell_value = float(current_output[quantity]) * float(current_output[price])
-        running_profit += profit_loss
-        current_input[4]  = float(current_input[quantity]) - float(current_output[quantity])
-        running_profit += profit_loss
+    exchange_profit = sum(exchange_out) - sum(exchange_in)
+    print("Exchange_out", exchange_out)
+    print("Exchange_in", exchange_in)
         
-        # Pop new input
-        ctr_flag = 0
-        ticker+=1
-        time.sleep(3)
-
+    print(exchange_profit)
+    print(running_profit)
 
     final_profit = running_profit + exchange_profit
     return running_profit
 
 def buildFinalCSV():
     pass
-    # 1. Build any derivative data
-    # 2. Create and write the actual CSV file

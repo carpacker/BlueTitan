@@ -16,7 +16,6 @@ import Coinbase
 from API import ExchangeAPI
 import Helpers
 from PrintLibrary import PrintLibrary
-import ProfitLibrary
 
 # FUNCTION: main
 # INPUT: exchanges - [string, ...]
