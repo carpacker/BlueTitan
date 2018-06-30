@@ -45,10 +45,17 @@ class BTArbitrage(object):
     # INITIALIZATION
     # INPUT: Clean - Used to designate whether to clean databases on initialization. Defaults to True.
     # DESCRIPTION:
-    #   Performs necessary tasks to begin Arbitrage.
-    def __init__(self, clean=True):
-		pass
-        
+    #   Performs necessary tasks to begin Arbitrage. Grabs input variables
+    def __init__(self, clean=True, exchanges, pairings, assets):
+		# Initialize local variables
+		cl_exchanges = exchanges
+		cl_pairings = pairings
+		cl_assets = assets
+
+		# Grab balance dict
+        cl_balance_dict = DatabaseLibrary.getAllBalances(exchanges)
+        PrintLibrary.displayDictionary("Initialized balances", cl_balance_dict)
+		
     # FUNCTION: Arbitrage [Top Level]
     # DESCRIPTION:
     #   Main function for arbitrage that acts as the top level.
