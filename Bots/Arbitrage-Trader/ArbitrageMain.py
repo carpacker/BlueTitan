@@ -47,61 +47,7 @@ class BTArbitrage(object):
     # DESCRIPTION:
     #   Performs necessary tasks to begin Arbitrage.
     def __init__(self, clean=True):
-
-        PrintLibrary.header("Initialization")
-
-        # Grab arguments and update relevant class variables
-        exchanges = exchanges = LowLiquidityArbitrage.cl_exchanges 
-        pairings = LowLiquidityArbitrage.cl_pairings 
-        assets = LowLiquidityArbitrage.cl_assets
-
-        arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
-                            "IntendedFAE"]
-        metrics_tables = ["Metrics", "FailureMetrics"]
-        assetmetrics_tables = ["AssetMetrics", "AssetFailureMetrics"]
-
-        databases = [("ArbitrageDatabase", ArbitrageDatabase, arbitrage_tables),
-                        ("MetricsDatabase", MetricsDatabase, metrics_tables),
-                        ("AssetMetricsDatabase", AssetMetricsDatabase, assetmetrics_tables)]
-
-
-        orig_exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
-        exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
-
-        PrintLibrary.displayVariables(exchanges, "Exchanges")
-        PrintLibrary.displayVariables(assets, "Assets")
-        PrintLibrary.displayVariables(pairings, "Pairings")
-
-        # Clause: Clean database [tables - exceptions]
-        if clean == True:
-            # temporary solution for doing a complete database wipe when necessary
-            superclean = False
-
-            # # Messy, only works since it gets added to table that then gets instantly deleted. Figure out workaround 
-            # #   for the future.
-            # fae_list = BalancingLibrary.initializeFAEProportions(assets, exchanges, True)
-
-            for database_tuple in databases:
-                PrintLibrary.displayVariables(database_tuple)
-                set_tables = set(database_tuple[2])
-                set_i_tables = set(DatabaseLibraryBase.listTablesDB(database_tuple[1]))
-
-                print("Intended Tables: ", set_tables)
-                print("Database tables", set_i_tables)
-                PrintLibrary.delimiter()
-                if (set_tables.issubset(set_i_tables) and set_tables.issuperset(set_i_tables)) or superclean==True:
-                    exceptions = DatabaseLibraryBase.cleanDatabase(database_tuple[1], database_tuple[2])
-                else:
-                    exceptions = DatabaseLibraryBase.cleanDatabase(database_tuple[1], database_tuple[2], exceptions)
-
-                DatabaseLibrary.initialize(exceptions, assets, exchanges)
-
-        cl_balance_dict = DatabaseLibrary.getAllBalances(exchanges)
-        if "IntendedFAE" not in orig_exceptions:
-            BalancingLibrary.initializeFAE(assets, exchanges, class_balance_dict)
-        # (TODO) - fix this dictionary shit so it can print...
-        # print(class_balance_dict)
-        # PrintLibrary.displayDictionary(class_balance_dict, "Balances")
+		pass
         
     # FUNCTION: Arbitrage [Top Level]
     # DESCRIPTION:
@@ -116,25 +62,20 @@ class BTArbitrage(object):
         consecutive_fails = 0
 
         # Scheduled Events
-        # 
+        #
 
-        # Profit Tracking
-        schedule.every().minute.do(ProfitTracker.runHourly, exchanges, assets)
-        schedule.every().hour.do(ProfitTracker.runHourly, exchanges, assets)
-        schedule.every().day.at("6:00").do(ProfitTracker.runDaily, exchanges, assets)
-
-        # Heuristic updates
-        # 
-
-        # Main Loop
+        # Main arbitrage loop -
+		#  1. checks for events
+		#  2. market arbitrage actions
+		#  3. limit arbitrage actions
         while 1:
-            header_string = "Iteration " + str(ticker) + " at " + Helpers.convertFromUnix(Helpers.createTimestamp())
+            header_string = "MAIN ARBITRAGE LOOP: Iteration " + str(ticker) + " at " + Helpers.convertFromUnix(Helpers.createTimestamp())
             PrintLibrary.header(header_string)
             
             # Check schedule for events waiting to be run
             schedule.run_pending()
 
-            # Pairing Loop
+			# Market Arbitrage
             for pairing in pairings:
                 time.sleep(2) # For rate limits
 
