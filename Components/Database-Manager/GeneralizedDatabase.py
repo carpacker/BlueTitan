@@ -104,9 +104,10 @@ def generalQuery(cursor, query):
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
+	
     # FUNCTION: buildInitTuple
-    # INPUT: table_name    - string
-    #        database_name - string
+    # INPUT: database_path - *
+	#        table_name    - string
     # OUTPUT: tuple
     # DESCRIPTION:
     #    Creates an initiliazer tuple based on a given table and name. It provides a generic
@@ -419,20 +420,25 @@ class GenDatabaseLibrary(object):
         pass
     
     # FUNCTION: getItem
-    # INPUT:
-    # OUTPUT:
+    # INPUT: database_path -
+	#        table_name    - string
+    #        data_uuid     - [data1, ...]
+	#        column        - string
+    # OUTPUT: Varies
     # DESCRIPTION:
-    #   Retrieves a single item from a
-    def getItem(data_uuid, column, table_name, database_name):
+    #   Retrieves a single item from an entry in the input database and table.
+    def getItem(database_path, table_name, data_uuid, column):
         pass
 
     # FUNCTION: getItems
-    # INPUT: data_uuid -
-    #
-    # OUTPUT: tuple [data1, ...]
+    # INPUT: database_path - *
+	#        table_name    - string
+    #        data_uuid     - [data1, ...]
+	#        columns       - string
+    # OUTPUT: list of tuples [(data1, ...) ...]
     # DESCRIPTION:
     #   Retrieves multiple items from an entry, designated by the column names.
-    def getItems(data_uuid, columns, table_name, database_name):
+    def getItems(database_path, table_name, data_uuid, columns):
         if columns is not None:
             col_s = ",".join(columns)
             sql_s = "SELECT %s FROM %s" % (col_s, table_name)
@@ -450,20 +456,28 @@ class GenDatabaseLibrary(object):
         pass
     
     # FUNCTION: updateItem
-    # INPUT: 
-    # OUTPUT: 
+    # INPUT:  database_path - *
+	#         table_name    - string
+    #         data_uuid     - [data1, ...]
+	#         input_val     - varies
+    #         column        - string
+    # OUTPUT: N/A
     # DESCRIPTION:
     #   Updates an item using UUID or data as a reference to access the entry.
-    def updateItem(data_uuid, input_val, column, table_name, database_name):
+    def updateItem(database_path, table_name, data_uuid, input_val, column):
         pass
 
     # FUNCTION: updateItems
-    # INPUT: 
-    # OUTPUT: 
+    # INPUT:  database_path - *
+	#         table_name    - string
+    #         data_uuid     - [data1, ...]
+	#         input_val     - varies
+    #         columns       - [string, ...]
+    # OUTPUT: N/A
     # DESCRIPTION:
     #   Updates multiple items (column values in an entry) using UUID or data as a reference
     #    to access the entry.
-    def updateItems(data_uuid, input_val, columns, table_name, database_name):
+    def updateItems(database_path, table_name, data_uuid, input_val, columns):
         pass
 
     # FUNCTION: getColumn
@@ -477,13 +491,13 @@ class GenDatabaseLibrary(object):
     #   Retrieves an entire column from a table in a datbase. kwargs limit and period can
     #    be used to restrict the number of values to return.
     # WARNING: heavy load on time, very slow
-    def getColumn(table_name, database_name, **kwargs):
+    def getColumn(database_path, table_name):
         pass
         # 1. Check if attempting use period
         # 2. Check the quantity of entries to grab
         # 3. If neither, grab all
         
-    # FUNCTION: getColumn
+    # FUNCTION: getColumns
     # INPUT: table_name    - string
     #        database_name - string
     #        columns       - [string, ...]
@@ -492,7 +506,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Performs multiple getColumn() calls in order to retrieve multiple columns.
     # WARNING: heavy load on time, very slow
-    def getColumns(table_name, database_name, **kwargs):
+    def getColumns(database_path, table_name):
         pass
 
     def deleteEntryString():
@@ -505,30 +519,51 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   TODO: will be similar to getEntry
-    def deleteEntry(data_uuid, table_name=None, database_name=None):
+    def deleteEntry(database_path, table_name, data_uuid):
         pass
 
     # FUNCTION: deleteEntries
-    # INPUT: 
-    # OUTPUT:
+    # INPUT: type_v  - 'QUANT', 'MINUTES', 'HOURS'
+	#        minutes - int
+    # OUTPUT: boolean
     # DESCRIPTION:
-    #   TODO: will be similar to getEntries
-    def deleteEntries():
-        
-        # Below is reference for time based
-        one_day = 60*60*24 # seconds
-        time = int(time.time() * 1000)
-        cutoff = time - (one_day*days)
+	#    Delete entries either by minutes from start point or number of entries from start point.
+    # TODO: error handling
+    def deleteEntries(database_path, table_name, type_v, value, start=0):
+		# Connect to database here
+		
+        sql_s = 'DELETE FROM %s WHERE Time < %s' % cutoff
+		if type_v == 'QUANT':
+			sql_s = ''
+			cursor.execute(sql_s)
+			return True
+		
+		# One day in seconds, hours in seconds  
+        one_day = 60*60*24
+		elif type_v == 'HOURS':
+			if start == 0:
+				pass
+			else:
+				pass
+		elif type_v == 'MINUTES':
+			pass
+		else:
+			# Error handling here
+			pass
+		
+        time = Helpers.getTimestamp()
+        cutoff = time - (one_day)
         sql_s = 'DELETE FROM %s WHERE Time < %s' % cutoff
         cursor.execute(sql_s)
 
     # FUNCTION: listColumns
-    # INPUT: cursor     - *
-    #        table_name - string
+    # INPUT: database_path - *
+    #        table_name    - string
     # OUTPUT: list of strings
     # DESCRIPTION:
     #   Returns a list of the names of each column in a given table.
-    def listColumns(cursor, table_name):
+    def listColumns(database_path, table_name):
+		# TODO: add database path stuff here
         sql_s = "PRAGMA table_info('%s')" % table_name
         cols_list = []
         cursor.execute(sql_s)
@@ -538,11 +573,11 @@ class GenDatabaseLibrary(object):
         return cols_list
 
     # FUNCTION: listTables
-    # INPUT: cursor
+    # INPUT: database_path - *
     # OUTPUT: table_list which is a representation of all the tables.
     # DESCRIPTION:
     #   Lists the tables in a database.
-    def listTables(cursor):
+    def listTables(database_path):
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
         table_list = []
         fetched = cursor.fetchall()
