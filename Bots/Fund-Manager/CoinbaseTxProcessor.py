@@ -108,7 +108,6 @@ def calculateFIFOprofit(transactions, assets):
             PrintLibrary.delimiter()
             print("* Iteration #", ticker)
             print("- Running Profit:", running_profit)
-
             # Control flag determines what elements to pop:
             if ctr_flag == 1:
                 current_output = outputs[ticker]
