@@ -1,0 +1,196 @@
+# blue-titanTD.org
+# Carson Packer
+# DESCRIPTION:
+#    Main TODO doc for blue titan's automated trading system.
+
+INDEX:
++ Organization
++ 
+* Organization
+All meta-organizational items such as readmes, todo lists and scheduling.
+
+** READMEs
+** Planner
+** Prototyping
+
+
+
+* BOTS
+** Arbitrage
+*** General
+Big tasks
+ + Reworking profit tracking in relation to performing withdrawals
+ + Laying own limit arbitrage foundation
+ + Add error tracking via PrintLibrary
+Specific tasks
+ + Rework decideOrder
+ + Rework determineOrdersize
+ + Generic checkMinOrder
+ + Skeleton functions for limit arbitrage in arbitrage library
+ + PrintLibrary message function
+
+Arbitrage
+ + if arbitrage_quantity == 0 error @ ~320
+ + determineOrderSize variable quantity/ratio...
+   + allow for scaling
+   + possible neural network
+ + evaluatePairing comments
+ + Reworking getAggregateWFees
+   + Possibly replace the function
+   + Break into small parts
+
+*** Balancing
++ Vetting and reworking file
++ Adding in changes to database library and all that
++ Possibly integrating into arbitrage library
++ Possibly move parts to fund manager
++ Test last loop buildCurrentFAE
++ Run through balancePairings
++ BalancePairing storeEntry actual values
++ Move tag check
+** Coin-Categorizer
+** Fund-Manager
+
+*** TODO :: general
+   - Review Metrics, bunch of inputs don't match up
+   - Make variables more clear (assign names instead)
+   - Generalize/partition parts of code
+   - Implement 'running algorithms'
+   - Fix changed items in helpers
+   - Clean up, move around runHourly/daily
+*** TODO :: by function
+** Market-Tracker
+** MA-Trader
+** Performance-Tracker
+** System-Controller
+*** TODO
++ Rework the clean database portion
++ Fix class balance_dict print
++ Helpers writeconvert pairing to asset list
+* COMPONENTS
+** Crypto-API
+** Database-Manager
+*** TODO :: general
+   - Moving databases to their own folderu
+   - Retrieval using uuid
+   - Uuid creation
+   - Uuid insertion
+*** TODO :: by function
+   - getEntry/getEntries
+   - deleteEntry
+   - deleteEntries
+
+*** TODO :: test
+   - createUuid
+   - Base tester flow
+** Front-End
+** Heuristic-Processor
+** Maintenance
+** Market-Simulation
+** Mining
+*** TODO : immediate
+   - Test autostart.sh
+   - Overclock 1 gpu
+   - List of GPUs, default, ideal settings in github
+   - Port settings to github
+*** Tidbits
+
+   Initial set up for a rig :: Starts after the below maintenance sweep
+   - Pre-requisite packages installed (todo compile list)
+   - autostart, clear logs, mine-start scripts set up
+   - Settings filled out
+   - Names/passwords set according to existing organizational scheme.
+
+   Maintenance flow for updating rigs
+   - Update ubuntu (re-install if necessary)
+   - Download latest mining version; test each with old drivers
+   - Download new video drivers, uninstall old ones; install new ones
+   - Test mining with new drivers; revert if they don't work
+
+** Performance-Analysis
+** Records-Analysis
+** Web-scraper
+
+* PAPERS
+* ORGANIZATION			       
+* GENERAL
+** Main
++ Windows laptop sys paths
++ Set up linux server
+** Libraries
+ + Rework TradingLibrary calls
+** Rigs
+  BIG GOALS
+- Get all rigs running
+- Overclock one rig
+*** TODO : General
+- Test autostart
+- Clearlogs, autostart on each rig
+- Move geth funds
+- Test location for RMA materials
+** Trading System
+*** Front End
+
+** Business
+   TODO
+
+
+#+TODO: TODO IN-PROGRESS WAITING DONE THEORY
+
+* Arbitrage
+** Balancing
+   + 
+* Coin Categorizer
+* DatabaseManagement
+
+** GeneralizedDatabase
+*** TODO :: general
+   - Moving databases to their own folderu
+   - Retrieval using uuid
+   - Uuid creation
+   - Uuid insertion
+*** TODO :: by function
+   - getEntry/getEntries
+   - deleteEntry
+   - deleteEntries
+
+*** TODO :: test
+   - createUuid
+   - Base tester flow
+* Fund Management
+
+** Profit Tracker
+   Possibly use a database to keep track of profits to date, RuntimeDatabase would fill that niche.
+
+*** TODO :: general
+   - Review Metrics, bunch of inputs don't match up
+   - Make variables more clear (assign names instead)
+   - Generalize/partition parts of code
+   - Implement 'running algorithms'
+   - Fix changed items in helpers
+   - Clean up, move around runHourly/daily
+*** TODO :: by function
+
+** Liquidation
+* Front-End
+* Graphing & Analysis
+* Mining
+** TODO : immediate
+  - Test autostart.sh
+  - Overclock 1 gpu
+  - List of GPUs, default, ideal settings in github
+  - Port settings to github
+** Tidbits
+
+  Initial set up for a rig :: Starts after the below maintenance sweep
+  - Pre-requisite packages installed (todo compile list)
+  - autostart, clear logs, mine-start scripts set up
+  - Settings filled out
+  - Names/passwords set according to existing organizational scheme.
+
+  Maintenance flow for updating rigs
+  - Update ubuntu (re-install if necessary)
+  - Download latest mining version; test each with old drivers
+  - Download new video drivers, uninstall old ones; install new ones
+  - Test mining with new drivers; revert if they don't work
+

@@ -16,6 +16,8 @@ still some routine items that must be handled, since this is the first official 
 trading bot.
 
 ## Linux Server Set-up
+# TODO: synopsis
+
 ## Project ORG
 - Note folder description
 - Org docs
@@ -51,17 +53,21 @@ The important tasks for balancing include:
 The next significant feature to be implemented is a true top-level controller. Rather than running
 everything through the arbitrage script, there will be an explicit component in place that's role
 is to manage the system. This is the system controller. For the prototype, all that is necessary is
-porting the previous base functionality
+porting the previous base functionality.
 
-* [ ] -
+* [ ] - Configure and test scheduled events
+* [ ] - Configure arbitrage and main inits properly
+* [ ] - Add in any new scheduling (liquidation)
 
 
 # Profit Tracking
-TODO intro
+
+After running an algorithm, the next most important feature is a system that keeps track of running profit.
 
 ##  Metrics
 TODO synopsis
 
+* [ ] - 
 ##  Liquidation
 TODO synopsis
 
