@@ -1,4 +1,4 @@
-# Introduction
+* Introduction
 This document contains all information pertaining to the release of the first version of running
 prototype of algorithmic trading software labeled "BlueTitan". The intent is for this piece of
 software to maintain autonomous, repetitive trading strategies in order to leverage the
@@ -7,7 +7,7 @@ a running version of the bot and to provide a basis of data in which to optimize
 its performance. The following task list comprises of the criteria that needs to be met in order
 for this bot to be considered 'running'. The target date is August 1st.
 
-# General
+* General
 The primary focus is to run an algorithm using fleshed out 'foundational' components such as
 database management and API features. Since these components are important in the grand scheme of
 things, but aren't necessarily useful independent of each other, the developed arbitrage algorithm
@@ -15,10 +15,20 @@ will act as the proof of concept, what will be used to demonstrate the functiona
 still some routine items that must be handled, since this is the first official version of the
 trading bot.
 
-## Linux Server Set-up
-# TODO: synopsis
+The necessary features that must be completed in order for the prototype to be in a runnable
+state, besides bugs and minor fixes along the way include:
 
-## Project ORG
+    1. File Organization
+    2. Complete Market Arbitrage Capabilities 
+    3. Automatic Balancing with error handling
+    4. Generalized Database Implementation
+    5. System Controller
+    6. Server Runtime
+    7. Profit Tracking & Metrics
+    8. Basic Liquidation
+
+* File Organization
+First draft of compartamentalization
 - Note folder description
 - Org docs
 - Auto notes

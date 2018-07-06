@@ -4,18 +4,24 @@
 #    Main TODO doc for blue titan's automated trading system.
 
 INDEX:
++ General
 + Organization
-+ 
-* Organization
++ Bots
++ Components
+
+* General
+
+** Organization
 All meta-organizational items such as readmes, todo lists and scheduling.
 
 ** READMEs
+*** TODO Write general format for readmes by directory
 ** Planner
 ** Prototyping
+*** TODO Re-structure prototype document
 
-
-
-* BOTS
+** Document
+* Bots
 ** Arbitrage
 *** General
 Big tasks
@@ -60,14 +66,13 @@ Arbitrage
    - Clean up, move around runHourly/daily
 *** TODO :: by function
 ** Market-Tracker
-** MA-Trader
 ** Performance-Tracker
 ** System-Controller
 *** TODO
 + Rework the clean database portion
 + Fix class balance_dict print
 + Helpers writeconvert pairing to asset list
-* COMPONENTS
+* Components
 ** Crypto-API
 ** Database-Manager
 *** TODO :: general
@@ -94,7 +99,6 @@ Arbitrage
    - List of GPUs, default, ideal settings in github
    - Port settings to github
 *** Tidbits
-
    Initial set up for a rig :: Starts after the below maintenance sweep
    - Pre-requisite packages installed (todo compile list)
    - autostart, clear logs, mine-start scripts set up
@@ -111,86 +115,15 @@ Arbitrage
 ** Records-Analysis
 ** Web-scraper
 
-* PAPERS
-* ORGANIZATION			       
-* GENERAL
-** Main
-+ Windows laptop sys paths
-+ Set up linux server
-** Libraries
- + Rework TradingLibrary calls
-** Rigs
-  BIG GOALS
-- Get all rigs running
-- Overclock one rig
-*** TODO : General
-- Test autostart
-- Clearlogs, autostart on each rig
-- Move geth funds
-- Test location for RMA materials
-** Trading System
-*** Front End
-
-** Business
-   TODO
+** Graphing
 
 
-#+TODO: TODO IN-PROGRESS WAITING DONE THEORY
+BOT STEPS:
 
-* Arbitrage
-** Balancing
-   + 
-* Coin Categorizer
-* DatabaseManagement
-
-** GeneralizedDatabase
-*** TODO :: general
-   - Moving databases to their own folderu
-   - Retrieval using uuid
-   - Uuid creation
-   - Uuid insertion
-*** TODO :: by function
-   - getEntry/getEntries
-   - deleteEntry
-   - deleteEntries
-
-*** TODO :: test
-   - createUuid
-   - Base tester flow
-* Fund Management
-
-** Profit Tracker
-   Possibly use a database to keep track of profits to date, RuntimeDatabase would fill that niche.
-
-*** TODO :: general
-   - Review Metrics, bunch of inputs don't match up
-   - Make variables more clear (assign names instead)
-   - Generalize/partition parts of code
-   - Implement 'running algorithms'
-   - Fix changed items in helpers
-   - Clean up, move around runHourly/daily
-*** TODO :: by function
-
-** Liquidation
-* Front-End
-* Graphing & Analysis
-* Mining
-** TODO : immediate
-  - Test autostart.sh
-  - Overclock 1 gpu
-  - List of GPUs, default, ideal settings in github
-  - Port settings to github
-** Tidbits
-
-  Initial set up for a rig :: Starts after the below maintenance sweep
-  - Pre-requisite packages installed (todo compile list)
-  - autostart, clear logs, mine-start scripts set up
-  - Settings filled out
-  - Names/passwords set according to existing organizational scheme.
-
-  Maintenance flow for updating rigs
-  - Update ubuntu (re-install if necessary)
-  - Download latest mining version; test each with old drivers
-  - Download new video drivers, uninstall old ones; install new ones
-  - Test mining with new drivers; revert if they don't work
-
+Finish test gen database
+resume runtime testing
+add profit liquidatino
+complete balancing
+widget library
+limit arbi
+second computer
