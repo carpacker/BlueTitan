@@ -193,6 +193,7 @@ for us to be able to establish a fund.
 ----------------------------------------------------------------------------------------------------
 ** 'empire' attitude
 
+I'm going to do this saturday morning
 - Varying projects within a realm
 - Role of components as a consistent base
 - Re-applying proven models
@@ -238,7 +239,7 @@ This is called proto-v1.txt in Documents/Prototyping. These are the items that m
 in order for the bot to run in its first prototype stage.
 
 The ORG doc containing the expansive TODO list for the BlueTitan project can be found in the
-Documents folder on the GitHub.
+Documents folder on the GitHub. Its also a work in progress, but there's quite a bit there already.
 ----------------------------------------------------------------------------------------------------
 * Updates on Antony
 
@@ -253,10 +254,11 @@ future. You can get an idea of what's going on by checking out the github.
 ----------------------------------------------------------------------------------------------------
 * 3 Month Calendar
 
-I've developed a three month calendar with deadlines for projects to help us move forward. It
-includes a variety of things. It can be found in the Documents folder on the GitHub. It is more
-of a guideline than it is an absolute decree. It mostly pertains to the software and was designed
-with the conceptual topics I went over earlier in mind.
+I'm developing  a three month calendar with deadlines for projects to help us move forward. It
+includeswill include a variety of things. It will be found in the Documents folder on the GitHub.
+It is more of a guideline than it is an absolute decree. It mostly pertains to the software and
+was designed with the conceptual topics I went over earlier in mind. It will be in the form of an
+ORG doc which I mentioned. I'm stil working on it so the document isn't there yet.
 
 ----------------------------------------------------------------------------------------------------
 * Balances
@@ -278,6 +280,6 @@ obviously welcome and important, but you do not necessarily need to have a respo
 you understand it and are on the same page.
 
 Sorry this took so long. I think delaying the move was the right choice. These things need to get
-done before we move.
+done before we move. Also I didn't proofread this, already spent too much time writing it.
 
 Carson
