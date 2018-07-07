@@ -1,0 +1,283 @@
+Hey,
+
+I ended up getting quite a bit of stuff together as I was managing the workload. I have ordered
+things as logically as I can perceive, some things may not make sense without looking at specific
+files that are on GitHub or elsewhere. When that is the case, there will be a mention of what to
+look at and where it is. Sorry this took so long and take your time to read through things.
+
+----------------------------------------------------------------------------------------------------
+* Branding
+
+I have been making an effort to consolidate what we have, solidify in practical terms what we want
+and otherwise package our business into something that is easier to understand across the board.
+A word one could use is rebranding, but we didn't really have much of a brand to begin with, so I
+believe this stage would be considered branding. My focus has been on concise, central scheduling
+and organization, systems for smooth transparency and analysis, establishing a consistent workflow
+of goal-directed actions and modeling the business like an 'empire'.
+
+----------------------------------------------------------------------------------------------------
+** Scheduling, Organization
+
+I have reasoned that, especially in regards to delaying the move, that we must enter a new stage of
+planning. What we were doing up until now was not enough. If we truly want to succeed to the degree
+that I believe is within our capabilities, I've decided that a significant amount of effort must
+go into streamlining organization and scheduling.
+
+As I've mentioned, I started learning and consequently adopted a new, powerful text editor called
+emacs. That move fell into the category of necessary optimizations to allow for streamlined
+workflow. Emacs has a mode called 'org' mode which acts as an expansive planner. It will be
+difficult to explain the ins and outs, I will instead show you how 'org' mode works over skype
+sometime.
+
+I have started towards keeping org documents as the master planners for our projects. Each project
+has its own org doc where information is stored and tracked. This includes to-dos, deadlines, notes
+and more. Org mode will be an invaluable tool for us. While you do not need to learn how to use it,
+I want to show you what it looks like and why they are useful.
+
+Working my organizational patterns into org-mode has been a big reason as to why this has taken so
+long. The good news is that I'm basically done with the structure and from here it is just building.
+I've been using org mode to plan much more than our projects.
+
+On that front, so you know, my current schedule involves a workday of 8am to 4pm on the weekdays.
+I have not set a consistent schedule yet for the weekends, but I will be doing something of a half
+day. That gives me 40-48 hours a week to work on our projects. I typically try to work on one or
+two things a day and will vary it up with personal projects.
+
+----------------------------------------------------------------------------------------------------
+** Accountability, Analysis
+
+The ability to process, analyze and understand a situation is an essential skill for us to have. The
+best way to highlight this topic is through the lens of 'profit'. However, it is actually much bigger
+than a dollar sign.
+
+Let's look at profit-tracking in the lens of what we have been doing, what we currently can do and
+what efforts have been completed thpat augment this ability. Then we will look at what we would
+want to do in order to maintain acceptable, somewhat efficient levels of profit-tracking. First
+we will assess mining, then the general fund-management.
+
+For mining, we mine a currency and it gets sent directly to an address. As long as we keep it on
+that address, its easy to track the proceeds. If we move it off, to anywhere else, record keeping
+is required in order to maintain an accurate balance. However, more complicated is the costs that
+are incurred. The initial sunk costs are straight forward: the price of the underlying components.
+Electricity is a bit harder to determine for a couple reasons. First, it is currently going through
+my dad, second, because we don't know how to accurately estimate the costs at runtime.
+
+That is okay and provides us some level of understanding of our current profits, but I think we can
+both agree that it is not complete and therefore, not acceptable. This is because we can't produce
+even a final estimate of how much we've made, only the revenue. Additionally, we have issues in
+earlier transactions where we sent funds to an exchange.
+
+----------------------------------------------------------------------------------------------------
+*** Mining
+
+The desired functionality for the ability to track profits of our mining operations becomes clear
+when we assess it in this manner. First, we need to be able to work through our previous issues.
+Second, we need to have systems in place in order to circumvent the above issues. Generally,
+what is required is
+
+    1. Ability to track direct revenue (in terms of asset)
+    2. Centralized record keeping of sunk costs
+    3. Tracking the value of transactions between addresses and exchanges
+    4. Recording and processing the cost of electricity
+
+The bottom line is that we need to do the above for the past and the future. Processing the past
+may be a bit time consuming. However, since we have outlined what is necessary to able to account
+our total profits day to day, we will be able to design a system that reduces further strain.
+
+I will take it one step further and outline a few steps that would be ideal for an optimal setup,
+but would not be appropiate to implement until the above is implemented. Additionally, we may have
+more to look at and items to add to the list once the above has been complete. For the sake of
+keeping things simple, I won't outline the benefits of the below functionalities.
+
+     1. Ability to track USD value day to day
+     2. Calculating the opportunity cost of mining against of assets
+     3. Calculating the depreciating value of our GPUs as they get used to mine
+
+----------------------------------------------------------------------------------------------------
+*** Fund-Management
+
+There are two items to look at in terms of fund management. First, there is bot related activities,
+then there is change in value of the fund where the bot has no action. In the future, due to the
+intended encompassing nature of the management system, the value will be completely tied to the
+bot's performance. For now, we have to account for change in value due to outside force, and human
+error.
+
+To keep things simple, when looking at fund management outside of the bot, we assess two things.
+First, we look at the change in value due to relatively long term decisions, for example the
+decision to be mostly short or mostly long on the market. Then we look at change in value due to
+short term decisions, like trading. The intent is to determine the value and the profit of the fund
+day to day, and then to accurately account and asses our performance. The long term decisions amount
+to assessing valuation over time, where trading would look at more nuanced decisions and items like
+aggregate fees.
+
+Currently, we do none of this, we merely hold some assets that I think are okay to hold. Not
+completely random, but not directed, and certainly not an acceptable management state.
+
+As for what to do, or what systems need to be in place in order to enact these decisions and then
+observe the results, there is a wide range of actions. I will start the conversation with ideas that
+I have, then we can deliberate until we find the right fit. Generally however, first we need to be
+able to make both types of decisions, then we need to be able to review those decisions, then we
+will need to be able to adapt to the result of those decisions. Easier said than done, here is a
+short list by topic:
+
+    1. Joint decision making on fund allocation based on market condition
+    2. Period of time as reference for decision making
+    3. Regular mettings to discuss direction of fund and its value
+    4. Short term trading strategies
+
+Onto the tracking the profitability of automated trading. A bit easier to track, since the program
+will be explicitly keeping records of its transactions. But, its an important conceptual
+distinction. The profitability of the program is one of the most important things for us to
+analyze. It provides us with the basis for our company, it is what would differentiate us from
+others. What matters is that we are able to keep tracking of the profit day to day of the entire
+system, distinguish human error from program error and [once it becomes this complex] keep track
+of the profit of different algorithms in isolation.
+
+Currently, we keep track of all transactions, meaning we can track the increase in value based off
+a trade. What we can't track is the change in value based on the choice of asset, which would play
+into the profit of the algorithm.
+
+To label explicitly what functionality would be required for adequate profit tracking and value
+assessment:
+
+    1. Profit tracking of program based on actions of an algorithm
+    2. Accounting for change in value of asset against trade revenue
+    3. Total profit tracking of the system
+    4. Opportunity cost of running one algorithm against another
+    5. Centralized record keeping of valuation of fund
+    
+----------------------------------------------------------------------------------------------------
+***  Value of Current State
+
+What is more important to me is the ability to track our total value, our intellectual capital...
+whatever word you want to use for the work we put in over time. That's everything, documents,
+meetings, messages. Having some way to establish metrics for the value of our work, outside of
+profit is an invaluable resource. Don't get me wrong, profit is one of the more meaningful metrics.
+However, especially in this early stage, we're going to want to look to other things as anchors
+to progress. This then allows us to validate our actions. We know we are making progress, because
+we have some way to see results. I don't think we have done enough of this for ourselves, we know
+we should keep track of how much money we have, but beyond that there isn't much.
+
+For example, these are some metrics I use to determine how much work I am putting in: GitHub
+check boxes, number of commits, number of lines of code written. If we were to record every hour we
+spend working on the project, that would be another metric.
+
+----------------------------------------------------------------------------------------------------
+** Goal-directed Actions
+
+These ideas are only useful to us when we are able to effectively apply them to scenarios. In
+isolation they are meaningless. I will use the BlueTitan trading system and fund management as a
+lens to understand how we should be acting. We should be setting goals and defining what actions
+need to be done in order to reach those goals. Next, we adapt the goals (and subsequent actions)
+over time as previous actions may alter these goals (or other events occur). Finally, we reflect on
+results and the progress towards goals, evaluating our performance over time.
+
+The two goals I think we should be focusing on are the program, specifically developing a
+distinguishable prototype of the program and fund management. Centering our actions around these
+topic I believe is our best option.
+
+The shift I am enacting for the bot involves working on the bot using versions. A mistake in the
+past has been altering the source code and rendering the bot unable to run, since part of it is
+being worked on. From now on, there will be prototype versions at every step of the way. These
+versions will be designed with  certain features before being considered complete and progress
+can be made towards designing and completing the next version of the prototype. This makes the
+project act in cycles, rather than in a straight line. Progress is detailed in a later section.
+Thus, each specific task can be executed with a short-term mindset (towards the prototype version)
+and each prototype version can be executed with a long-term mindset.
+
+I do not have as much to say about fund management, other than I believe we should move to adopt
+that as our primary joint action. I will just update you on the bot and other things, you don't
+need to have any significant input on the menial thing. This is because we already agree on
+most big picture items. Shifting our focus on trading and managing the fund would be a good segue
+for us to be able to establish a fund.
+----------------------------------------------------------------------------------------------------
+** 'empire' attitude
+
+- Varying projects within a realm
+- Role of components as a consistent base
+- Re-applying proven models
+
+----------------------------------------------------------------------------------------------------
+I might be tempted to label this our manifesto. From here, I have practical updates. As I was
+working on these things and the practical updates, I decided to write the above. To wrap things
+up in a conclusion, those are the things that I believe are most important going forward based
+on my perception of what we have been doing, what we are doing and what we could be doing. While
+I think that everything has been appropiate up until this point, in other words my suggestion of
+the following does not imply that this has not been going on, I would like to encourage you to
+develop documents in a similar manner based on your perception of our current state, what we can
+do, what you think we should do and what you would like to do. To be blunt, you are never going
+to quit your job as long as you don't have something to do in its place that offers a greater
+opportunity cost. That is the nature of life, and I think that is the appropiate way to manage
+the situation. If you want to quit your job and pursue an entrepeneurial venture, you may want to
+consider viewing your options in this manner. I believe I am a good person for you to bounce ideas
+off of. I am writing this in part because it does just that for myself. I feel the need to validate
+the opportunity cost of our actions. Writing things like the above, robust planning and constant
+evaluation are key to that intent. I am dedicated to building something greater and I think the two
+of us are poised to do so, if we are so inclined. We can have another conversation about evaluating
+the opportunity cost at another point. I have spent alot of time thinking about it and may be able
+to offer you productive insight.
+
+----------------------------------------------------------------------------------------------------
+* Current Bot Work
+
+I will run through a short update of what I am currently working on. I run through specific tasks
+in greater detail below in the calendar section. Generally, this is what is being worked on in
+general order of importance:
+
+    1. File Organization
+    2. Complete Market Arbitrage Capabilities 
+    3. Automatic Balancing with error handling
+    4. Generalized Database Implementation
+    5. System Controller
+    6. Server Runtime
+    7. Profit Tracking & Metrics
+    8. Basic Liquidation
+    
+These are being worked on simultaneously, descriptions of each can be found in the prototype doc.
+This is called proto-v1.txt in Documents/Prototyping. These are the items that must be finished
+in order for the bot to run in its first prototype stage.
+
+The ORG doc containing the expansive TODO list for the BlueTitan project can be found in the
+Documents folder on the GitHub.
+----------------------------------------------------------------------------------------------------
+* Updates on Antony
+
+I've been working with Antony for a few weeks. I will go over the project idea and will update you
+occasionally. At some point we will have a meeting between three of us. He is down for the project
+and I will go over by voice what the situation is.
+
+We're developing an algorithm that uses the moving average (or something similar) to trade off of.
+It is a high frequency strategy which would ideally be run side by side the arbitrage in the
+future. You can get an idea of what's going on by checking out the github.
+
+----------------------------------------------------------------------------------------------------
+* 3 Month Calendar
+
+I've developed a three month calendar with deadlines for projects to help us move forward. It
+includes a variety of things. It can be found in the Documents folder on the GitHub. It is more
+of a guideline than it is an absolute decree. It mostly pertains to the software and was designed
+with the conceptual topics I went over earlier in mind.
+
+----------------------------------------------------------------------------------------------------
+* Balances
+
+The current tally of our total balance in terms by asset and in terms of USD can be found in the
+balances.txt file. I am working on a more robust way to track balances from day to day that I will
+get back to you on. Note that this isn't a valuation of profit, just what we currently have as
+holdings
+
+----------------------------------------------------------------------------------------------------
+
+* Conclusion
+
+Take your time to read and process the above. Get back to me when you have collected your thoughts.
+I want to say that you don't necessarily need to have a response to most of this, I'm not trying to
+sell you on anything. The purpose of this was to communicate the current state of operations in
+depth and provide a conceptual basis for the actions that I am taking. Input and conversation is
+obviously welcome and important, but you do not necessarily need to have a response as long as
+you understand it and are on the same page.
+
+Sorry this took so long. I think delaying the move was the right choice. These things need to get
+done before we move.
+
+Carson
