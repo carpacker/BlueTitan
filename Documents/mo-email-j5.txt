@@ -191,12 +191,23 @@ need to have any significant input on the menial thing. This is because we alrea
 most big picture items. Shifting our focus on trading and managing the fund would be a good segue
 for us to be able to establish a fund.
 ----------------------------------------------------------------------------------------------------
-** 'empire' attitude
+** Reusability
 
-I'm going to do this saturday morning
-- Varying projects within a realm
-- Role of components as a consistent base
-- Re-applying proven models
+We don't need to limit ourselves to cryptocurrency related ventures. While our focus has been
+developing software to be used in trading, I have gone to great lengths to ensure that the software
+could be repurposed to other things. That leaves us the ability to expand operations, diversify
+our investments and otherwise extract more value from our labor.
+
+For instance, the cryptocurrency API can be used for anything cryptocurrency related, not
+necessarily just for trading. A database manamagent system will be useful everywhere, given that
+data is so valuable in the present. A generic front end would allow us the capabilities to easily
+slap together use-able applications based on our technology. Web scraping tools can be used to
+find all types of data across the internet. The list goes on, these are all the things that are
+currently in the works and can be used elsewhere.
+
+Examples that we've already talked about: coin categorizer, shoe scraping bot. We can always be on
+the lookout for ways to apply our software. Something we should likely keep an eye out for is
+mobile application development and web scraping.
 
 ----------------------------------------------------------------------------------------------------
 I might be tempted to label this our manifesto. From here, I have practical updates. As I was
