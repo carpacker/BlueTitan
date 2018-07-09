@@ -1,0 +1,2 @@
+# A generic widget library is a crucial step towards the diversification of software
+# TODO
