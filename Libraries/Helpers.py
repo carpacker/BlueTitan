@@ -13,8 +13,8 @@ general purpose functions, used in many places because of their general applicat
 import sys
 
 # WINDOWS main-desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs/')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs/')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
 
 # WINDOWS laptop
 # sys.path.append()

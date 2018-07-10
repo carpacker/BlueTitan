@@ -8,8 +8,8 @@
 import sys
 import time
 
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 
 # Internal-Imports
 import Coinbase
