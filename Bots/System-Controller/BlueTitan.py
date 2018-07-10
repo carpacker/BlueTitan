@@ -11,26 +11,29 @@ import threading
 import time
 
 # WINDOWS main-desktop
-sys.path.append()
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Libraries")
 
 # WINDOWS laptop
-#
+#sys.path.append()
 
 # LINUX main-server
-#
+#sys.path.append()
 
 # Internal-Imports
-
+from FundAllocator import FundAllocator
+from PrintLibrary import PrintLibrary
+import Helpers
+from ArbitrageMain import ArbitrageTrader
 
 class BlueTitan(object):
 
-	# INITIALIZATION
-	# INPUT:
-	#  TODO
+	# INITIALIZATION: BlueTitan
+	# INPUT: algorithms - list of algorithms desired to be running, additionally contains
+	#                     information like acceptable exchanges and pairings to be run over.
 	# DESCRIPTION:
-	#    Performs database initialization, sets up scheduling tasks
-	def __init__(self, exchanges, pairings, clean=True):
-		PrintLibrary.header("Initialization")
+	#    Performs initialization for BlueTitan trading system object
+	def __init__(self, algorithms, clean=True):
+		PrintLibrary.header("BlueTitan Initialization")
 
 		# Pull assets from pairing
 		assets = Helpers.convertPairingListAsset(pairings)
@@ -87,4 +90,13 @@ class BlueTitan(object):
 
 		# 3. Run arbitrage algorithm
 		# NOTE: only running algorithm for now
-		BTArbitrage.
+
+	
+	def main():
+		pass
+
+
+if __name__ == "__main__":
+	algorithms = []
+	
+	testbt = BlueTitan().main()

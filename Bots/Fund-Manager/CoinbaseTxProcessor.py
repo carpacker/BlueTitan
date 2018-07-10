@@ -73,16 +73,21 @@ def processTransactions(exchanges, transactions):
 # OUTPUT: Dictionary
 # DESCRIPTION:
 #    Given a list of chronologically sorted transactions, calculates the profit loss up
-#     until the last transaction.
-# NOTE: maybe do it by asset?
+#     until the last transaction. Provides a variety of dynamic functionalities. It
+#     returns the total profit, total loss and then provides the P/L by asset. It deals
+#     with Transfers by waiting for a receive, and summing  the profit from the time
+#     anything left to when it came back.
 def calculateFIFOprofit(transactions, assets):
     exchange_in = []
     exchange_out = []
+	
     for asset in assets: 
         inputs = []
-        outputs = []       
+        outputs = []
+		
         # Places BUYs and SELLs into their own lists.
         for row in transactions:
+			
             print(row)
             if row[1] == 'Buy' and row[2] == asset:
                 inputs.append(row)
@@ -108,15 +113,15 @@ def calculateFIFOprofit(transactions, assets):
             PrintLibrary.delimiter()
             print("* Iteration #", ticker)
             print("- Running Profit:", running_profit)
+			
             # Control flag determines what elements to pop:
             if ctr_flag == 1:
                 current_output = outputs[ticker]
                 current_input = inputs[ticker]
-
             elif ctr_flag == 0:
                 current_output = outputs[ticker]
-            # CASE: Sell is larger - work through buys
-            
+				
+            # CASE: Sell is larger - work through buys 
             curr_value = float(current_output[3])
             PrintLibrary.displayVariables(current_input, "Current INPUT")
             PrintLibrary.displayVariables(current_output, "Current OUTPUT")
@@ -126,6 +131,7 @@ def calculateFIFOprofit(transactions, assets):
                 
                 PrintLibrary.displayVariables(current_input, "Current INPUT")
                 PrintLibrary.displayVariables(current_output, "Current OUTPUT")
+				
                 # Multiply asset by price, subtract asset from running
                 orig_value = float(current_input[3]) * float(current_input[4])
                 sell_value = float(current_input[3]) * float(current_output[4])
@@ -134,6 +140,7 @@ def calculateFIFOprofit(transactions, assets):
                 current_output[3]  = float(current_output[3]) - float(current_input[3])
                 curr_value = current_output[3]
                 PrintLibrary.displayVariables([orig_value, sell_value, profit_loss, curr_value], "orig/sell/profit/curr")
+				
                 try:
                     ticker_t += 1
                     current_input = inputs[ticker_t]
@@ -165,5 +172,15 @@ def calculateFIFOprofit(transactions, assets):
     final_profit = running_profit + exchange_profit
     return running_profit
 
-def buildFinalCSV():
+# FUNCTION: buildFinalCSV
+# INPUT: filename         - string
+#        adjusted_txs     -
+#        profit_loss_list -
+# OUTPUT: N/A
+# DESCRIPTION
+def buildFinalCSV(filename, adjusted_txs, profit_loss_list):
+
+	# 1. Write in final values at top
+	# 1.5. Delimiter
+	# 2. Add in adjusted transactions line by line
     pass
