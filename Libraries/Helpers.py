@@ -378,7 +378,7 @@ def sumFAE(fae_list):
 # INPUT: listy - list
 # OUTPUT: float
 # DESCRIPTION:
-#   Sums the values in a list
+#   Sums the values in a list.
 def sumValues(listy):
     running_sum = 0
     ticker = 0
@@ -416,7 +416,7 @@ def averageValue(values):
 # DESCRIPTION:
 #   Returns the USD value of a specific asset. If no price is given, it calls binance's
 #    getPrice function and calculates the usd value.
-def usdValue(asset, quantity, exchange=None,):
+def usdValue(asset, quantity, exchange=None):
 
     # If exchange is provided, used exchange price
     if exchange:        
@@ -453,7 +453,7 @@ def sortAlphabetically(fae):
 # DESCRIPTION:
 #	Converts a balances exchange-key dictionary to a dictionary with ASSET as outer key instead. In general, flips the 
 #	 dictionary (future will re-name function).
-# TODO - move to helpers, rename invert nested dict
+# NOTE: rename invert nested dict
 def convertAssetDict(balances):
 	asset_dict = {}
 	for exchange in balances:
@@ -461,7 +461,6 @@ def convertAssetDict(balances):
 			asset_dict[asset] = {}
 
 	return asset_dict
-
 
 # FUNCTION: readCSV
 # INPUT: csv_name - string
@@ -486,8 +485,8 @@ def readCSV(csv_name):
 # OUTPUT: Dictionary
 # DESCRIPTION:
 #    Returns a dictionary with addresses as key to an exchange.
-# NOTE: only grabs addresses for ETH, BTC, LTC                
 def buildAddrDictionary(exchanges, assets):
+    
     # Address Dict
     addr_dict = {}
     for exchange in exchanges:

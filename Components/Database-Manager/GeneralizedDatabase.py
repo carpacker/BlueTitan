@@ -104,10 +104,10 @@ def generalQuery(cursor, query):
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
-	
+    
     # FUNCTION: buildInitTuple
     # INPUT: database_path - *
-	#        table_name    - string
+    #        table_name    - string
     # OUTPUT: tuple
     # DESCRIPTION:
     #    Creates an initiliazer tuple based on a given table and name. It provides a generic
@@ -156,8 +156,8 @@ class GenDatabaseLibrary(object):
             for col_tuple in columns:
                 print(col_tuple)
                 added_s = ",%s %s %s" % col_tuple
-            sql_s += added_s
-            sql_s += ")"
+                sql_s += added_s
+                sql_s += ")"
 
             PrintLibrary.displayVariable(sql_s)
             cursor.execute(sql_s)
@@ -203,9 +203,9 @@ class GenDatabaseLibrary(object):
             except sqlite3.OperationalError:
                 pass
             database.createTable(cursor, table)
-        disconnect(connection)
+            disconnect(connection)
         return list_clean
-                             
+    
     # HELPER: buildStringStore
     # INPUT: cursor     - *
     #        table_name - string
@@ -222,15 +222,15 @@ class GenDatabaseLibrary(object):
         sql_q = "("
         for value in range(0, num_columns):
             sql_q += "?,"
-        sql_q = sql_q[:-1]
-        sql_q += ")"
+            sql_q = sql_q[:-1]
+            sql_q += ")"
 
         # 3. (?, ...) where number of elements is equal to number of columns.
         sql_s = "INSERT INTO %s(" % table_name
         for column in columns:
             sql_s += column + ","
-        sql_s = sql_s[:-1]
-        sql_s += ") VALUES " + sql_q
+            sql_s = sql_s[:-1]
+            sql_s += ") VALUES " + sql_q
         return sql_s
 
     # FUNCTION: storeEntry
@@ -282,7 +282,7 @@ class GenDatabaseLibrary(object):
     #        data_uuid     - list or string
     # OUTPUT: (V1, ..., Vn) where n is number of columns
     # DESCRIPTION:
-    #	Accesses a table in a database and pulls a row from the database. There
+    #   Accesses a table in a database and pulls a row from the database. There
     #    are two options to access the entry. The first is by a unique identifier
     #    (uuid). The second is by a list of variables/values, and the function
     #    attempts to find the entry using these as a key.
@@ -319,7 +319,7 @@ class GenDatabaseLibrary(object):
         sql_s ="SELECT * FROM %s WHERE" % table_name
         for value in data:
             sql_s += "%s = ? AND " % value
-        sql_s = sql_s[:-4]
+            sql_s = sql_s[:-4]
         return sql_s
     
     # FUNCTION: getEntries
@@ -335,7 +335,7 @@ class GenDatabaseLibrary(object):
     #    determine what entries to return. 
     def getEntries(database_path, table_name, data_uuids, period=0, limit=-1, order_by=""):
         connection, cursor = connect(database_path)
-                
+        
         cursor.execute(sql_s)
         result = cursor.fetchall()
         disconnect(connection)
@@ -356,14 +356,14 @@ class GenDatabaseLibrary(object):
         sql_s ="SELECT * FROM %s WHERE" % table_name
         for value in data:
             sql_s += "%s = ? AND " % value
-        # Add period
-        sql_s += "Time_stamp > %s" % (period)
-        # Add limit
+            # Add period
+            sql_s += "Time_stamp > %s" % (period)
+            # Add limit
         if limit > -1:
-                sql_s += " LIMIT %S" % limit
-        # Add ordering
+            sql_s += " LIMIT %S" % limit
+            # Add ordering
         if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
+            sql_s += " ORDER BY %s" % order_by
 
         PrintLibrary.displayVariable(sql_s, "execution string")
         return sql_s
@@ -421,21 +421,21 @@ class GenDatabaseLibrary(object):
     
     # FUNCTION: getItem
     # INPUT: database_path -
-	#        table_name    - string
+    #        table_name    - string
     #        data_uuid     - [data1, ...]
-	#        column        - string
+    #        column        - string
     # OUTPUT: Varies
-    # DESCRIPTION:
+    # DESCRIPTION: 
     #   Retrieves a single item from an entry in the input database and table.
     def getItem(database_path, table_name, data_uuid, column):
         pass
 
     # FUNCTION: getItems
     # INPUT: database_path - *
-	#        table_name    - string
+    #        table_name    - string
     #        data_uuid     - [data1, ...]
-	#        columns       - string
-    # OUTPUT: list of tuples [(data1, ...) ...]
+    #        columns       - string
+    # OUTPUT: list of tuples [(data1, ...) ...] 
     # DESCRIPTION:
     #   Retrieves multiple items from an entry, designated by the column names.
     def getItems(database_path, table_name, data_uuid, columns):
@@ -444,11 +444,11 @@ class GenDatabaseLibrary(object):
             sql_s = "SELECT %s FROM %s" % (col_s, table_name)
             
         if limit > -1:
-                sql_s += " LIMIT %s" % limit
+            sql_s += " LIMIT %s" % limit
         if order_by is not "":
-                sql_s += " ORDER BY %s" % order_by
-        cursor.execute(sql_s)
-        result = cursor.fetchall()
+            sql_s += " ORDER BY %s" % order_by
+            cursor.execute(sql_s)
+            result = cursor.fetchall()
         return result
 
 
@@ -457,9 +457,9 @@ class GenDatabaseLibrary(object):
     
     # FUNCTION: updateItem
     # INPUT:  database_path - *
-	#         table_name    - string
+    #         table_name    - string
     #         data_uuid     - [data1, ...]
-	#         input_val     - varies
+    #         input_val     - varies
     #         column        - string
     # OUTPUT: N/A
     # DESCRIPTION:
@@ -469,9 +469,9 @@ class GenDatabaseLibrary(object):
 
     # FUNCTION: updateItems
     # INPUT:  database_path - *
-	#         table_name    - string
+    #         table_name    - string
     #         data_uuid     - [data1, ...]
-	#         input_val     - varies
+    #         input_val     - varies
     #         columns       - [string, ...]
     # OUTPUT: N/A
     # DESCRIPTION:
@@ -493,9 +493,9 @@ class GenDatabaseLibrary(object):
     # WARNING: heavy load on time, very slow
     def getColumn(database_path, table_name):
         pass
-        # 1. Check if attempting use period
-        # 2. Check the quantity of entries to grab
-        # 3. If neither, grab all
+    # 1. Check if attempting use period
+    # 2. Check the quantity of entries to grab
+    # 3. If neither, grab all
         
     # FUNCTION: getColumns
     # INPUT: table_name    - string
@@ -524,33 +524,20 @@ class GenDatabaseLibrary(object):
 
     # FUNCTION: deleteEntries
     # INPUT: type_v  - 'QUANT', 'MINUTES', 'HOURS'
-	#        minutes - int
+    #        minutes - int
     # OUTPUT: boolean
     # DESCRIPTION:
-	#    Delete entries either by minutes from start point or number of entries from start point.
+    #    Delete entries either by minutes from start point or number of entries from start point.
     # TODO: error handling
     def deleteEntries(database_path, table_name, type_v, value, start=0):
-		# Connect to database here
-		
+	    # Connect to database here
         sql_s = 'DELETE FROM %s WHERE Time < %s' % cutoff
-		if type_v == 'QUANT':
-			sql_s = ''
-			cursor.execute(sql_s)
-			return True
-		
-		# One day in seconds, hours in seconds  
-        one_day = 60*60*24
-		elif type_v == 'HOURS':
-			if start == 0:
-				pass
-			else:
-				pass
-		elif type_v == 'MINUTES':
-			pass
-		else:
-			# Error handling here
-			pass
-		
+        if type_v == 'QUANT':
+            sql_s = ''
+            cursor.execute(sql_s)
+            return True
+        # One day in seconds, hours in seconds  
+        one_day = 60*60*24        
         time = Helpers.getTimestamp()
         cutoff = time - (one_day)
         sql_s = 'DELETE FROM %s WHERE Time < %s' % cutoff
@@ -563,7 +550,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Returns a list of the names of each column in a given table.
     def listColumns(database_path, table_name):
-		# TODO: add database path stuff here
+        # TODO: add database path stuff here
         sql_s = "PRAGMA table_info('%s')" % table_name
         cols_list = []
         cursor.execute(sql_s)
