@@ -7,6 +7,8 @@
 # External-Imports
 import sys
 import time
+import os
+import csv
 
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
@@ -36,7 +38,7 @@ def main(exchanges):
     print(profit_loss_list)
     
     # 4. Build final CSV of all record
-    buildFinalCSV(adjusted_fifo_txs, profit_loss_list)
+    buildFinalCSV("finalCSV.csv", adjusted_fifo_txs, profit_loss_list)
 
 # FUNCTION: processTransactions
 # INPUT: transactions - list
@@ -81,96 +83,34 @@ def calculateFIFOprofit(transactions, assets):
     exchange_in = []
     exchange_out = []
 	
-    for asset in assets: 
-        inputs = []
-        outputs = []
-		
-        # Places BUYs and SELLs into their own lists.
-        for row in transactions:
-			
+    inputs = []
+    outputs = []
+
+    profit_loss = 0
+    # Places BUYs and SELLs into their own lists.
+    for row in transactions:
+
+        if row[1] == 'Buy':
+            inputs.append(float(row[5]))
+        elif row[1] == 'Sell':
+            outputs.append(float(row[5]))
+        elif row[1] == 'Transfer':
+            print("TRANSFERS", row)
+            outputs.append(float(row[5]))
+            exchange_in.append(float(row[5]))
+        elif row[1] == 'Receive':
             print(row)
-            if row[1] == 'Buy' and row[2] == asset:
-                inputs.append(row)
-            elif row[1] == 'Sell' and row[2] == asset:
-                outputs.append(row)
-            elif row[1] == 'Transfer' and row[2] == asset:
-                print(row)
-                outputs.append(row)
-                exchange_in.append(float(row[5]))
-            elif row[1] == 'Receive' and row[2] == asset:
-                print(row)
-                inputs.append(row)
-                exchange_out.append(float(row[5]))
+            inputs.append(float(row[5]))
+            exchange_out.append(float(row[5]))
 
-        # 2. While there are outputs still left to be acted over, calculate
-        #     profit loss using FIFO methodology.
-        running_profit = 0
-        running_loss = 0
-        ctr_flag = 1
-
-        ticker = 0
-        while len(outputs) > 0:
-            PrintLibrary.delimiter()
-            print("* Iteration #", ticker)
-            print("- Running Profit:", running_profit)
-			
-            # Control flag determines what elements to pop:
-            if ctr_flag == 1:
-                current_output = outputs[ticker]
-                current_input = inputs[ticker]
-            elif ctr_flag == 0:
-                current_output = outputs[ticker]
-				
-            # CASE: Sell is larger - work through buys 
-            curr_value = float(current_output[3])
-            PrintLibrary.displayVariables(current_input, "Current INPUT")
-            PrintLibrary.displayVariables(current_output, "Current OUTPUT")
-            ticker_t = 0
-            while curr_value >= float(current_input[3]):
-                print("** INNER ITERATION ", ticker_t)
-                
-                PrintLibrary.displayVariables(current_input, "Current INPUT")
-                PrintLibrary.displayVariables(current_output, "Current OUTPUT")
-				
-                # Multiply asset by price, subtract asset from running
-                orig_value = float(current_input[3]) * float(current_input[4])
-                sell_value = float(current_input[3]) * float(current_output[4])
-                profit_loss = sell_value - orig_value
-                running_profit += profit_loss
-                current_output[3]  = float(current_output[3]) - float(current_input[3])
-                curr_value = current_output[3]
-                PrintLibrary.displayVariables([orig_value, sell_value, profit_loss, curr_value], "orig/sell/profit/curr")
-				
-                try:
-                    ticker_t += 1
-                    current_input = inputs[ticker_t]
-                except IndexError:
-                    PrintLibrary.displayVariables(inputs)
-                    time.sleep(10)
-
-            # CASE: Buy is larger, continue loop
-            # Multiple asset by price, subtract asset from running
-            print("Exiting inner iteration OR buy initially larger")
-            PrintLibrary.displayVariables(current_input, "Current INPUT")
-            PrintLibrary.displayVariables(current_output, "Current OUTPUT")
-            orig_value = float(current_output[3]) * float(current_input[4])
-            sell_value = float(current_output[3]) * float(current_output[4])
-            profit_loss = sell_value - orig_value
-            current_input[3]  = float(current_input[3]) - float(current_output[3])
-            running_profit += profit_loss
-            PrintLibrary.displayVariables([orig_value, sell_value, profit_loss], "orig/sell/profit")
-            ctr_flag = 0
-            ticker+=1
-
-    exchange_profit = sum(exchange_out) - sum(exchange_in)
-    print("Exchange_out", exchange_out)
-    print("Exchange_in", exchange_in)
-        
-    print(exchange_profit)
-    print(running_profit)
-
-    final_profit = running_profit + exchange_profit
-    return running_profit
+    input_volume = Helpers.sumValues(inputs)
+    sell_volume = Helpers.sumValues(outputs)
+    return_exchange = Helpers.sumValues(exchange_out)
+    off_exchange = Helpers.sumValues(exchange_in)
+    
+    print(input_volume, sell_volume)
+    profit =  return_exchange - off_exchange + sell_volume - input_volume
+    return profit
 
 # FUNCTION: buildFinalCSV
 # INPUT: filename         - string
@@ -178,8 +118,20 @@ def calculateFIFOprofit(transactions, assets):
 #        profit_loss_list -
 # OUTPUT: N/A
 # DESCRIPTION
-def buildFinalCSV(filename, adjusted_txs, profit_loss_list):
+def buildFinalCSV(csv_name, adjusted_txs, profit):
+    
+    script_dir = os.path.dirname('U:/Directory/Projects/Work/BlueTitan/')
+    full_path = os.path.join(script_dir, 'resources/CSV/' + csv_name)
+    with open(full_path, 'w') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(['DATE', 'TRANSACTION TYPE', 'ASSET', 'QUANTITY', 'PRICE', 'VALUE', 'ADDRESS[TO/FROM]'])
+        writer.writerow(['-', 'PROFIT', 'ALL', '-', '-', profit, ''])
+        time.sleep(10)
+        for row in adjusted_txs:
+            writer.writerow(row)
 
+    csv_file.close()
+    
 	# 1. Write in final values at top
 	# 1.5. Delimiter
 	# 2. Add in adjusted transactions line by line
