@@ -28,18 +28,21 @@ from GeneralizedDatabase import GenDatabaseLibrary
 
 class BlueTitan(object):
 
+	# CLASS VARIABLES
 	running_algos = []
-	        arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
+	# Not sure if this is proper
+	fund_allocator = None
+
+	# What to do with these guys
+	arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
                             "IntendedFAE"]
-         metrics_tables = ["Metrics", "FailureMetrics"]
-         assetmetrics_tables = ["AssetMetrics", "AssetFailureMetrics"]
-         databases = [("ArbitrageDatabase", ArbitrageDatabase, arbitrage_tables),
-                       ("MetricsDatabase", MetricsDatabase, metrics_tables),
-                       ("AssetMetricsDatabase", AssetMetricsDatabase, assetmetrics_tables)]
-
-
-        orig_exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
-        exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
+    metrics_tables = ["Metrics", "FailureMetrics"]
+    assetmetrics_tables = ["AssetMetrics", "AssetFailureMetrics"]
+    databases = [("ArbitrageDatabase", ArbitrageDatabase, arbitrage_tables),
+                 ("MetricsDatabase", MetricsDatabase, metrics_tables),
+                 ("AssetMetricsDatabase", AssetMetricsDatabase, assetmetrics_tables)]
+    orig_exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
+    exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
 
 	# INITIALIZATION: BlueTitan
 	# INPUT: algorithms - list of algorithms desired to be running, additionally contains
@@ -98,6 +101,8 @@ class BlueTitan(object):
         schedule.every().hour.do(ProfitTracker.runHourly, exchanges, assets)
         schedule.every().day.at("6:00").do(ProfitTracker.runDaily, exchanges, assets)
 
+		# 3. Initialize fund allocator object
+
 	# MAIN: BlueTitan
 	# INPUT: N/A
 	# OUTPUT: N/A
@@ -105,6 +110,7 @@ class BlueTitan(object):
 	#    
 	def main():
 		while 1:
+			FundAllocator()
 			# 1. Run Arbitrage Algorithm
 			# NOTE: only running algorithm for now
 		

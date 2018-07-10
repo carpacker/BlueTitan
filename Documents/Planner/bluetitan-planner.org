@@ -3,11 +3,14 @@
 # DESCRIPTION:
 #    Main TODO doc for blue titan's automated trading system.
 
-INDEX:
-+ General
-+ Organization
-+ Bots
-+ Components
+CURRENT STEPS: 
++ Finish Generalized Database
++ Finish SystemController
++ Create runtimeDatabase
++ Setting up second computer
++ Resume runtime testing
++ Profit Liquidation
++ Complete balancing
 
 * General
 
@@ -19,7 +22,7 @@ All meta-organizational items such as readmes, todo lists and scheduling.
 ** Planner
 ** Prototyping
 *** TODO Re-structure prototype document
-
+    
 ** Document
 * Bots
 ** Arbitrage
@@ -114,16 +117,6 @@ Arbitrage
 ** Performance-Analysis
 ** Records-Analysis
 ** Web-scraper
-
 ** Graphing
-
-
-BOT STEPS:
-
-Finish test gen database
-resume runtime testing
-add profit liquidatino
-complete balancing
-widget library
-limit arbi
-second computer
+** Libraries
+*** 

@@ -3,8 +3,8 @@ import sys
 import time
 
 # WINDOWS main-desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/DatabaseManager')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange_APIs')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/DatabaseManager')
 
 # WINDOWS laptop
 # sys.path.append()

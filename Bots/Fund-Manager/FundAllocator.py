@@ -1,19 +1,22 @@
 # FundAllocator.py
 # Carson Packer
 # DESCRIPTION:
-#     Top level controller that manages fund portioning between bots.
+#    Top level controller that manages fund portioning between bots.
 
 # External-Imports
 import sys
 import threading
 
-sys.path.append('U:/Directory/Projects/BlueTitan/Libraries')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Libraries')
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 
 # CLASS: FundAllocator
 # DESCRIPTION:
-#  
+#    TODO
 class FundAllocator(object):
-    pass
+	
+	# Initialize 
+    def __init__(self):
+		pass
