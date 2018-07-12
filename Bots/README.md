@@ -43,10 +43,31 @@ C:
 ```
 
 ## Market-Tracker
-Visit all files, re-name and re-organize, set-up polling again
+```
+D:
+TODO
+
+C:
+TODO
+```
 
 ## MA-Trader
+```
+D:
+TODO
 
+C:
+TODO
+```
+
+## Performance-Tracker
+```
+D:
+TODO
+
+C:
+TODO
+```
 ## System Controller
 D: TODO
 
