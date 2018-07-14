@@ -26,7 +26,11 @@ C:
 ## Coin-Categorizer
 ```
 D:
-This system attempts to exploit the extreme, volatile swings of small & unknown cryptocurrencies. These cryptocurrencies in the past have fluctuated to the degree that, in extreme cases, $100 becomes worth $1million over the course of a year. This is not the standard, however, there seems to be a pattern of upswings that can be leveraged. This program will process an input CSV file ranking cryptocurrencies starting below rank 100 [on coinmarketcap.com]. It then automatically makes a degree of small investments across the most attractive of these cryptocurrencies, based on user definition. 
+This system attempts to exploit the extreme, volatile swings of small & unknown cryptocurrencies. These cryptocurrencies in the past have
+fluctuated to the degree that, in extreme cases, $100 becomes worth $1million over the course of a year. This is not the standard, however,
+there seems to be a pattern of upswings that can be leveraged. This program will process an input CSV file ranking cryptocurrencies starting
+below rank 100 [on coinmarketcap.com]. It then automatically makes a degree of small investments across the most attractive of these
+cryptocurrencies, based on user definition. 
 
 C:
 - Test CSV file
@@ -39,7 +43,8 @@ C:
 ## Fund-Manager
 ```
 D:
-Plays the part allocating the fund to various parts of the system and routine functions involving the fund. This includes tasks such as liquidation, tracking value (and profit/loss) and others. 
+Plays the part allocating the fund to various parts of the system and routine functions involving the fund. This includes tasks such as
+liquidation, tracking value (and profit/loss) and others. 
 
 C:
 - TODO
@@ -49,7 +54,11 @@ C:
 ## Market-Tracker
 ```
 D:
-Performs the task of tracking market data over time and performs polling of running algorithms. The main functionality is to track metrics of the market in order to keep a granular record of the market for analysis, manipulation and testing. The secondary functionality, which will be tackled further down the line, is to run a trimmed down version of each algorithm in order to test the efficacy of the algorithm over a greater number of pairings relative to the main runtime. This allows the system controller to re-balance the fund to a different algorithm that is more successful in the short term.
+Performs the task of tracking market data over time and performs polling of running algorithms. The main functionality is to track metrics
+of the market in order to keep a granular record of the market for analysis, manipulation and testing. The secondary functionality, which
+will be tackled further down the line, is to run a trimmed down version of each algorithm in order to test the efficacy of the algorithm
+over a greater number of pairings relative to the main runtime. This allows the system controller to re-balance the fund to a different
+algorithm that is more successful in the short term.
 
 C:
 - Re-evaluate and set up tracking skeleton (main metric tracking, algorith tracking)
@@ -62,21 +71,25 @@ C:
 ## MA-Trader
 ```
 D:
-*
+* Deferred to potential-garbazno
 
 C:
-*
+* Deferred to potential-garbanzo
 ```
 
 ## Performance-Tracker
 ```
 D:
-TODO
+Tracks the performance of the program in various ways from specific algorithms to TODO.
 
 C:
-TODO
+- TODO
 ```
 ## System Controller
-D: TODO
+```
+D: 
+Top level portion that calls other sub-systems and manages interactions between them.
 
-C: TODO
+C:
+- TODO
+```
