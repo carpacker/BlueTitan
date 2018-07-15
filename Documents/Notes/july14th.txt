@@ -1,0 +1,3 @@
+- Adding in local balances by allocation
+- Switching way arbitrage is run (while 1 is now outside)
+- Need to write limit arbitrage loop

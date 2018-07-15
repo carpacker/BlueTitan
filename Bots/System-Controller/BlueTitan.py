@@ -109,9 +109,11 @@ class BlueTitan(object):
 	# DESCRIPTION:
 	#    
 	def main():
+        BTArbitrage = BTArbitrage()
 		while 1:
 			FundAllocator()
 			# 1. Run Arbitrage Algorithm
+            BTArbitrage
 			# NOTE: only running algorithm for now
 		
 
