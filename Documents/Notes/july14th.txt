@@ -13,3 +13,4 @@ BlueTitan.py
 - Think about better way to do balancing/fund allocation based on runtime database
 - Change this fae_list thing
 - Remove superclean 
+

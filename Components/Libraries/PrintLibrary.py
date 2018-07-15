@@ -1,3 +1,9 @@
+# PrintLibrary.py
+# Carson Packer
+# DESCRIPTION:
+#    Provides a library of functions to aid in testing and debugging. These functions are designed
+#     to format and output convinient text to look at.
+
 # External Imports
 import time
 
@@ -15,8 +21,9 @@ class PrintLibrary(object):
     run = True
 
     # FUNCTON: displayDictionary
-    # INPUT: var_dict -  tuple of (key,value)
-    #        header   -  string (OPTIONAL)
+    # INPUT: var_dict - tuple of (key,value)
+    #        header   - string (OPTIONAL)
+    #        run      - bool
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Takes a dictionary and prints each key/value pairing of the dictionary.
@@ -34,12 +41,14 @@ class PrintLibrary(object):
             pass
 
     # FUNCTION: displayOrderbook
-    # INPUT:
-    # OUTPUT:
+    # INPUT: bidasks - ([asks, ...], [bids, ...]
+    #        header  - string (OPTIONAL
+    #        run     - bool
+    # OUTPUT: N/A
     # DESCRIPTION:
     #   Takes input tuples representing an order book (bids and asks) of an exchange and constructs a series of print
     #    statements to display them in a visually cohesive manner.
-    def displayOrderbook(header="", run=run):
+    def displayOrderbook(bidasks, header="", run=run):
         if run == True:
             pass
         else:

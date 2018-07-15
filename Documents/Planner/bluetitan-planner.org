@@ -25,7 +25,7 @@ All meta-organizational items such as readmes, todo lists and scheduling.
     
 ** Document
 * Bots
-** Arbitrage
+** Arbitrage-Trader
 *** General
 Big tasks
  + Reworking profit tracking in relation to performing withdrawals
@@ -48,7 +48,9 @@ Arbitrage
    + Possibly replace the function
    + Break into small parts
 
-*** Balancing
+*** ArbitrageMain
+*** ArbitrageLibrary
+*** BalancingLibrary
 + Vetting and reworking file
 + Adding in changes to database library and all that
 + Possibly integrating into arbitrage library
@@ -57,6 +59,7 @@ Arbitrage
 + Run through balancePairings
 + BalancePairing storeEntry actual values
 + Move tag check
+*** DatabaseLibrary
 ** Coin-Categorizer
 ** Fund-Manager
 
@@ -71,10 +74,21 @@ Arbitrage
 ** Market-Tracker
 ** Performance-Tracker
 ** System-Controller
-*** TODO
-+ Rework the clean database portion
-+ Fix class balance_dict print
-+ Helpers writeconvert pairing to asset list
+*** General
+*** BlueTitan.py
+- Fix class balance_dict print
+- Adding in global balance in runtimedatabase, local allocated balance in local balances
+- Writing limit Arbitrage main logic
+? Change returns in market arbitrage
+- Future decideOrder will be dependent on some weighted variable that changes over time based on other things happening
+- Dealing with tables from system controller point of view
+ - Possibly pass table names and exceptions as an argument with the algorithm
+- More elegant system for FAE
+- Brainstorm more scheduled events
+- Add algorithm inputs (name, pairing stuff)
+- Think about better way to do balancing/fund allocation based on runtime database
+- Change this fae_list thing
+- Remove superclean 
 * Components
 ** Crypto-API
 ** Database-Manager
