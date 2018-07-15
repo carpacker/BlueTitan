@@ -14,3 +14,5 @@ BlueTitan.py
 - Change this fae_list thing
 - Remove superclean 
 
+- message function for PrintLibrary
+- Start adding in errors for printlibrary

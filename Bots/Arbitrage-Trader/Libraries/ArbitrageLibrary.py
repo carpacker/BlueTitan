@@ -8,15 +8,12 @@
 import time 
 import sys
 
-# WINDOWS main-desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
+# WINDOWS main-desktop, LINUX main-server
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
 
 # WINDOWS laptop
-# sys.path.append()
-
-# LINUX main-server
 # sys.path.append()
 
 # Internal-Imports
@@ -86,15 +83,13 @@ class ArbitrageLibrary(object):
         notional_two = notional_dict_two["min_trade_size"]
         notional = min(notional_one, notional_two)
 
-        # Return 0 IF order size is too small
+        # order size is too small, return 0
         if order_size < notional:
-            # Maybe print out the exchange in the future
             PrintLibrary.displayVariable(order_size, "Order is below theshold for one of the exchanges")
             return 0
 
         # If order size is ok, perform step size conversion
         else:
-            # Perform Lotsize conversion
             step_size = max(notional_dict_one["step_size"], notional_dict_two["step_size"])
             qty_trim = order_size % step_size
             quantity = quantity - qty_trim
@@ -106,7 +101,7 @@ class ArbitrageLibrary(object):
     #        sell_exchange - string
     # OUTPUT: bool
     # DESCRIPTION:
-    #   Decides which exchange to attempt to arbitrage on first
+    #   Decides which exchange to attempt to arbitrage on first.
     def decideOrder(buy_exchange, sell_exchange):
         temp_dict = {'binance': 3, 'bittrex': 2, 'cryptopia': 1}
         return temp_dict[sell_exchange] < temp_dict[buy_exchange]
@@ -117,7 +112,7 @@ class ArbitrageLibrary(object):
     # OUTPUT: quantity [float]
     # DESCRIPTION:
     #   Determines the order size for an arbitrage trade based on profit ratio. Implicit check on
-    #    whether or not to perform arbitrage
+    #    whether or not to perform arbitrage.
     def determineOrderSize(profit_ratio, quantity, price):
 
         # Case 1: Profit ratio is in huge range [?]
@@ -130,7 +125,7 @@ class ArbitrageLibrary(object):
 
             # Check to make sure the BTC value of the trade is more than a specified minimum
             if btc_value > .01:
-                # wtf is this
+                # why would this work
                 #final_quantity = .01 / price
                 final_quantity = quantity * .1
             else:

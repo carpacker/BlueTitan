@@ -50,6 +50,13 @@ Arbitrage
 
 *** ArbitrageMain
 *** ArbitrageLibrary
+**** TODO checkMinOrder: Print out exchange in the future [if order_size<notional]
+**** TODO decideOrder: Future involves more complex weighting to decide which exchange is more liquid
+**** TODO determineOrderSize: Rework
+**** TODO evaluatePairing: Describe outputs
+**** TODO evaluatePairing: Rework/evaluate arbitrage case section
+**** TODO handleIncompleteArbitrage: rework
+**** TODO getAggregateWFees: deprecate and rework
 *** BalancingLibrary
 + Vetting and reworking file
 + Adding in changes to database library and all that
