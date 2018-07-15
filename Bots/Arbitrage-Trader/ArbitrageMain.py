@@ -93,6 +93,7 @@ class BTArbitrage(object):
         new_open_limits = ArbitrageLibrary.removeLimitTrades(resolved_trades)
         # 4. Build list of pairings that don't have an open trade
         # TODO
+        
         for pairing in limit_pairings:
             # 3. Create new limit arbitrage
             BTArbitrage.limitArbitrage('')

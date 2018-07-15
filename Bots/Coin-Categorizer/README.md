@@ -1,13 +1,22 @@
 # Coin-Categorizer
- Purpose:
-   Iterate through a list of cryptocurrencies with defined attributes, give
-   them an aggregate  score based on these attributes, identify coins whichare
-   'to be bought' and then go through
-   the API of whatever sites are necessary to buy them.
+The technical goal involves iterating through a list of cryptocurrencies with defined attributes,
+give them an aggregate score based on these attributes, identify coins whic hare 'to be bought'
+and then go through the API of whatever sites are necessary to buy them.
 
-## Theory
------------ COIN RANKER THEORY -----------
-PART ONE:
+## Categories
+Description here
+- Coins are valued based on these categories
+
+[Asset :  (PRICE, VOLUME, MARKETS, TIMELINE, SOCIAL_NEWS, WEBSITE,
+               SOURCE_CODE, PRICE_MOV, MINEABLE, WHITEPAPER)]  
+## Scoring System
+Description here
+- Go over the scoring system, the baseline & nuances
+
+[ETH   :   (8, 10, 8, ...)] --> 8
+
+## Pseudocode & flow
+Part One: Coin ranker
  Dictionary for each grouping:
  OUTER DICTIONARY: [grouping : grouping_dict]
  INNER DICTIONARY: [currency : aggregate_score]
@@ -19,7 +28,7 @@ PART ONE:
        RETURN AGGREGATE SCORE
    Add [currency : aggregate_score] to current grouping_dict
 
- PART TWO:
+Part two
  INPUT: grouping dictionary from previous part
  OUTER DICTIONARY: [grouping : value_dict]
  INNER DICTIONARY: [currency : percentage_allocated]
@@ -28,20 +37,12 @@ PART ONE:
    allocate percentage of grouping_fund to each currency based on aggregate_score
  Return outer dictionary to coinbuyer
  
-## Coin Classification
-
-     [Asset :  (PRICE, VOLUME, MARKETS, TIMELINE, SOCIAL_NEWS, WEBSITE,
-                   SOURCE_CODE, PRICE_MOV, MINEABLE, WHITEPAPER)]  
-     [ETH   :   (8, 10, 8, ...)] --> 8
- LENGTH = (1 + NUMBER OF VARIABLES)
- 
-## Scoring System
-Notes here on how a currency will be ranked and given an aggregate score later
-
 ## Allocation Method
-Notes here on how funds will be allocated based on score.
+Description here
+-how funds will be allocated based on score.
 
 ## Acquiring Coins
+Description here
 
 INPUT:  dictionary of [grouping : [pairing : percentage_allocated]
         total value to be allocated
@@ -52,13 +53,6 @@ INPUT:  dictionary of [grouping : [pairing : percentage_allocated]
 4. Validate buy went through
 5. Store result in database
 6. Move onto next coin
-
-## TO-DO
-
-
-
-Last thing I was on was: rankCoins and organize below that.
-
 
 # TODO:
 # - Minimum buy all coins (? $2, .0005 btc minimum)

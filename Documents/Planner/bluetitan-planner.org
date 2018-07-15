@@ -85,7 +85,17 @@ compareFAE, calculateFees, buildWithdrawList, balancePairings
 **** TODO initializeFAE/AssetInfo: Possibly rework into runtime database
 **** TODO getPairings: ????
 **** TODO getBalances & getAllBalances: revisit, commenting
+*** README
+**** TODO Explain function of market arbitrage
+**** TODO Explain function of limit arbitrage
+**** TODO Tie together the two in loop
 ** Coin-Categorizer
+*** README
+**** TODO Describe scoring system & categories
+**** TODO Reworking pseudocode section
+**** TODO Allocation method section
+**** TODO Acquiring gcoins section
+**** TODO Transcribe TODO at bottom
 ** Fund-Manager
 
 *** TODO :: general
