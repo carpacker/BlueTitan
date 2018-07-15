@@ -108,7 +108,7 @@ def calculateFIFOprofit(transactions, assets):
     return_exchange = Helpers.sumValues(exchange_out)
     off_exchange = Helpers.sumValues(exchange_in)
     
-    print(input_volume, sell_volume)
+    print(input_volume, sell_volume, return_exchange, off_exchange)
     profit =  return_exchange - off_exchange + sell_volume - input_volume
     return profit
 
@@ -131,8 +131,3 @@ def buildFinalCSV(csv_name, adjusted_txs, profit):
             writer.writerow(row)
 
     csv_file.close()
-    
-	# 1. Write in final values at top
-	# 1.5. Delimiter
-	# 2. Add in adjusted transactions line by line
-    pass

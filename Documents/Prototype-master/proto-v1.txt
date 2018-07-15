@@ -88,3 +88,10 @@ TODO intro
 TODO:  GENERALIZED DATABASE
 TODO:  SPECIFIC DATABASELIBRARIES
 ## MySQL
+
+
+- FAE proportion stuff along with some system of constant profit tracking will likely need to be reworked.
+- Appropiate functions from Helpers moved to TradingLibrary, and tradinglibrary properly commented
+- Function listing style implemente in functions
+- getAggregateWFees --? 
+
