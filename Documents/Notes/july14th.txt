@@ -1,12 +1,15 @@
-- Adding in local balances by allocation
-- Switching way arbitrage is run (while 1 is now outside)
-- Need to write limit arbitrage loop
-- Change returns in market arbitrage
+Thoughts to be aded elsewhere:
+
+BlueTitan.py
+- Adding in global balance in runtimedatabase, local allocated balance in local balances
+- Writing limit Arbitrage main logic
+? Change returns in market arbitrage
 - Future decideOrder will be dependent on some weighted variable that changes over time based on other things happening
 - Dealing with tables from system controller point of view
-# TODO: How to know database table names and exceptions
-Possibly pass table names and exceptions as an argument with the algorithm
-More elegant system for FAE
-More comprehensive scheduling initializationsxs
-
-Think about better way to do balancing/fund allocation based on runtime database
+ - Possibly pass table names and exceptions as an argument with the algorithm
+- More elegant system for FAE
+- Brainstorm more scheduled events
+- Add algorithm inputs (name, pairing stuff)
+- Think about better way to do balancing/fund allocation based on runtime database
+- Change this fae_list thing
+- Remove superclean 

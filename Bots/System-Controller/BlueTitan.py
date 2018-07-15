@@ -16,10 +16,6 @@ sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/Database-Manage
 sys.path.append("U:/Directory/Projects/Work/BlueTitan/Bots/Fund-Manager")
 sys.path.append("U:/Directory/Projects/Work/BlueTitan/Bots/Arbitrage-Trader")
 
-# WINDOWS laptop
-#sys.path.append()
-
-
 # Internal-Imports
 from FundAllocator import FundAllocator
 from PrintLibrary import PrintLibrary
@@ -32,22 +28,16 @@ class BlueTitan(object):
 	# CLASS VARIABLES
 	running_algos = []
 
-	# What to do with these guys
-	arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
-                            "IntendedFAE"]
-    metrics_tables = ["Metrics", "FailureMetrics"]
-    assetmetrics_tables = ["AssetMetrics", "AssetFailureMetrics"]
-    databases = [("ArbitrageDatabase", ArbitrageDatabase, arbitrage_tables),
-                 ("MetricsDatabase", MetricsDatabase, metrics_tables),
-                 ("AssetMetricsDatabase", AssetMetricsDatabase, assetmetrics_tables)]
-    orig_exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
-    exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
-
 	# INITIALIZATION: BlueTitan
 	# INPUT: algorithms - list of algorithms desired to be running, additionally contains
 	#                     information like acceptable exchanges and pairings to be run over.
 	# DESCRIPTION:
-	#    Performs initialization for BlueTitan trading system object
+	#    Performs initialization for BlueTitan trading system object. This includes base system
+    #     database initialization, algorithm specific database initialization and scheduling for
+    #     events.
+    #
+    #  The algorithm object in the algorithms is structure as follows:
+    #  (alg_name, [pairings], [exchanges], (db_table_names), (table_exceptions))
 	def __init__(self, algorithms, clean=True):
 		PrintLibrary.header("BlueTitan Initialization")
 
@@ -98,6 +88,7 @@ class BlueTitan(object):
         #  BalancingLibrary.initializeFAE(assets, exchanges, class_balance_dict)
 
 		# 2. Initialize scheduling events
+        # NOTE: Change these, add more
         schedule.every().minute.do(ProfitTracker.runHourly, exchanges, assets)
         schedule.every().hour.do(ProfitTracker.runHourly, exchanges, assets)
         schedule.every().day.at("6:00").do(ProfitTracker.runDaily, exchanges, assets)
@@ -126,4 +117,14 @@ class BlueTitan(object):
 if __name__ == "__main__":
 	algorithms = {}
 	algorithm["Arbitrage"] = [("pairing1", ("exchange1", "exchange2"))]
+
+    arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
+                            "IntendedFAE"]
+    metrics_tables = ["Metrics", "FailureMetrics"]
+    assetmetrics_tables = ["AssetMetrics", "AssetFailureMetrics"]
+    databases = [("ArbitrageDatabase", ArbitrageDatabase, arbitrage_tables),
+                 ("MetricsDatabase", MetricsDatabase, metrics_tables),
+                 ("AssetMetricsDatabase", AssetMetricsDatabase, assetmetrics_tables)]
+    orig_exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
+    exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
 	testbt = BlueTitan(algorithms).main()
