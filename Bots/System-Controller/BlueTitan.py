@@ -52,7 +52,9 @@ class BlueTitan(object):
 		PrintLibrary.header("BlueTitan Initialization")
 
         # Initialize databases for base functionalities
-        # TODO
+        # - Runtime database
+        # - FundAllocator database
+        # - All metrics database
         
         # Initialize databases for algorithms
 		for algorithm in algorithms:
@@ -84,6 +86,7 @@ class BlueTitan(object):
 					PrintLibrary.displayVariables(set_table, "Intended Tables")
 			        PrintLibrary.displayVariables(set_i_tables, "Database Tables")
 					PrintLibrary.delimiter()
+                    
 					if (set_tables.issubset(set_i_tables) and set_tables.issuperset(set_i_tables)) or superclean==True:
 						exceptions = GenDatabaseLibrary.cleanDatabase(database_tuple[1], database_tuple[2])
 					else:
@@ -91,8 +94,8 @@ class BlueTitan(object):
 
 					DatabaseLibrary.initialize(exceptions, assets, exchanges)
 				
-		if "IntendedFAE" not in orig_exceptions:
-            BalancingLibrary.initializeFAE(assets, exchanges, class_balance_dict)
+		# if "IntendedFAE" not in orig_exceptions:
+        #  BalancingLibrary.initializeFAE(assets, exchanges, class_balance_dict)
 
 		# 2. Initialize scheduling events
         schedule.every().minute.do(ProfitTracker.runHourly, exchanges, assets)
@@ -103,17 +106,21 @@ class BlueTitan(object):
 	# INPUT: N/A
 	# OUTPUT: N/A
 	# DESCRIPTION:
-	#    
+	#    Main loop for the top level. Starts off by creating relevant objects, then performs the
+    #     continuous cycle of checking for scheduled events, rebalancing the fund when needed
+    #     and otherwise running algorithms.
 	def main(self):
         algorithms = self.running_algos
         fund_allocator = FundAllocator()
 		while 1:
+            # 0. Check for events
 			# 1. Call fundAllocator
             # 2. Run algorithms
             for algorithm in algorithms:
                 # Run each algorithm
 			    # NOTE: only running algorithm for now
-		
+
+            
 `
 
 if __name__ == "__main__":

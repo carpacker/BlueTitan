@@ -6,3 +6,7 @@
 - Dealing with tables from system controller point of view
 # TODO: How to know database table names and exceptions
 Possibly pass table names and exceptions as an argument with the algorithm
+More elegant system for FAE
+More comprehensive scheduling initializationsxs
+
+Think about better way to do balancing/fund allocation based on runtime database
