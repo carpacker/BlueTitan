@@ -193,8 +193,9 @@ class BTArbitrage(object):
 
 
     # FUNCTION: marketArbitrage
-    # INPUT: TODO
-    # OUTPUT:  TODO
+    # INPUT: input_tuple - (TODO)
+    # OUTPUT:  tuple of information about the trade -
+    #           (TODO)
     # DESCRIPTION:
     #     Main function for executing market-based arbitrage.
     def marketArbitrage(input_tuple):
@@ -218,17 +219,21 @@ class BTArbitrage(object):
         quantity_buy = TradingLibrary.convertMinQuantity(buy_exchange, quantity, pairing)
         quantity_sell = TradingLibrary.convertMinQuantity(sell_exchange, quantity, pairing)
 
+        # TRUE for buy exchange first, FALSE for sell exchange first
+        # NOTE: Verify the above
         result = ArbitrageLibrary.decideOrder(buy_exchange, sell_exchange)
-        PrintLibrary.displayVariables([sell_balance_quote, sell_balance_base, buy_balance_quote], "Sell quote/base, buy quote/base going into arbitrage")
+        PrintLibrary.displayVariables([sell_balance_quote, sell_balance_base,  buy_balance_quote, buy_balance_quote], ["Sell balance quote", "Sell balance base", "Buy balance quote", "Buy balance base"])
+
         if result == True:
             sell_id_one = ExchangeAPI.sellLimit(sell_exchange, pairing, quantity_sell, sell_price)
             if sell_id_one["success"] != True:
                 print(' ERROR [executeArbitrage, order ONE sell_order_failed]')
                 return 2
-            time.sleep(2)
-            print("sell_id_one", sell_id_one)
+            time.sleep(1)
+            
+            PrintLibrary.displayVariable(sell_id_one, "First sell order result"))
             order_dict_sell1 = ExchangeAPI.getOrder(sell_exchange, sell_id_one["order_id"], pairing)
-            print("order sell 1", order_dict_sell1)
+            PrintLibrary.displayVariable(order_dict_sell1
             # CASE: None of value has been executed :: cancel and exit
             if order_dict_sell1["incomplete"] == True:
                 print("INCOMPLETE ARBITRAGE")

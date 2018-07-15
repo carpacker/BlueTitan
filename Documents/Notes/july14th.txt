@@ -1,3 +1,5 @@
 - Adding in local balances by allocation
 - Switching way arbitrage is run (while 1 is now outside)
 - Need to write limit arbitrage loop
+- Change returns in market arbitrage
+- Future decideOrder will be dependent on some weighted variable that changes over time based on other things happening
