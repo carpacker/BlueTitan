@@ -1,24 +1,26 @@
 # DatabaseLibrary.py (Arbitrage)
 # Carson Packer
 # DESCRIPTION:
-#    Arbitrage's database library
+#    Arbitrage's database library. Contains all database calls specifically pertinent to arbitrage's
+#     algorithm.
 
 # External-Imports
 import sys
 
-# WINDOWS main-desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Web-Scrapers')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
+# WINDOWS main-desktop, LINUX main-server
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Web-Scrapers')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 
 # WINDOWS laptop
-
-# LINUX main-server
+#sys.path.append()
 
 # Internal-Imports
-from GeneralizedDatabase import GenDatabaseLibrary
 from API import ExchangeAPI
 import FeeScraper
+from GeneralizedDatabase import GenDatabaseLibrary
+from PrintLibrary import PrintLibrary
 
 # Local Variables
 path = os.path.join(os.path.dirname(__file__), 'ArbitrageDatabase.sqlite3')
@@ -279,7 +281,7 @@ def getBalances(exchange, assets):
 # INPUT: exchanges - [string, ...]
 # OUTPUT: dictionary of balances - {TODO}
 # DESCRIPTION:
-#   Retrieves all the balances from the exchanges, includes a total balance calculation
+#   Retrieves all the balances from the exchanges, includes a total balance calculation.
 # test this, maybe only the above or the below is necessary.
 def getAllBalances(exchanges):
 

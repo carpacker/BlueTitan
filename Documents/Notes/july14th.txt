@@ -1,4 +1,6 @@
-Thoughts to be aded elsewhere:
+BlueTitan notes
+Carson Packer
+July 14th, 2018
 
 BlueTitan.py
 - Adding in global balance in runtimedatabase, local allocated balance in local balances
@@ -12,7 +14,8 @@ BlueTitan.py
 - Add algorithm inputs (name, pairing stuff)
 - Think about better way to do balancing/fund allocation based on runtime database
 - Change this fae_list thing
-- Remove superclean 
+- Remove superclean
 
+PrintLibrary.py
 - message function for PrintLibrary
 - Start adding in errors for printlibrary

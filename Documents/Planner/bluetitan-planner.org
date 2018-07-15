@@ -67,6 +67,12 @@ Arbitrage
 + BalancePairing storeEntry actual values
 + Move tag check
 *** DatabaseLibrary
+**** TODO createTable: Vet tables again and possibly switch around order of columns
+**** TODO initializeTables: FAE, fix up balances/assetinfo with new runtime database
+**** TODO initializeBalances: Run through again, possibly adapt to fundAllocator
+**** TODO initializeFAE/AssetInfo: Possibly rework into runtime database
+**** TODO getPairings: ????
+**** TODO getBalances & getAllBalances: revisit, commenting
 ** Coin-Categorizer
 ** Fund-Manager
 
