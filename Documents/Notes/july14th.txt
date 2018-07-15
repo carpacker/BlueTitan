@@ -19,3 +19,14 @@ BlueTitan.py
 PrintLibrary.py
 - message function for PrintLibrary
 - Start adding in errors for printlibrary
+
+Finish a few of these --> Finish arbitrage --> coin categorizer --> MATrader --> Mobile work environment
+
+Notes
+Sync texworks documents
+possibly important written work for bots:
+- prototype doc
+- Limit arbitrage theory
+- Failure tracking theory
+- Fund management/allocation theory
+- Top level theory

@@ -7,16 +7,13 @@
 import sys
 import time
 
-# WINDOWS main-desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
-sys.path.append('U:/Directory/Projects/BlueTitan/Libraries')
+# WINDOWS main-desktop, LINUX main-server
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange_APIs')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 
 # WINDOWS laptop
-#
-
-# LINUX main-server
-#
+#sys.path.append
 
 # Internal-Imports
 from API import ExchangeAPI
@@ -27,7 +24,8 @@ from PrintLibrary import PrintLibrary
 # CLASS: BalancingLibrary
 # FUNCTION LIST: [balanceAccounts, balancePairing]
 # DESCRIPTION:
-#   Library of functions that represents the set of primary operations used in the account balancing component.
+#   Library of functions that represents the set of primary operations used in the account
+#    balancing component.
 class BalancingLibrary(object):
 
     # FUNCTION: rebalance
@@ -46,6 +44,7 @@ class BalancingLibrary(object):
 		buy_exchange = arbitrage_tuple[4]
 		
         # Retrieve the intended balance ratio for the given asset/exchanges
+        # NOTE: ????
         intended_fae = BalancingLibrary.retrieveIntendedFAE(asset, exchange)
 		
         # Make sure balancing would be profitable
@@ -53,11 +52,14 @@ class BalancingLibrary(object):
 		
         # If within profitable range, balance the pairing
         if balance_bool:
-            withdraw_info = BalancingLibrary.balancePairing(pairing, quantity_base, quantity_quote, sell_exchange, buy_exchange)
+            withdraw_info = BalancingLibrary.balancePairing(pairing, quantity_base, quantity_quote,
+                                                            sell_exchange, buy_exchange)
 			
-            # withdraw_info contains information that is used to later to determine when a 
-            #  transfer is being tracked and so on.
+            # withdraw_info contains information that is used to later to determine when a transfer
+            #  is being tracked and so on.
             return withdraw_info
+        
+        # If not within profitable range
         else:
 			PrintLibrary.displayVariable("Not profitable to balance")
             return ("Not profitable to balance")
@@ -73,20 +75,20 @@ class BalancingLibrary(object):
     #	Top level function involved in balancing the accounts after arbitrage.
     def balancePairing(pairing, quantity_base, quantity_quote, sell_exchange, buy_exchange):
 
-        # Transfer quote, base
+        # 1. Transfer quote, base
         buy_withdraw = BalancingLibrary.transferQuote(quote_asset, quantity_quote, buy_exchange, sell_exchange)
         sell_withdraw = BalancingLibrary.transferBase(base_asset, quantity_base, sell_exchange, buy_exchange)
 		PrintLibrary.displayVariables(buy_withdraw, "Buy withdraw")
 		PrintLibrary.displayVariables(sell_withdraw, "Sell withdraw")
 		
-        # Create withdraw list --> [timestamp, transfertime, buy_exchange, asset, amount,
+        # 2. Create withdraw list --> [timestamp, transfertime, buy_exchange, asset, amount,
         #							sell_exchange, base_t_asset, base_btc_value, total_btc,
         #							fee_btc, buy_withdraw_id, sell_withdraw_id] 
         withdraw_list = BalancingLibrary.buildWithdrawList(buy_withdraw, sell_withdraw)
         PrintLibrary.displayVariables(withdraw_list)
 
-		# TODO: fill this out with actual values
-		GenDatabaseLibrary.storeEntry("???", withdraw_list)
+        # 3. Store result
+		GenDatabaseLibrary.storeEntry("ArbitrageDatabase", withdraw_list)
 
         return withdraw_list
 
@@ -98,6 +100,7 @@ class BalancingLibrary(object):
     #	 to reduce loss of profits through withdrawal fees by combining transfers of the base asset.
     def balancePairings(fae_list):
         print("Balancepairings Start // INPUT: ", fae_list)
+        
         # 1. Sell assets that are overflowing
         temp_dict = {}
         ticker = 0
@@ -314,8 +317,9 @@ class BalancingLibrary(object):
     #		 intended_fae - list
     # OUTPUT: [fae, ...]
     # DESCRIPTION:
-    #	Builds a 'current FAE' list to be used in a comparison against the intended fae list. The idea is to create a list,	 based on 
-    #	 the current balances, that can be compared against the intended FAE in order to initialize the balances.
+    #	Builds a 'current FAE' list to be used in a comparison against the intended fae list. The
+    #    idea is to create a list, based on the current balances, that can be compared against the
+    #    intended FAE in order to initialize the balances.
     def buildCurrentFAE(balances, intended_fae):
         current_fae = []
         total_value_usd = balances["ALL"]["total_value_usd"]

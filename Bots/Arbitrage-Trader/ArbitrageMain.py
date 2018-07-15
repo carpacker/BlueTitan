@@ -11,7 +11,7 @@ import sys
 import threading
 import time
 
-# WINDOWS main-desktop
+# WINDOWS main-desktop, LINUX main-server
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
@@ -20,11 +20,6 @@ sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exch
 #sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/DatabaseManager')
 #sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 #sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
-
-# LINUX main-server
-#sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
-#sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
-#sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')# sys.path.append()
 
 # Internal-Imports
 from API import ExchangeAPI
@@ -42,22 +37,30 @@ from PrintLibrary import PrintLibrary
 class BTArbitrage(object):
 
     # Class Variables [Exchanges, Pairings, Assets, Balances]
-    cl_exchanges = []
-    cl_pairings = []
+    cl_market_exchanges = []
+    cl_limit_exchanges = []
+    cl_market_pairings = []
+    cl_limit_pairings = []
     cl_assets = []
     cl_balance_dict = {}
+
+    # Used in runtime
     consecutive_fails = 0
     ticker = 0
+
+    # Limit arbitrage variables
+    open_limits = []
     
     # INITIALIZATION
     # INPUT: Clean - Used to designate whether to clean databases on initialization. Defaults to True.
     # DESCRIPTION:
     #   Performs necessary tasks to begin Arbitrage. Grabs input variables
-    def __init__(self, exchanges, m_pairings, l_pairings, assets):
+    def __init__(self, m_exchanges, m_pairings, l_exchanges, l_pairings, assets):
         
 		# Initialize local variables
-		cl_exchanges = exchanges
+		cl_market_exchanges = m_exchanges
 		cl_market_pairings = m_pairings
+        cl_limit_exchanges = l_exchanges
         cl_limit_pairings = l_pairings
 		cl_assets = assets
         cl_balance_dict = GenDatabaseLibrary.getAllBalances("ArbitrageDatabase", exchanges)
@@ -65,25 +68,36 @@ class BTArbitrage(object):
 
     # FUNCTION: Arbitrage [Top Level]
     # DESCRIPTION:
-    #   Main function for arbitrage that acts as the top level.
+    #   Main function for arbitrage that acts as the top level. Performs limit and market arbitrage.
     def Arbitrage(self):
 
         # Local Variable initialization
-        exchanges = self.cl_exchanges
+        market_exchanges = self.cl_market_exchanges
         market_pairings = self.cl_market_pairings
+        limit_exchanges = self.cl_limit_exchanges
         limit_pairings = self.cl_limit_pairings
         assets =  self.cl_assets
-    
+        open_limits = self.open_limits
+        
         header_string = "MAIN ARBITRAGE LOOP: Iteration " + str(self.ticker) + " at " + Helpers.convertFromUnix(Helpers.createTimestamp())
         PrintLibrary.header(header_string)
-
+        PrintLibrary.delimiter()
+        
         PrintLibrary.header("Limit Arbitrage Loop")
-        for pairing in limit_pairings:
-            pass
-            # 1. Check existing limit arbitrage
-            # 2. Handle existing limit arbitrage
-            # 3. Create new limit arbitrage
 
+        # 1. Check existing limit arbitrage
+        unresolved_trades = ArbitrageLibrary.checkLimitTrades(open_limits)
+        # 2. Handle existing limit arbitrage
+        resolved_trades = ArbitrageLibrary.handleLimitTrades(unresolved_trades)
+        # 3. Remove resolved trades from open_limits
+        new_open_limits = ArbitrageLibrary.removeLimitTrades(resolved_trades)
+        # 4. Build list of pairings that don't have an open trade
+        # TODO
+        for pairing in limit_pairings:
+            # 3. Create new limit arbitrage
+            BTArbitrage.limitArbitrage('')
+
+            
         PrintLibrary.header("Market Arbitrage Loop")
         for pairing in market_pairings:
             time.sleep(2) # For rate limits

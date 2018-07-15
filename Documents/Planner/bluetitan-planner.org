@@ -49,6 +49,7 @@ Arbitrage
    + Break into small parts
 
 *** ArbitrageMain
+**** TODO Test that class variables pass through properly in new outer while loop
 *** ArbitrageLibrary
 **** TODO checkMinOrder: Print out exchange in the future [if order_size<notional]
 **** TODO decideOrder: Future involves more complex weighting to decide which exchange is more liquid
@@ -58,8 +59,19 @@ Arbitrage
 **** TODO handleIncompleteArbitrage: rework
 **** TODO getAggregateWFees: deprecate and rework
 *** BalancingLibrary
-+ Vetting and reworking file
-+ Adding in changes to database library and all that
+Big picture:
+- Automatic balancing
+- Profit/valuation tracking such that withdrawals can be validated
+- Transfer time checking
+
+Not finished adding:
+compareFAE, calculateFees, buildWithdrawList, balancePairings
+**** TODO Add function list header like ArbitrageLibrary has
+**** TODO retrieveIntendedFAE: Rework, currently a skeleton
+**** TODO checkProfitability: Nothing there, finish
+**** TODO rebalance: not profitable return & error stuff
+**** TODO balancePairing: Maybe move buildWithdrawList outside of object for consistency
+
 + Possibly integrating into arbitrage library
 + Possibly move parts to fund manager
 + Test last loop buildCurrentFAE
