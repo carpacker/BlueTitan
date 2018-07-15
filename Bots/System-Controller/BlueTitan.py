@@ -10,14 +10,15 @@ import sys
 import threading
 import time
 
-# WINDOWS main-desktop
-sys.path.append("U:/Directory/Projects/Work/BlueTitan/Libraries")
+# WINDOWS main-desktop, LINUX main-server
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/Libraries")
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager")
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Bots/Fund-Manager")
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Bots/Arbitrage-Trader")
 
 # WINDOWS laptop
 #sys.path.append()
 
-# LINUX main-server
-#sys.path.append()
 
 # Internal-Imports
 from FundAllocator import FundAllocator
@@ -30,8 +31,6 @@ class BlueTitan(object):
 
 	# CLASS VARIABLES
 	running_algos = []
-	# Not sure if this is proper
-	fund_allocator = None
 
 	# What to do with these guys
 	arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
@@ -52,22 +51,21 @@ class BlueTitan(object):
 	def __init__(self, algorithms, clean=True):
 		PrintLibrary.header("BlueTitan Initialization")
 
+        # Initialize databases for base functionalities
+        # TODO
+        
+        # Initialize databases for algorithms
 		for algorithm in algorithms:
 			print(algorithm)
-			running_algos.append(algorithm)
+			self.running_algos.append(algorithm)
 
-			# TODO: pull pairings
-			# TODO: pull assets
-			pairings = 0
+            pairings = algorithm[1]
 			assets = Helpers.convertPairingListAsset(pairings)
-			# TODO: pull exchanges
-			exchanges = 0
+			exchanges = algorithm[2]
 		
 			PrintLibrary.displayVariables(exchanges, "Exchanges")
 			PrintLibrary.displayVariables(assets, "Assets")
 			PrintLibrary.displayVariables(pairings, "Pairings")
-
-			# TODO: How to know database table names and exceptions
 			
 			# Clean database [tables - exceptions]
 			if clean == True:
@@ -81,15 +79,15 @@ class BlueTitan(object):
 				for database_tuple in databases:
 					PrintLibrary.displayVariables(database_tuple)
 					set_tables = set(database_tuple[2])
-					set_i_tables = set(DatabaseLibraryBase.listTablesDB(database_tuple[1]))
+					set_i_tables = set(GenDatabaseLibrary.listTables(database_tuple[1]))
 
-					print("Intended Tables: ", set_tables)
-					print("Database tables", set_i_tables)
+					PrintLibrary.displayVariables(set_table, "Intended Tables")
+			        PrintLibrary.displayVariables(set_i_tables, "Database Tables")
 					PrintLibrary.delimiter()
 					if (set_tables.issubset(set_i_tables) and set_tables.issuperset(set_i_tables)) or superclean==True:
-						exceptions = DatabaseLibraryBase.cleanDatabase(database_tuple[1], database_tuple[2])
+						exceptions = GenDatabaseLibrary.cleanDatabase(database_tuple[1], database_tuple[2])
 					else:
-						exceptions = DatabaseLibraryBase.cleanDatabase(database_tuple[1], database_tuple[2], exceptions)
+						exceptions = GenDatabaseLibrary.cleanDatabase(database_tuple[1], database_tuple[2], exceptions)
 
 					DatabaseLibrary.initialize(exceptions, assets, exchanges)
 				
@@ -101,24 +99,24 @@ class BlueTitan(object):
         schedule.every().hour.do(ProfitTracker.runHourly, exchanges, assets)
         schedule.every().day.at("6:00").do(ProfitTracker.runDaily, exchanges, assets)
 
-		# 3. Initialize fund allocator object
-
 	# MAIN: BlueTitan
 	# INPUT: N/A
 	# OUTPUT: N/A
 	# DESCRIPTION:
 	#    
-	def main():
-        BTArbitrage = BTArbitrage()
+	def main(self):
+        algorithms = self.running_algos
+        fund_allocator = FundAllocator()
 		while 1:
-			FundAllocator()
-			# 1. Run Arbitrage Algorithm
-            BTArbitrage
-			# NOTE: only running algorithm for now
+			# 1. Call fundAllocator
+            # 2. Run algorithms
+            for algorithm in algorithms:
+                # Run each algorithm
+			    # NOTE: only running algorithm for now
 		
-
+`
 
 if __name__ == "__main__":
 	algorithms = {}
 	algorithm["Arbitrage"] = [("pairing1", ("exchange1", "exchange2"))]
-	testbt = BlueTitan().main()
+	testbt = BlueTitan(algorithms).main()
