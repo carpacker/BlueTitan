@@ -23,7 +23,7 @@ sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exch
 
 # Internal-Imports
 from API import ExchangeAPI
-from ArbitrageLibrary import ArbitrageLibrary
+from ArbitrageLibrary import ArbitrageLibrary, LimitArbitrage
 from BalancingLibrary import BalancingLibrary
 from GeneralizedDatabase import GenDatabaseLibrary
 import Helpers
@@ -68,7 +68,7 @@ class BTArbitrage(object):
         cl_limit_exchanges = l_exchanges
         cl_limit_pairings = l_pairings
 		cl_assets = assets
-        cl_balance_dict = GenDatabaseLibrary.getAllBalances("ArbitrageDatabase", exchanges)
+        cl_balance_dict = DatabaseLibrary.getAllBalances(exchanges)
         PrintLibrary.displayDictionary("Initialized balances", cl_balance_dict)
 
     # FUNCTION: Arbitrage [Top Level]
@@ -91,18 +91,17 @@ class BTArbitrage(object):
         PrintLibrary.header("Limit Arbitrage Loop")
 
         # 1. Check existing limit arbitrage
-        unresolved_trades = ArbitrageLibrary.checkLimitTrades(open_limits)
+        unresolved_trades = LimitArbitrage.checkLimitTrades(open_limits)
         # 2. Handle existing limit arbitrage
-        resolved_trades = ArbitrageLibrary.handleLimitTrades(unresolved_trades)
+        resolved_trades = LimitArbitrage.handleLimitTrades(unresolved_trades)
         # 3. Remove resolved trades from open_limits
-        new_open_limits = ArbitrageLibrary.removeLimitTrades(resolved_trades)
+        new_open_limits = LimitArbitrage.removeLimitTrades(resolved_trades)
         # 4. Build list of pairings that don't have an open trade
-        # TODO
+        open_pairings = LimitArbitrage.getOpenPairings(new_open_limits)
         
-        for pairing in limit_pairings:
+        for pairing in open_pairings:
             # 3. Create new limit arbitrage
-            BTArbitrage.limitArbitrage('')
-
+            LimitArbitrage.createTrade(pairing)
             
         PrintLibrary.header("Market Arbitrage Loop")
         for pairing in market_pairings:
@@ -136,12 +135,12 @@ class BTArbitrage(object):
                 total_btc  = Helpers.baseAsset(bidask_one[0], bidask_one[4])
                 failed_tuple = (pairing, bidask_one[0], total_btc, bidask_one[3], bidask_one[1], bidask_one[4], bidask_one[2],
                             bidask_one[6], bidask_one[5], "N/A", 1, consecutive_fails)
-                GenDatabaseLibrary.storeEntry("ArbitrageFailureMetrics", failed_tuple)
+                GenDatabaseLibrary.storeEntry("ArbitrageDatabase", "FailureTrades", failed_tuple)
             if bidask_two[7] == True:
                 total_btc  = Helpers.baseAsset(bidask_two[0], bidask_two[4])
                 failed_tuple = (pairing, bidask_two[0], total_btc, bidask_two[3], bidask_two[1], bidask_two[4], bidask_two[2],
                             bidask_two[6], bidask_two[5], "N/A", 1, consecutive_fails)
-                GenDatabaseLibrary.storeEntry("ArbitrageFailureMetrics", failed_tuple)
+                GenDatabaseLibrary.storeEntry("ArbitrageDatabase", "FailureTrades", failed_tuple)
 
             # Choose most profitable evaluated pairing
             # * - (arbitrage_quantity, sell_exchange, sell_price_limit, buy_exchange, buy_price_limit, profit, profit_ratio)
@@ -161,6 +160,7 @@ class BTArbitrage(object):
             input_tuple = order_tuple[:-3] + (pairing,)
             return_balances = self.marketArbitrage(input_tuple)
 
+            # TODO: REWORK ALL THIS NONSENSE
             # TempTODO, create more robust stage detection
             if return_balances == 2 or return_balances == 3:
                 failed_tuple = (pairing, order_tuple[0], total_btc, order_tuple[3], order_tuple[1], order_tuple[4], order_tuple[2],
@@ -174,40 +174,6 @@ class BTArbitrage(object):
                 BalancingLibrary.balanceFAE(quote, return_balances)
 
             time.sleep(1)
-            ###### PART TWO: USE PREVIOUS DATA TO SET UP LIMIT BASED ORDERS #########
-            # 
-            # (ITERATION after first: check to see if limit orders have filled)
-            #       if so, attempt market order, remove from list
-            #        potentially double down on limit order if market is successful
-            #        if not error handling
-            #         initially it would just check 0 orders and say ok go on
-            # call new function for each pairing that is attractive based on above data
-            # open limit orders near highest bid lowest ask
-            # wait for them to fill (set something in place to make sure they don't open
-            #   a new one until they're filled)
-            # probably keep a list of open orders
-            #
-            # more to come, probably start here
-            ##########################################################################
-
-            ############ PAIRING HEURISTIC / NEW LIST HERE ##########################
-            # IF PAIRING IS ATTRACTIVE FOR SOME REASON
-            # 	ADD TO SECONDARY LIST
-            #########################################################################
-
-        ################################################################################
-        # SECONDARY LIST LOOP: USING COINS DESIGNATED TO BE ATTRACTIVE
-        # DO THESE COINS FOR ??? ITERATIONS
-        # for pairing in secondary_list
-        # 	same arbitrage loop
-        #   remove if out of quantity
-        #   after X iterations || not enough currencies (??)
-        #   remove certain currencies (update lists based on balances)
-        #   break and do a main loop
-        #
-        # NOTE: Account balances needs to inform (???) listener when the accounts are rebalanced for favourable currencies;
-        #             add them back into main to check for preference again
-        ###############################################################################
 
         self.ticker+=1
 
@@ -241,18 +207,28 @@ class BTArbitrage(object):
         # TRUE for buy exchange first, FALSE for sell exchange first
         # NOTE: Verify the above
         result = ArbitrageLibrary.decideOrder(buy_exchange, sell_exchange)
-        PrintLibrary.displayVariables([sell_balance_quote, sell_balance_base,  buy_balance_quote, buy_balance_quote], ["Sell balance quote", "Sell balance base", "Buy balance quote", "Buy balance base"])
+        PrintLibrary.displayVariables([sell_balance_quote, sell_balance_base,
+                                       buy_balance_quote, buy_balance_base],
+                                      ["Sell balance quote", "Sell balance base",
+                                       "Buy balance quote", "Buy balance base"])
 
+        
         if result == True:
-            sell_id_one = ExchangeAPI.sellLimit(sell_exchange, pairing, quantity_sell, sell_price)
-            if sell_id_one["success"] != True:
-                print(' ERROR [executeArbitrage, order ONE sell_order_failed]')
-                return 2
-            time.sleep(1)
             
-            PrintLibrary.displayVariable(sell_id_one, "First sell order result")
+            PrintLibrary.message("Perform operation on sell exchange first")
+            sell_id_one = ExchangeAPI.sellLimit(sell_exchange, pairing, quantity_sell, sell_price)
+            
+            if sell_id_one["success"] != True:
+                PrintLibrary.errorMessage("First SELL order failed")
+                # TODO: Fix return
+                return 2
+            
+            time.sleep(1) # For rate limits
+            
+            PrintLibrary.displayVariable(sell_id_one, "First sell order ID")
             order_dict_sell1 = ExchangeAPI.getOrder(sell_exchange, sell_id_one["order_id"], pairing)
-            PrintLibrary.displayVariable(order_dict_sell1)
+            PrintLibrary.displayVariable(order_dict_sell1, "First sell order result")
+            
             # CASE: None of value has been executed :: cancel and exit
             if order_dict_sell1["incomplete"] == True:
                 print("INCOMPLETE ARBITRAGE")
@@ -264,12 +240,15 @@ class BTArbitrage(object):
                     #checkMinimumOrder
                     quantity = float(order_dict_sell1['executed_quantity'])
                     quantity = ArbitrageLibrary.convertMinQuantity(buy_exchange, quantity, pairing)
+
+            # CASE: Value has been executed
             else:
                 quantity = quantity_sell
 
             print("FIRST ORDER SUCCESS SELL")
             print("QUANTITY = " + str(quantity))
             print("INCOMPLETE = " + str(order_dict_sell1["incomplete"]))
+        
         else:
             buy_id_one = ExchangeAPI.buyLimit(buy_exchange, pairing, quantity_buy, buy_price)
             print(buy_id_one)
@@ -344,11 +323,11 @@ class BTArbitrage(object):
         buy_price = float(buy_dict["rate"])
         PrintLibrary.displayVariables((sell_price, buy_price), ("Sell price", "Buy price"))
         
-        # Calculate Profit
+        # * - Calculate Profit
         pr = Helpers.calculatePR(sell_price, buy_price)
         profit = Helpers.calculateProfit(sell_price, buy_price, executed_quantity)
 
-        # Update balances
+        # * - Update balances
         quant_float = float(executed_quantity)
         total_btc_sell = ArbitrageLibrary.baseAsset(quant_float, sell_price)
         total_btc_buy = ArbitrageLibrary.baseAsset(quant_float, buy_price)

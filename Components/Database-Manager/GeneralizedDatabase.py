@@ -10,10 +10,7 @@ import uuid
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 
 # Windows Laptop
-# sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')
-# sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
-# sys.path.append('C:/C-Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
-
+#sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary

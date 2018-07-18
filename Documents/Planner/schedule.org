@@ -9,6 +9,23 @@ Topic: Project organization
 Topic: Schedule set up
 Topic: Todo cleanups
 *** To-do
+[ ] - Finish working through ArbitrageTrader todo
+[ ] - Coincategorizer todo
+[ ] - Database-Manager todo
+[ ] - Work tasks into schedule
+[ ] - Add todos for next couple days
+*** Timestamps
+*** Notes
+LIMIT ARBITRAGE:
+   Possibly keep open running limit trades in an instantiated LimitArbitrage() object.
+*** Issues
+** Friday, 19th
+** Saturday, 20th
+** Sunday, 21st
+** Monday, 22nd
+** Tuesday, 23rd
+*** TO-DO
+[ ] - Run through balancing and fill out todo
 *** Timestamps
 *** Notes
 *** Issues

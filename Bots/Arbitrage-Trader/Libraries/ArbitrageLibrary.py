@@ -350,3 +350,23 @@ class ArbitrageLibrary(object):
         # TODO: record difference between prices
         # TODO: error checking
         return ret_dict
+
+# CLASS: LimitArbitrage
+# DESCRIPTION:
+#    Container object for limit arbitrage calls.
+class LimitArbitrage():
+
+    def checkLimitTrades():
+        pass
+
+    def createTrade():
+        pass
+    
+    def getOpenLimits():
+        pass
+    
+    def handleLimitTrades():
+        pass
+
+    def removeLimitTrades():
+        pass

@@ -6,7 +6,7 @@
 #     components major category.
 
 * General
-  
+- ErrorLibrary?
 ** Organization
 All meta-organizational items such as readmes, todo lists and scheduling.
 
@@ -34,27 +34,31 @@ All meta-organizational items such as readmes, todo lists and scheduling.
 *** General
 Big tasks
  + Reworking profit tracking in relation to performing withdrawals
- + Laying own limit arbitrage foundation
- + Add error tracking via PrintLibrary
 Specific tasks
  + Rework decideOrder
  + Rework determineOrdersize
  + Generic checkMinOrder
- + Skeleton functions for limit arbitrage in arbitrage library
- + PrintLibrary message function
-
 Arbitrage
  + if arbitrage_quantity == 0 error @ ~320
  + determineOrderSize variable quantity/ratio...
    + allow for scaling
    + possible neural network
- + evaluatePairing comments
- + Reworking getAggregateWFees
-   + Possibly replace the function
-   + Break into small parts
 
 *** ArbitrageMain
 **** TODO Test that class variables pass through properly in new outer while loop
+**** TODO Change LimitArbitrage createTrade call if needed
+**** TODO Re-visit storage of failed arbitrages (~134)
+***** TODO How to deal with asset metric stuff...
+**** TODO Revisit profit boolean conditional
+**** TODO Revisit returnbalances staging
+**** TODO Possibly move marketArbitrage
+**** TODO Return statements in market arbitrage (currently is like 2/3 for the stages)
+**** TODO Rework partial fill clauses (starting 266, should be two of them)
+**** TODO Success/failure prints
+**** TODO Model rest of the if/else like the first staement
+**** TODO Verify base asset function
+**** TODO Run through limit arbitrage notes
+**** TODO Add secondary list structure (???)
 *** Arbitrage Library
 **** TODO checkMinOrder: Print out exchange in the future [if order_size<notional]
 **** TODO decideOrder: Future involves more complex weighting to decide which exchange is more liquid
@@ -63,6 +67,8 @@ Arbitrage
 **** TODO evaluatePairing: Rework/evaluate arbitrage case section
 **** TODO handleIncompleteArbitrage: rework
 **** TODO getAggregateWFees: deprecate and rework
+**** TODO Adding limit arbitrage functions
+**** TODO LimitArbitrage createTrade
 *** BalancingLibrary
 Big picture:
 - Automatic balancing
@@ -178,3 +184,6 @@ compareFAE, calculateFees, buildWithdrawList, balancePairings
 ** Libraries
 *** PrintLibrary
 **** TODO Add list of headers for displayVariables
+**** TODO Check message function exists
+**** TODO Inherent error integration
+**** TODO errorMessage function 
