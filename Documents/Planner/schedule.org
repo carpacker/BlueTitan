@@ -1,0 +1,15 @@
+# schedule.org (blue-titan)
+# Carson Packer
+# DESCRIPTION:
+#    Schedule for project development of the BlueTitan trading system.
+
+* July (2018)
+** Thursday, 18th
+Topic: Project organization
+Topic: Schedule set up
+Topic: Todo cleanups
+*** To-do
+*** Timestamps
+*** Notes
+*** Issues
+* August(2018)

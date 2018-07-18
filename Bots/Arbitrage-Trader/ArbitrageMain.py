@@ -226,7 +226,6 @@ class BTArbitrage(object):
         sell_balance_base = GenDatabaseLibrary.getItem("ArbitrageDatabase", base, sell_exchange)
         buy_balance_base = GenDatabaseLibrary.getItem("ArbitrageDatabase", base, buy_exchange)
         buy_balance_quote = GenDatabaseLibrary.getItem("ArbitrageDatabase", quote, buy_exchange)
-
         # Convert price & quantity to appropiate standard such that each exchange
         #  will accept the parameter.
         buy_price = TradingLibrary.convertMinPrice(buy_exchange, buy_price, pairing)
@@ -246,9 +245,9 @@ class BTArbitrage(object):
                 return 2
             time.sleep(1)
             
-            PrintLibrary.displayVariable(sell_id_one, "First sell order result"))
+            PrintLibrary.displayVariable(sell_id_one, "First sell order result")
             order_dict_sell1 = ExchangeAPI.getOrder(sell_exchange, sell_id_one["order_id"], pairing)
-            PrintLibrary.displayVariable(order_dict_sell1
+            PrintLibrary.displayVariable(order_dict_sell1)
             # CASE: None of value has been executed :: cancel and exit
             if order_dict_sell1["incomplete"] == True:
                 print("INCOMPLETE ARBITRAGE")
@@ -332,20 +331,19 @@ class BTArbitrage(object):
             executed_quantity = float(order_dict_sell2["executed_quantity"])
             sell_dict = order_dict_sell2
 
-            print("SECOND ORDER SUCCESS (BUY FIRST):")
-            print("QUANTITY = " + str(executed_quantity))
-            print("SELL_DICT = ", sell_dict)
+            PrintLibrary.message("Second Order Success!")
+            PrintLibrary.displayVariable(executed_quantity, "Executed quantity")
+            PrintLibrary.displayDictionary(sell_dict, "Sell Dictionary"))
 
         sell_price = float(sell_dict["rate"])
         buy_price = float(buy_dict["rate"])
-        print(sell_price, "sellPrice")
-        print(buy_price, "buyPrice")
-
-        stage = PrintLibrary.stageHeader("Calculate Profits", stage)
+        PrintLibrary.displayVariables((sell_price, buy_price), ("Sell price", "Buy price"))
+        
+        # Calculate Profit
         pr = Helpers.calculatePR(sell_price, buy_price)
         profit = Helpers.calculateProfit(sell_price, buy_price, executed_quantity)
 
-        stage = PrintLibrary.stageHeader("Update Account Balances", stage)
+        # Update balances
         quant_float = float(executed_quantity)
         total_btc_sell = ArbitrageLibrary.baseAsset(quant_float, sell_price)
         total_btc_buy = ArbitrageLibrary.baseAsset(quant_float, buy_price)
@@ -356,20 +354,17 @@ class BTArbitrage(object):
         buy_balance_base -= total_btc_buy
         buy_balance_quote += quant_float
 
-        DatabaseLibrary.updateBalance(sell_exchange, base, sell_balance_base)
-        DatabaseLibrary.updateBalance(sell_exchange, quote, sell_balance_quote)
-        DatabaseLibrary.updateBalance(buy_exchange, base, buy_balance_base)
-        DatabaseLibrary.updateBalance(buy_exchange, quote, buy_balance_quote)
+        GenDatabaseLibrary.updateItem("ArbitrageDatabase", "Balances", sell_exchange, base, sell_balance_base)
+        GenDatabaseLibrary.updateItem("ArbitrageDatabase", "Balances", sell_exchange, quote, sell_balance_quote)
+        GenDatabaseLibrary.updateItem("ArbitrageDatabase", "Balances", buy_exchange, base, buy_balance_base)
+        GenDatabaseLibrary.updateItem("ArbitrageDatabase", "Balances", buy_exchange, quote, buy_balance_quote)
 
         init_quantity = input_tuple[0]
         packed_info = pairing, init_quantity, total_btc, executed_quantity, buy_exchange, sell_exchange, buy_price, sell_price, pr, profit
-        print(packed_info)
-        DatabaseLibrary.storeArbitrage(packed_info)
+        
+        PrintLibrary.displayVariables(packed_info, "Final values returned")
+        GenDatabaseLibrary.storeEntry("ArbitrageDatabase", "MarketTrades", packed_inf)
 
         result = (pairing, sell_exchange, buy_exchange, sell_balance_base, sell_balance_quote, buy_balance_base, buy_balance_quote)
-            
-        print(result)
+        
         return result
-
-if __name__ == '__main__':
-    LowLiquidityArbitrage().Arbitrage()

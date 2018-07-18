@@ -1,7 +1,9 @@
 # blue-titanTD.org
 # Carson Packer
 # DESCRIPTION:
-#    Main TODO doc for blue titan's automated trading system.
+#    Main TODO doc for blue titan's automated trading system. Items are broken down by category 
+#     starting with a general category for meta related items, the bots major category and the
+#     components major category.
 
 CURRENT STEPS: 
 + Finish Generalized Database
@@ -13,7 +15,7 @@ CURRENT STEPS:
 + Complete balancing
 
 * General
-
+  
 ** Organization
 All meta-organizational items such as readmes, todo lists and scheduling.
 
@@ -50,7 +52,7 @@ Arbitrage
 
 *** ArbitrageMain
 **** TODO Test that class variables pass through properly in new outer while loop
-*** ArbitrageLibrary
+*** Arbitrage Library
 **** TODO checkMinOrder: Print out exchange in the future [if order_size<notional]
 **** TODO decideOrder: Future involves more complex weighting to decide which exchange is more liquid
 **** TODO determineOrderSize: Rework
@@ -90,6 +92,9 @@ compareFAE, calculateFees, buildWithdrawList, balancePairings
 **** TODO Explain function of limit arbitrage
 **** TODO Tie together the two in loop
 ** Coin-Categorizer
+*** General
++ Possibly subdivide functions into libraries
++ Needs its own database
 *** README
 **** TODO Describe scoring system & categories
 **** TODO Reworking pseudocode section
@@ -168,4 +173,5 @@ compareFAE, calculateFees, buildWithdrawList, balancePairings
 ** Web-scraper
 ** Graphing
 ** Libraries
-*** 
+*** PrintLibrary
+**** TODO Add list of headers for displayVariables

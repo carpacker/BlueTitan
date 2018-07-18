@@ -544,7 +544,6 @@ class BalancingLibrary(object):
                                     DatabaseLibrary.storeFAE(asset, exchange, equal_prop, .5)
                     return []
 
-
     # FUNCTION: retrieveIntendedFAE
     # INPUT: asset 	  - string [optional]
     #		 exchange - string [optional]

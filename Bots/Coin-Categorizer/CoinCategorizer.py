@@ -1,12 +1,19 @@
 # CoinCategorizer.py
 # Carson Packer
+# DESCRIPTION:
+#    Top level function
 
 # External-Imports
 import sys
 import csv
 
+# WINDOWS main-desktop, LINUX main-server
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/Libraries")
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/
+sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/
 # Internal-Import
 from API import ExchangeAPI
+import Helpers
 
 # CLASS: CoinCategorizer
 # DESCRIPTION:
@@ -24,15 +31,6 @@ def CoinCategorizer(Object):
         balances = getBalances(asset)
         coin_list = rankCoins()
         distribution_values = allocateFunds(coin_list, balances)
-        
-    # FUNCTION: parseCSV
-    # INPUT: csv_name - string
-    # OUTPUT: [(data, ...), ...]
-    # DESCRIPTION:
-    #    Parses a CSV file and turns it into an effective matrix (list of tuples).
-    # NOTE: probably move this to helpers or something
-    def parseCSV():
-        pass
 
     # FUNCTION: buildAssetList
     # INPUT: coin_info - [(data, ...), ...]
