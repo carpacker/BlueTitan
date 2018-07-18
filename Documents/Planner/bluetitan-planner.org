@@ -5,15 +5,6 @@
 #     starting with a general category for meta related items, the bots major category and the
 #     components major category.
 
-CURRENT STEPS: 
-+ Finish Generalized Database
-+ Finish SystemController
-+ Create runtimeDatabase
-+ Setting up second computer
-+ Resume runtime testing
-+ Profit Liquidation
-+ Complete balancing
-
 * General
   
 ** Organization
@@ -22,10 +13,22 @@ All meta-organizational items such as readmes, todo lists and scheduling.
 ** READMEs
 *** TODO Write general format for readmes by directory
 ** Planner
+*** TODO Fill out syllabus.org
+*** TODO Fill out this document (todo document)
+*** TODO Fill out schedule.org
+*** TODO Move genericWidget.org
 ** Prototyping
 *** TODO Re-structure prototype document
-    
-** Document
+*** TODO Finish first draft prototype document 
+*** TODO Send to mohammad for editing
+*** TODO Final draft prototype document
+*** TODO Integrate goals into syllabus
+** Documents
+*** TODO Organize debuggin screenshots
+*** TODO Changelog format
+*** TODO Organize archive
+*** TODO Prototype-master organize
+*** TODO Organize notes
 * Bots
 ** Arbitrage-Trader
 *** General

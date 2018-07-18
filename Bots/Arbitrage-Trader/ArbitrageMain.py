@@ -52,9 +52,14 @@ class BTArbitrage(object):
     open_limits = []
     
     # INITIALIZATION
-    # INPUT: Clean - Used to designate whether to clean databases on initialization. Defaults to True.
+    # INPUT: m_exchanges - [string, ...] market exchanges
+    #        m_pairings  - [string, ...] market pairings
+    #        l_exchanges - [string, ...] limit exchanges
+    #        l_pairings  - [string, ...] limit pairings
+    #        assets      - [string, ...] assets used
     # DESCRIPTION:
-    #   Performs necessary tasks to begin Arbitrage. Grabs input variables
+    #   Performs necessary tasks to begin Arbitrage. Grabs input variables, assigns them to local
+    #    class variables.
     def __init__(self, m_exchanges, m_pairings, l_exchanges, l_pairings, assets):
         
 		# Initialize local variables

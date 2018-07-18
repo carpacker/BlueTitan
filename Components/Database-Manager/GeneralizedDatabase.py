@@ -6,26 +6,31 @@ import time
 import uuid
 
 
-# Windows Main Desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Libraries')
+# WINDOWS main-desktop, LINUX main-server
+sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
 
 # Windows Laptop
 # sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')
 # sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
 # sys.path.append('C:/C-Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 
-# Linux Desktop
-# sys.path.append()
-
-# Main Server
-# sys.path.append()
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 import Helpers
 
-'''                                       Helpers                                   
-'''
+# PATHS
+# DESCRIPTION:
+#    Until a better solution is developed, the paths to the databases are stored here in a
+#     dictionary. Each function accesses the dictionary to access the database path. This
+#     requires inputting the database names/paths ahead of time
+
+database_paths = {"ArbitrageDatabase" : 0,
+                  "AssetMetricsDatabase" : 0,
+                  "MetricsDatabase" : 0,
+                  "RuntimeDatabase" : 0
+
+##################################### HELPERS ######################################################
 
 
 # FUNCTION: checkTableNameExists
@@ -106,7 +111,7 @@ def generalQuery(cursor, query):
 class GenDatabaseLibrary(object):
     
     # FUNCTION: buildInitTuple
-    # INPUT: database_path - *
+    # INPUT: database_name - string
     #        table_name    - string
     # OUTPUT: tuple
     # DESCRIPTION:
@@ -115,7 +120,7 @@ class GenDatabaseLibrary(object):
     #  TEXT - ""
     #  REAL - 0
     #  REST - TODO
-    def buildInitTuple(database_path, table_name):
+    def buildInitTuple(database_name, table_name):
 
         # Below isn't written yet... instead of getcolumns, it should be getcolumn names or something
         num_columns = GenDatabaseLibraries.getColumns()
@@ -239,12 +244,13 @@ class GenDatabaseLibrary(object):
     #        database_name - string
     # OUTPUT: N/A
     # DESCRIPTION:
-    #   Generic function for storing an entry into a table in a database.
-    def storeEntry(database_path, table_name, data):
+    #    Generic function for storing an entry into a table in a database.
+    def storeEntry(database_name, table_name, data):
         
         # Set database, initializes variables, check table exists
         timestamp = int(time.time() * 1000)
         uuid = createUuid(table_name, database_name)
+        database_path = database_paths[database_name]
         connection, cursor = connect(database_path) 
         checkTableNameExists(cursor, database_name, table_name)
         # Build SQL execution string, execute and then disconnect

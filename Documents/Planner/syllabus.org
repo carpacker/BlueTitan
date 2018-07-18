@@ -1,0 +1,12 @@
+# syllabus.org
+# Carson Packer
+# BlueTitan trading system
+# DESCRIPTION:
+#    TODO
++ Finish Generalized Database
++ Finish SystemController
++ Create runtimeDatabase
++ Setting up second computer
++ Resume runtime testing
++ Profit Liquidation
++ Complete balancing
