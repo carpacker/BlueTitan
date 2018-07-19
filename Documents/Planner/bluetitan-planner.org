@@ -32,19 +32,9 @@ All meta-organizational items such as readmes, todo lists and scheduling.
 * Bots
 ** Arbitrage-Trader
 *** General
-Big tasks
- + Reworking profit tracking in relation to performing withdrawals
-Specific tasks
- + Rework decideOrder
- + Rework determineOrdersize
- + Generic checkMinOrder
-Arbitrage
- + if arbitrage_quantity == 0 error @ ~320
- + determineOrderSize variable quantity/ratio...
-   + allow for scaling
-   + possible neural network
-
+    Reworking profit tracking in relation to performing withdrawal
 *** ArbitrageMain
+**** TODO if arbitrage_quantity == 0 error (?)
 **** TODO Test that class variables pass through properly in new outer while loop
 **** TODO Change LimitArbitrage createTrade call if needed
 **** TODO Re-visit storage of failed arbitrages (~134)
@@ -61,8 +51,10 @@ Arbitrage
 **** TODO Add secondary list structure (???)
 *** Arbitrage Library
 **** TODO checkMinOrder: Print out exchange in the future [if order_size<notional]
+**** TODO generic checkMinOrder (?)
 **** TODO decideOrder: Future involves more complex weighting to decide which exchange is more liquid
 **** TODO determineOrderSize: Rework
+**** TODO determineOrderSize: Variable quantity/price for neural network(?)
 **** TODO evaluatePairing: Describe outputs
 **** TODO evaluatePairing: Rework/evaluate arbitrage case section
 **** TODO handleIncompleteArbitrage: rework
