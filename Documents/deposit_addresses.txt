@@ -1,0 +1,11 @@
+Binance : paqtrading
+
+ETH = 0x93dc468139fdaa5b27ab4f6872889e7169db4903
+BTC = 1KLwhroNqs9aExdS7ZTTRore2UH9wKXqjs
+LTC = LYciQJb2HkFJkhsx5WaBBgxwxtHmJfiwga
+
+Bittrex : paqtrading
+
+ETH =
+BTC =
+LTC = 

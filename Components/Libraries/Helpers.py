@@ -1,40 +1,35 @@
+# Helpers.py
+# Carson Packer
+# BlueTitan Trading System
+# DESCRIPTION:
+#    Contains miscellaneous functions that don't fall into the other categories for various
+#     categorical libraries.
+#
+# This script contains a set of classes that contain helper runctions for specific components 
+# of the systems. There is also a suite of functions outside of any class definition that are 
+# general purpose functions, used in many places because of their general application. 
 
-'''
-#                                        Helpers 
 
-This script contains a set of classes that contain helper runctions for specific components 
-of the systems. There is also a suite of functions outside of any class definition that are 
-general purpose functions, used in many places because of their general application. 
-
-'''
-
-#                                       Imports
-
+# External-Imports
+from collections import defaultdict
+import csv
+from datetime import datetime
+import os
 import sys
+import time
 
-# WINDOWS main-desktop
+# WINDOWS main-desktop, LINUX main-server
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs/')
 sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
 
 # WINDOWS laptop
 # sys.path.append()
 
-# LINUX main-server
-# sys.path.append()
-
-# External-Imports
-from datetime import datetime
-from collections import defaultdict
-import csv
-import time
-import os
-
 # Internal-Imports
 from API import ExchangeAPI
 from GeneralizedDatabase import GenDatabaseLibrary
 
-#                                    General Helpers
-
+##################################### General Helpers ###############################################
 # * btcValue            - Convert an asset to BTC value
 # * calculatePR         - Calculate the profit ratio given two prices
 # * calculateProfit     - Calculate profit given prices and quantity
@@ -45,6 +40,7 @@ from GeneralizedDatabase import GenDatabaseLibrary
 # * quoteAsset          - Quote asset converter [btc as input value w/ asset]
 # * reversePairings     - Reverse a list of pairings (made by selim)
 # * usdValue            - Output USD value of some quantity of asset
+####################################################################################################
 
 # FUNCTION: btcValue
 # INPUT: quantity - float
@@ -471,7 +467,7 @@ def convertAssetDict(balances):
 def readCSV(csv_name):
     return_csv = []
     script_dir = os.path.dirname(__file__)
-    full_path = os.path.join(script_dir, '../resources/CSV/' + csv_name)
+    full_path = os.path.join('U:/Directory/Projects/Work/BlueTitan/resources/CSV/' + csv_name)
     with open(full_path, 'r') as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:

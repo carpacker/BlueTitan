@@ -25,7 +25,7 @@ import Helpers
 database_paths = {"ArbitrageDatabase" : 0,
                   "AssetMetricsDatabase" : 0,
                   "MetricsDatabase" : 0,
-                  "RuntimeDatabase" : 0
+                  "RuntimeDatabase" : 0}
 
 ##################################### HELPERS ######################################################
 

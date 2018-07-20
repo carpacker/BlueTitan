@@ -1,4 +1,4 @@
-# blue-titanTD.org
+# todo.org
 # Carson Packer
 # DESCRIPTION:
 #    Main TODO doc for blue titan's automated trading system. Items are broken down by category 
@@ -132,6 +132,9 @@ compareFAE, calculateFees, buildWithdrawList, balancePairings
 - Remove superclean 
 * Components
 ** Crypto-API
+NOTE: Possibly move generic API for everything to a bigger file, then everything imports by class
+so from cryptoAPI import ...
+then, cryptoAPI has like miningapi, exchangeapi
 ** Database-Manager
 *** TODO :: general
    - Moving databases to their own folderu
@@ -179,3 +182,6 @@ compareFAE, calculateFees, buildWithdrawList, balancePairings
 **** TODO Check message function exists
 **** TODO Inherent error integration
 **** TODO errorMessage function 
+* Tests
+** APITests.py
+*** TODO Edit file description
