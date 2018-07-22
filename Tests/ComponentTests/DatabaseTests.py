@@ -38,7 +38,6 @@ def initializeTestDatabase():
     PrintLibrary.header("Test Database Initialized")
     
 
-# TESTERS:
 # TESTERS: base functions
 # DESCRIPTION:
 #   All testers for helper functions exclusively used within the GeneralizedDatabase.py file.
@@ -66,69 +65,148 @@ def baseTesters():
 #   Testers for each main generic function.
 def mainTesters():
     PrintLibrary.header("Main functions")
-    PrintLibrary.header("storeEntry, storeEntries")
-    GenDatabaseLibrary.storeEntry("TestTable1", "TestDatabase")
-    GenDatabaseLibrary.storeEntries("TestTable1", "TestDatabase")
-    GenDatabaseLibrary.storeEntries("TestTable2", "TestDatabase")
+    PrintLibrary.header("storeEntry")
+    GenDatabaseLibrary.storeEntry("TestDatabase", "", 0)
+    GenDatabaseLibrary.storeEntry("TestDatabase", "", 0)
+    GenDatabaseLibrary.storeEntry("TestDatabase", "", 0)
+    GenDatabaseLibrary.storeEntry("TestDatabase", "", 0)
+    GenDatabaseLibrary.storeEntry("TestDatabase", "", 0)
 
+    PrintLibrary.delimiter()
+    PrintLibrary.header("storeEntries")
+    GenDatabaseLibrary.storeEntries("TestDatabase", "", [])
+    GenDatabaseLibrary.storeEntries("TestDatabase", "", ())
+    GenDatabaseLibrary.storeEntries("TestDatabase", "", [])
+    GenDatabaseLibrary.storeEntries("TestDatabase", "", [])
+    GenDatabaseLibrary.storeEntries("TestDatabase", "", [])
 
-    PrintLibrary.header("getEntry, getEntries, getLastEntry")
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getEntry")
     GenDatabaseLibrary.getEntry("aa1", "ArbitrageTrades", "ArbitrageDatabase")
     GenDatabaseLibrary.getEntry("mm1", "Metrics", "MetricsDatabase")
     GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
+    GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
+    GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
+    GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
+    GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
+    GenDatabaseLibrary.getEntry("aa2", "ArbitrageTrades", "ArbitrageDatabase")
 
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getEntries")
     GenDatabaseLibrary.getEntries()
     GenDatabaseLibrary.getEntries()
     GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenatabaseeLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenatabaseeLibrary.getEntries()
 
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getLastEntry")
     GenDatabaseLibrary.getLastEntry()
 
-
-    PrintLibrary.header("getColumn, getColumns")
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getColumn")
     GenDatabaseLibrary.getColumn()
     GenDatabaseLibrary.getColumn()
+    GenDatabaseLibrary.getColumn()
 
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getColumns")
     GenDatabaseLibrary.getColumns()
-    GenDatabaseLibrary.getColumns
+    GenDatabaseLibrary.getColumns()
+    GenDatabaseLibrary.getColumns()
+    GenDatabaseLibrary.getColumns()
+    GenDatabaseLibrary.getColumns()
 
+    PrintLibrary.delimiter()
+    GenDatabaseLibrary.header("getColumnType")
+    GenDatabaseLibrary.getColumnType()
+    GenDatabaseLibrary.getColumnType()
+    GenDatabaseLibrary.getColumnType()
 
-    PrintLibrary.header("getItem, getItems")
+    PrintLibrary.delimiter()
+    GenDatabaseLibrary.header("getColumnTypes")
+    GenDatabaseLibrary.getColumnTypes()
+
+    PrintLibrary.delimiter()
+    GenDatabaseLibrary.header("getColumnName")
+    GenDatabaseLibrary.getColumnName()
+    GenDatabaseLibrary.getColumnName()
+    GenDatabaseLibrary.getColumnName()
+
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getColumnNames")
+    GenDatabaseLibrary.getColumnNames()
+
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getItem")
     GenDatabaseLibrary.getItem()
     GenDatabaseLibrary.getItem()
-
+    GenDatabaseLibrary.getItem()
+    GenDatabaseLibrary.getItem()
+    GenDatabaseLibrary.getItem()
+    GenDatabaseLibrary.getItem()
+    
+    PrintLibrary.delimiter()
+    PrintLibrary.header("getItems")
+    GenDatabaseLibrary.getItems()
+    GenDatabaseLibrary.getItems()
+    GenDatabaseLibrary.getItems()
+    GenDatabaseLibrary.getItems()
+    GenDatabaseLibrary.getItems()
+    GenDatabaseLibrary.getItems()
     GenDatabaseLibrary.getItems()
     GenDatabaseLibrary.getItems()
 
-    PrintLibrary.header("updateEntry, updateEntries")
+    PrintLibrary.delimiter()
+    PrintLibrary.header("updateEntry")
     GenDatabaseLibrary.updateEntry()
     GenDatabaseLibrary.updateEntry()
+    GenDatabaseLibrary.updateEntry()
+    GenDatabaseLibrary.updateEntry()
+    GenDatabaseLibrary.getEntry()
+    GenDatabaseLibrary.getEntry()
+    GenDatabaseLibrary.getEntry()
+    GenDatabaseLibrary.getEntry()
+
+    PrintLibrary.delimiter()
+    PrintLibrary.header("updateEntries")
     GenDatabaseLibrary.updateEntries()
-    GenDatabaseLibrary.updateEntries
+    GenDatabaseLibrary.updateEntries()
+    GenDatabaseLibrary.updateEntries()
+    GenDatabaseLibrary.updateEntries()
+    GenDatabaseLibrary.updateEntries()
+    GenDatabaseLibrary.updateEntries()
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
+    GenDatabaseLibrary.getEntries()
     
-    PrintLibrary.header("updateitem, updateItems")
+    PrintLibrary.delimiter()
+    PrintLibrary.header("updateitem")
     GenDatabaseLibrary.updateItem()
     GenDatabaseLibrary.updateItem()
     GenDatabaseLibrary.updateItem()
     GenDatabaseLibrary.updateItem()
 
+    PrintLibrary.delimiter()
+    PrintLibrary.header("updateItems")
     GenDatabaseLibrary.updateItems()
     GenDatabaseLibrary.updateItems()
     
-    # deleteEntry, deleteEntries
+    PrintLibrary.delimiter()
+    PrintLibrary.header("deleteEntry")
     GenDatabaseLibrary.deleteEntry()
+    
+    PrintLibrary.delimiter()
+    PrintLibrary.header("deleteEntries")
     GenDatabaseLibrary.deleteEntries()
 
-
-# TESTERS: secondary functions
-# DESCRIPTION:
-#    Tests functions that are not considered part of the generic database suite, they may be accessed but
-#     serve the primary purpose of supporting the main set of calls.
-def secondaryTesters():
-
-    pass
-    # buildInitTuple
-
 if __name__ == "__main__":
-    # GenDatabaseLibrary.deleteTable("TestDatabase", "RandomTable")
     initializeTestDatabase()
+    baseTesters()
     mainTesters()
