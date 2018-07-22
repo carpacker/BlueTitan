@@ -3,6 +3,9 @@
 # BlueTitan trading system
 # DESCRIPTION:
 #    TODO
+
+
+
 + Finish Generalized Database
 + Finish SystemController
 + Create runtimeDatabase

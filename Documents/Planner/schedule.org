@@ -23,6 +23,12 @@ LIMIT ARBITRAGE:
 ** Saturday, 20th
 ** Sunday, 21st
 ** Monday, 22nd
+Topic: Testing
+*** To-do
+[ ] - 
+*** Timestamps
+*** Notes
+*** Issues
 ** Tuesday, 23rd
 *** TO-DO
 [ ] - Run through balancing and fill out todo
