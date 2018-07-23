@@ -19,13 +19,19 @@ Topic: Todo cleanups
 LIMIT ARBITRAGE:
    Possibly keep open running limit trades in an instantiated LimitArbitrage() object.
 *** Issues
-** Friday, 19th
-** Saturday, 20th
-** Sunday, 21st
-** Monday, 22nd
+** Thursday, 19th
+** Friday, 20th
+** Saturday, 21st
+** Sunday, 22nd
 Topic: Testing
+** Monday, 23rd
+Topic: Tests set up
+Topic: Planner
 *** To-do
-[ ] - 
+[ ] - Work through more of the planner
+[ ] - Set up syllabus
+[ ] - Start working on new prototype doc
+[ ] - Possible changelog format
 *** Timestamps
 *** Notes
 *** Issues
