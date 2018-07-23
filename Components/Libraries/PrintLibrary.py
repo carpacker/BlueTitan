@@ -100,11 +100,15 @@ class PrintLibrary(object):
         else:
             pass
 
+    # FUNCTION: header2
+    # DESCRIPTION:
+    #    Alternate header function.
     def header2(message, run=run):
         if run == True:
             print("|# # # # # # # # # # # # # # # # # # " + message + " # # # # # # # # # # # # # # # # # #|")
         else:
             pass
+
     # FUNCTION: sleep
     # INPUT: time       - int
     #        message    - string

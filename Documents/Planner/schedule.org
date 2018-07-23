@@ -32,6 +32,7 @@ Topic: Testing
 ** Tuesday, 23rd
 *** TO-DO
 [ ] - Run through balancing and fill out todo
+[ ] - 
 *** Timestamps
 *** Notes
 *** Issues

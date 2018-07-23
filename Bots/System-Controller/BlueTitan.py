@@ -23,6 +23,7 @@ import Helpers
 from ArbitrageMain import ArbitrageTrader
 from GeneralizedDatabase import GenDatabaseLibrary
 
+# 
 class BlueTitan(object):
 
 	# CLASS VARIABLES
