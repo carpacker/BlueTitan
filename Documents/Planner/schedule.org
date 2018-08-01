@@ -39,7 +39,22 @@ Topic: Planner
 *** TO-DO
 [ ] - Run through balancing and fill out todo
 [ ] - 
-*** Timestamps
 *** Notes
 *** Issues
+** Sunday, 29th
+*** TODO
+**** TODO Do this
+**** TODO Do that
+*** Notes
+- this thing on this file for this reason
+*** Issues
+- This other thing didn't work because xyz
 * August(2018)
+
+
++ Finish Generalized Database
++ Finish SystemController
++ Create runtimeDatabase
++ Setting up second computer
++ Resume runtime testing
++ Profit Liquidation

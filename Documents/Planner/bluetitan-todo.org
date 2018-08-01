@@ -1,4 +1,6 @@
 # todo.org
+#+TITLE: TBD
+#+OPTIONS:
 # Carson Packer
 # DESCRIPTION:
 #    Main TODO doc for blue titan's automated trading system. Items are broken down by category 
