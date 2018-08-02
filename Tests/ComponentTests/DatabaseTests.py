@@ -5,8 +5,10 @@ import sqlite3
 import time
 
 # Windows Main Desktop
-sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Libraries')
-sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Database-Manager')
+# WINDOWS main-desktop, LINUX main-server
+sys.path.append(os.path.realpath('../../Components/Crypto-API/Exchange-APIs/'))
+sys.path.append(os.path.realpath('../../Components/Libraries'))
+sys.path.append(os.path.realpath('../../Components/Database-Manager'))
 
 # Windows Laptop
 # sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')

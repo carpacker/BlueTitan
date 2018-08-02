@@ -18,13 +18,9 @@ import os
 import sys
 import time
 
-# WINDOWS main-desktop, LINUX main-server
-sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Crypto-API/Exchange-APIs/')
-sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Database-Manager')
-
 # Internal-Imports
 from API import ExchangeAPI
-from GeneralizedDatabase import GenDatabaseLibrary
+from PrintLibrary import PrintLibrary
 
 ##################################### General Helpers ###############################################
 # * btcValue            - Convert an asset to BTC value                                             #

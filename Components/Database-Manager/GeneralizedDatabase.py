@@ -6,7 +6,7 @@ import time
 import uuid
 
 # WINDOWS main-desktop, LINUX main-server
-sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Libraries')
+sys.path.append(os.path.realpath('../Libraries'))
 
 # Windows Laptop
 #sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Libraries')
