@@ -4,16 +4,10 @@ import os
 import sqlite3
 import time
 
-# Windows Main Desktop
-# WINDOWS main-desktop, LINUX main-server
+# Relative path for imports
 sys.path.append(os.path.realpath('../../Components/Crypto-API/Exchange-APIs/'))
 sys.path.append(os.path.realpath('../../Components/Libraries'))
 sys.path.append(os.path.realpath('../../Components/Database-Manager'))
-
-# Windows Laptop
-# sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')
-# sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Crypto-API/Exchange-APIs')
-# sys.path.append('C:/C-Directory/Projects/BlueTitan/Bots/Arbitrage/Libraries')
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary
@@ -21,7 +15,9 @@ import Helpers
 import GeneralizedDatabase
 from GeneralizedDatabase import GenDatabaseLibrary
 
-path = os.path.join(os.path.dirname(__file__), 'TestDatabase.sqlite3')
+# Path for test database
+path = os.path.join(os.path.realpath('../../Resources/Databases'), 'TestDatabase.sqlite3')
+
 # FUNCTION: initializeTestDatabase
 # INPUT: N/A
 # OUTPUT: N/A

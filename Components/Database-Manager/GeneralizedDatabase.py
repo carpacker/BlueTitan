@@ -5,26 +5,9 @@ import sqlite3
 import time
 import uuid
 
-# WINDOWS main-desktop, LINUX main-server
-sys.path.append(os.path.realpath('../Libraries'))
-
-# Windows Laptop
-#sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Libraries')
-
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 import Helpers
-
-# PATHS
-# DESCRIPTION:
-#    Until a better solution is developed, the paths to the databases are stored here in a
-#     dictionary. Each function accesses the dictionary to access the database path. This
-#     requires inputting the database names/paths ahead of time
-
-database_paths = {"ArbitrageDatabase" : 0,
-                  "AssetMetricsDatabase" : 0,
-                  "MetricsDatabase" : 0,
-                  "RuntimeDatabase" : 0}
 
 ##################################### HELPERS ######################################################
 # * checkTableNameExists
@@ -109,8 +92,18 @@ def generalQuery(cursor, query):
 #   Library of generic functions for interacting with any database (and tables). Takes databases
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
-    
-    # FUNCTION: buildInitTuple
+
+    database_paths = {}
+
+    # INITIALIZATION:
+    #    GenDatabaseLibrary must be instantiated as instance with an input of the used database
+    #     paths. This allows the class to remain truly generic as it caters to the input given
+    #     by another script. The downside is that the object must be passed around.
+    def __init__(self, paths):
+        for path in paths:
+            self.database_paths[path] = paths[path]
+        print(database_paths)
+        
     # INPUT: database_name - string
     #        table_name    - string
     # OUTPUT: tuple
@@ -122,7 +115,8 @@ class GenDatabaseLibrary(object):
     #  REST - TODO
     def buildInitTuple(database_name, table_name):
 
-        # Below isn't written yet... instead of getcolumns, it should be getcolumn names or something
+        # Below isn't written yet... instead of getcolumns, it should be getcolumn names or
+        #  something
         num_columns = GenDatabaseLibraries.getColumns()
         
         init_list = []

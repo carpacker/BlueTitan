@@ -9,7 +9,6 @@
 # of the systems. There is also a suite of functions outside of any class definition that are 
 # general purpose functions, used in many places because of their general application. 
 
-
 # External-Imports
 from collections import defaultdict
 import csv
@@ -24,6 +23,8 @@ from PrintLibrary import PrintLibrary
 
 ##################################### General Helpers ###############################################
 # * btcValue            - Convert an asset to BTC value                                             #
+# * calculateChange     -
+# * calculateOrderFee   - 
 # * calculatePR         - Calculate the profit ratio given two prices                               #
 # * calculateProfit     - Calculate profit given prices and quantity                                # 
 # * convertFromUnix     - Timestamp converter                                                       #
@@ -31,6 +32,7 @@ from PrintLibrary import PrintLibrary
 # * createUuid          - Used to create a unique identifier for the internal uuid system           #
 # * determinePrecision  - Used to navigate excvhange's requirements on precission                   # 
 # * quoteAsset          - Quote asset converter [btc as input value w/ asset]                       #
+# * readCSV             - Reads in a CSV file and outputs a TODO
 # * reversePairings     - Reverse a list of pairings (made by selim)                                #
 # * usdValue            - Output USD value of some quantity of asset                                #
 #####################################################################################################
@@ -84,7 +86,7 @@ def calculateOrderFee(exchange, btc_value):
 #        buy_price  - float
 # OUTPUT: float
 # DESCRIPTION:
-#  Calculate the profit ratio of a trade event.
+#  Calculate the profit ratio of a trade event based on input sell and buy prices.
 def calculatePR(sell_price, buy_price):
     return 100 * (sell_price - buy_price) / sell_price
 
@@ -96,13 +98,14 @@ def calculatePR(sell_price, buy_price):
 # DESCRIPTION:
 #  Calculate the raw profit of a trade event.
 def calculateProfit(sell_price, buy_price, quantity):
-    profit_off = sell_price - buy_price
-    profit = quantity * profit_off
+    profit_offset = sell_price - buy_price
+    profit = quantity * profit_offset
     return profit
 
 # FUNCTION: createTimestamp
 # INPUT: scale - int (OPTIONAL) [DEFAULT = 1000]
 # OUTPUT: float
+# DESCRIPTION:
 #   Creates a Unix-based timestamp. Optional input to put it in a format other than
 #    millisseconds.
 def createTimestamp(scale=1000):
@@ -214,7 +217,14 @@ def inverseExchange(exchange):
     if exchange == "bittrex":
         return "binance"
 
-# TODO
+# FUNCTION: getMinTrade
+# INPUT: exchanges - [string, ...]
+#        pairing   - stirng
+# OUTPUT: Dictionary
+# DESCRIPTIoN:
+#    Retrieve the minimum trade size from the given list of exchanges
+# TODO: probably add a version for single access
+# TODO: Test through this, especially purpose of missing exchange
 def getMinTrade(exchanges, pairing):
     ret_dict = {}
     missing = []
