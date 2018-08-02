@@ -19,28 +19,25 @@ import sys
 import time
 
 # WINDOWS main-desktop, LINUX main-server
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs/')
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
-
-# WINDOWS laptop
-# sys.path.append()
+sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Crypto-API/Exchange-APIs/')
+sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Database-Manager')
 
 # Internal-Imports
 from API import ExchangeAPI
 from GeneralizedDatabase import GenDatabaseLibrary
 
 ##################################### General Helpers ###############################################
-# * btcValue            - Convert an asset to BTC value
-# * calculatePR         - Calculate the profit ratio given two prices
-# * calculateProfit     - Calculate profit given prices and quantity
-# * convertFromUnix     - Timestamp converter
-# * convertToUnix       - Timestamp converter
-# * createUuid          - Used to create a unique identifier for the internal uuid system
-# * determinePrecision  - Used to navigate excvhange's requirements on precission
-# * quoteAsset          - Quote asset converter [btc as input value w/ asset]
-# * reversePairings     - Reverse a list of pairings (made by selim)
-# * usdValue            - Output USD value of some quantity of asset
-####################################################################################################
+# * btcValue            - Convert an asset to BTC value                                             #
+# * calculatePR         - Calculate the profit ratio given two prices                               #
+# * calculateProfit     - Calculate profit given prices and quantity                                # 
+# * convertFromUnix     - Timestamp converter                                                       #
+# * convertToUnix       - Timestamp converter                                                       #
+# * createUuid          - Used to create a unique identifier for the internal uuid system           #
+# * determinePrecision  - Used to navigate excvhange's requirements on precission                   # 
+# * quoteAsset          - Quote asset converter [btc as input value w/ asset]                       #
+# * reversePairings     - Reverse a list of pairings (made by selim)                                #
+# * usdValue            - Output USD value of some quantity of asset                                #
+#####################################################################################################
 
 # FUNCTION: btcValue
 # INPUT: quantity - float

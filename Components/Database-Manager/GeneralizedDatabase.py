@@ -5,9 +5,8 @@ import sqlite3
 import time
 import uuid
 
-
 # WINDOWS main-desktop, LINUX main-server
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
+sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Libraries')
 
 # Windows Laptop
 #sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Libraries')
@@ -28,17 +27,19 @@ database_paths = {"ArbitrageDatabase" : 0,
                   "RuntimeDatabase" : 0}
 
 ##################################### HELPERS ######################################################
-
+# * checkTableNameExists
+# * commitWrite  
+# * connect
 
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string
 # OUTPUT: N/A
 #   Wrapper function to ensure that the table exists before performing an operation.
 # TODO: TRY/CATCH block in case database doesn't have default table or something like that.
-def checkTableNameExists(cursor, table_, database, table_name):
-    table_names = GenDatabaseLibrary.listTables(cursor)
+def checkTableNameExists(database_path, table_name):
+    table_names = GenDatabaseLibrary.listTables(database_path)
     if table_name not in table_names:
-        database.createTable(cursor, table_name)
+        return False
 
 # FUNCTION: commitWrite
 # INPUT: connect - SQL connection
@@ -55,7 +56,9 @@ def commitWrite(connect):
 #   Wrapper function used to easily connect to the desired database.
 DEFAULT_PATH = os.path.join(os.path.dirname(__file__), 'MiscDatabase.sqlite3')
 def connect(path=DEFAULT_PATH):
+    print(path)
     try:
+        print(path)
         connection = sqlite3.connect(path)
         cursor = connection.cursor()
         return connection,cursor
@@ -73,9 +76,9 @@ def createUuid(table_name, database_name):
 
     # Prototype, inefficient system to create unique identifiers. Future will need
     #  a better solution, as this makes too many database calls in a row.
-    table_identifiers = GeneralizedDatabase.getItem(table_name, "table_ientifiers",  "RuntimeDatabase")
-    database_identifiers = GeneralizedDatabase.getItem(database_name, "database_identifiers", "RuntimeDatabase")
-    uuid_counter = GeneralizedDatabase.getItem("last_uuid", "globals", "RuntimeDatabase")
+    table_identifiers = GenDatabaseLibrary.getItem(runtime_path, "table_identifiers")
+    database_identifiers = GenDatabaseLibrary.getItem(runtime_path, "database_identifiers")
+    uuid_counter = GenDatabaseLibrarye.getItem(runtime_path, "last_uuid", "globals")
     
     identifier = table_identifier + database_identifier + str(uuid_counter)
     print(identifier)
@@ -146,7 +149,7 @@ class GenDatabaseLibrary(object):
         connection, cursor = connect(database_path)
 
         # Check if table name exists already
-        table_names = GenDatabaseLibrary.listTables(cursor)
+        table_names = GenDatabaseLibrary.listTables(database_path)
         exists = table_name in table_names
         if exists:
             disconnect(connection)
@@ -553,13 +556,15 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Returns a list of the names of each column in a given table.
     def listColumns(database_path, table_name):
-        # TODO: add database path stuff here
+        connection, cursor = connect(database_path)
+        
         sql_s = "PRAGMA table_info('%s')" % table_name
         cols_list = []
         cursor.execute(sql_s)
         col_tups = cursor.fetchall()
         for tup in col_tups:
             cols_list.append(tup[1])
+        disconnect(connection)
         return cols_list
 
     # FUNCTION: listTables
@@ -568,9 +573,11 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #   Lists the tables in a database.
     def listTables(database_path):
+        connection, cursor = connect(database_path)
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
         table_list = []
         fetched = cursor.fetchall()
         for tup in fetched:
             table_list.append(tup[0])
+        disconnect(connection)
         return table_list

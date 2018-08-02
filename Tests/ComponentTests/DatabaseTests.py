@@ -5,8 +5,8 @@ import sqlite3
 import time
 
 # Windows Main Desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Libraries')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Database-Manager')
+sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Libraries')
+sys.path.append('U:/Directory/Projects/paq/BlueTitan/Components/Database-Manager')
 
 # Windows Laptop
 # sys.path.append('C:/C-Directory/Projects/BlueTitan/Components/Libraries')
@@ -19,6 +19,7 @@ import Helpers
 import GeneralizedDatabase
 from GeneralizedDatabase import GenDatabaseLibrary
 
+path = os.path.join(os.path.dirname(__file__), 'TestDatabase.sqlite3')
 # FUNCTION: initializeTestDatabase
 # INPUT: N/A
 # OUTPUT: N/A
@@ -28,9 +29,9 @@ from GeneralizedDatabase import GenDatabaseLibrary
 def initializeTestDatabase():
     PrintLibrary.header("Initializing Test Database")
     
-    path = os.path.join(os.path.dirname(__file__), 'TestDatabase.sqlite3')
     connection, cursor = GeneralizedDatabase.connect(path)
     
+    GenDatabaseLibrary.createTable(path, "RandomTable", [("Column1", "real", "NOT NULL")])
     GenDatabaseLibrary.deleteTable(path, "RandomTable")
     GenDatabaseLibrary.createTable(path, "RandomTable", [("Column1", "real", "NOT NULL")])
     GenDatabaseLibrary.initializeTable(path, "RandomTable")
@@ -46,16 +47,18 @@ def baseTesters():
     PrintLibrary.delimiter()
     PrintLibrary.header("Functions without database dependencies")
 
-    PrintLibrary.header("UUID tets")
-    PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("ArbitrageTrades", "ArbitrageDatabase"))
-    PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("Metrics", "MetricsDatabase"))
-    PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("AssetMetrics", "AssetMetricsDatabase"))
+    #PrintLibrary.header("UUID tests")
+    #PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("ArbitrageTrades", "ArbitrageDatabase"))
+    #PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("Metrics", "MetricsDatabase"))
+    #PrintLibrary.displayVariable(GeneralizedDatabase.createUuid("AssetMetrics", "AssetMetricsDatabase"))
 
     PrintLibrary.header("Connect, checkTableNameExists, generalQuery, commitWrite, disconnect flow tests")
     connect, cursor = GeneralizedDatabase.connect()
-    GeneralizedDatabase.checkTableNameExists()
-    GeneralizedDatabase.generalQuery()
-    GeneralizedDatabase.commitWrite()
+    print(GeneralizedDatabase.checkTableNameExists(path, "Testing"))
+    GenDatabaseLibrary.createTable(path, "Testing", [("Column1", "real", "NOT NULL")])
+    print(GeneralizedDatabase.checkTableNameExists(path, "Testing"))
+    #GeneralizedDatabase.generalQuery()
+    #GeneralizedDatabase.commitWrite()
     GeneralizedDatabase.disconnect(connect)
     PrintLibrary.header("BASE function tests are FINISHED")
     PrintLibrary.delimiter()
