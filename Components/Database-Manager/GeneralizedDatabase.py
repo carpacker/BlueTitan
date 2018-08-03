@@ -10,10 +10,13 @@ from PrintLibrary import PrintLibrary
 import Helpers
 
 ##################################### HELPERS ######################################################
-# * checkTableNameExists
-# * commitWrite  
-# * connect
-
+# * checkTableNameExists -
+# * commitWrite          -
+# * connect              -
+# * createUUID           -
+# * disconnect           -
+# * generalQuery         -
+####################################################################################################
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string
 # OUTPUT: N/A
@@ -39,9 +42,8 @@ def commitWrite(connect):
 #   Wrapper function used to easily connect to the desired database.
 DEFAULT_PATH = os.path.join(os.path.dirname(__file__), 'MiscDatabase.sqlite3')
 def connect(path=DEFAULT_PATH):
-    print(path)
+    print("booga", path)
     try:
-        print(path)
         connection = sqlite3.connect(path)
         cursor = connection.cursor()
         return connection,cursor
@@ -49,6 +51,44 @@ def connect(path=DEFAULT_PATH):
         print(e)
     return None
 
+#
+def listColumns(cursor, table_name):
+    sql_s = "PRAGMA table_info('%s')" % table_name
+    cols_list = []
+    cursor.execute(sql_s)
+    col_tups = cursor.fetchall()
+    for tup in col_tups:
+        cols_list.append(tup[1])
+    return cols_list
+
+# HELPER: buildStringStore
+# INPUT: cursor     - *
+#        table_name - string
+#        columns    - TODO
+# OUTPUT: string
+# DESCRIPTION:
+#    Builds SQL string to store an entry. 
+def buildStringStore(cursor, table_name, columns="all"):
+    
+    # 1. List columns
+    columns = listColumns(cursor, table_name)
+    num_columns = len(columns)
+
+    # 2. Build string based on column names and number of columns
+    sql_q = "("
+    for value in range(0, num_columns):
+        sql_q += "?,"
+        sql_q = sql_q[:-1]
+        sql_q += ")"
+
+    # 3. (?, ...) where number of elements is equal to number of columns.
+    sql_s = "INSERT INTO %s(" % table_name
+    for column in columns:
+        sql_s += column + ","
+        sql_s = sql_s[:-1]
+        sql_s += ") VALUES " + sql_q
+    return sql_s
+ 
 # FUNCTION: createUuid
 # INPUT: table_name    - string
 #        database_name - string
@@ -102,8 +142,7 @@ class GenDatabaseLibrary(object):
     def __init__(self, paths):
         for path in paths:
             self.database_paths[path] = paths[path]
-        print(database_paths)
-        
+            
     # INPUT: database_name - string
     #        table_name    - string
     # OUTPUT: tuple
@@ -139,7 +178,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for creating a table in a database.
-    def createTable(database_path, table_name, columns):
+    def createTable(self, database_path, table_name, columns):
         connection, cursor = connect(database_path)
 
         # Check if table name exists already
@@ -169,7 +208,7 @@ class GenDatabaseLibrary(object):
     # DESCRIPTION:
     #    Generic table initializer, looks through columns in table and fills it with default values
     #     based on the type of data stored there.
-    def initializeTable(database_path, table_name):
+    def initializeTable(self, database_path, table_name):
         pass
     
     # FUNCTION: deleteTable
@@ -178,7 +217,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Deletes a table given a cursor for a databse and the table's name.
-    def deleteTable(database_path, table_name):
+    def deleteTable(self, database_path, table_name):
         connection, cursor = connect(database_path)
         # TODO: Add better check
         sql_s = 'DROP TABLE %s' % table_name
@@ -191,7 +230,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: list of tables cleaned in database
     # DESCRIPTION
     #   Used to clean a database's tables minus exceptions.
-    def cleanDatabase(database_path, tables, exceptions=[""]):
+    def cleanDatabase(self, database_path, tables, exceptions=[""]):
         connection, cursor = connect(database_path)
 
         # Use regular expression to find difference of two lists
@@ -205,48 +244,25 @@ class GenDatabaseLibrary(object):
             disconnect(connection)
         return list_clean
     
-    # HELPER: buildStringStore
-    # INPUT: cursor     - *
-    #        table_name - string
-    # OUTPUT: string
-    # DESCRIPTION:
-    #    Builds SQL string to store an entry. 
-    def buildStringStore(cursor, table_name, columns="all"):
-        
-        # 1. List columns
-        columns = GenDatabaseLibrary.listColumns(cursor, table_name)
-        num_columns = len(columns)
 
-        # 2. Build string based on column names and number of columns
-        sql_q = "("
-        for value in range(0, num_columns):
-            sql_q += "?,"
-            sql_q = sql_q[:-1]
-            sql_q += ")"
-
-        # 3. (?, ...) where number of elements is equal to number of columns.
-        sql_s = "INSERT INTO %s(" % table_name
-        for column in columns:
-            sql_s += column + ","
-            sql_s = sql_s[:-1]
-            sql_s += ") VALUES " + sql_q
-        return sql_s
 
     # FUNCTION: storeEntry
-    # INPUT: data          - tuple, (item, ...)
-    #        table_name    - string
-    #        database_name - string
+    # INPUT: database_path -
+    #        table_name    -
+    #        data          - tuple, (item, ...)
     # OUTPUT: N/A
     # DESCRIPTION:
     #    Generic function for storing an entry into a table in a database.
-    def storeEntry(database_name, table_name, data):
+    def storeEntry(self, database_path, table_name, data):
         
         # Set database, initializes variables, check table exists
-        timestamp = int(time.time() * 1000)
-        uuid = createUuid(table_name, database_name)
-        database_path = database_paths[database_name]
+
+        #timestamp = int(time.time() * 1000)
+        #uuid = createUuid(table_name, database_name)
+
         connection, cursor = connect(database_path) 
         checkTableNameExists(cursor, database_name, table_name)
+
         # Build SQL execution string, execute and then disconnect
         sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
         PrintLibrary.displayVariable(sql_s, "SQL string")
@@ -258,12 +274,9 @@ class GenDatabaseLibrary(object):
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for storing multiple entries into a table in a database.
-    def storeEntries(database_name, table_name, data):
+    def storeEntries(self, database_path, table_name, data):
 
         # Set database, initializes variables, check table exists
-        database_path = database_paths[database_name]
-        timestamp = int(time.time() * 1000)
-        uuid = createUuid(table_name, database_name)
         connection, cursor = connect(database_path)
         checkTableNameExists(cursor, table_name, database_name)
 
@@ -549,6 +562,7 @@ class GenDatabaseLibrary(object):
     # OUTPUT: list of strings
     # DESCRIPTION:
     #   Returns a list of the names of each column in a given table.
+    #  * - Wrapper over generic list columns
     def listColumns(database_path, table_name):
         connection, cursor = connect(database_path)
         
