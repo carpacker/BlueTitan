@@ -23,8 +23,8 @@ from PrintLibrary import PrintLibrary
 
 ##################################### General Helpers ###############################################
 # * btcValue            - Convert an asset to BTC value                                             #
-# * calculateChange     -
-# * calculateOrderFee   - 
+# * calculateChange     - Calculates the change between two values                                  #
+# * calculateOrderFee   - Calculates the fee one would be paying at a given quantity and price      #
 # * calculatePR         - Calculate the profit ratio given two prices                               #
 # * calculateProfit     - Calculate profit given prices and quantity                                # 
 # * convertFromUnix     - Timestamp converter                                                       #
@@ -32,7 +32,7 @@ from PrintLibrary import PrintLibrary
 # * createUuid          - Used to create a unique identifier for the internal uuid system           #
 # * determinePrecision  - Used to navigate excvhange's requirements on precission                   # 
 # * quoteAsset          - Quote asset converter [btc as input value w/ asset]                       #
-# * readCSV             - Reads in a CSV file and outputs a TODO
+# * readCSV             - Reads in a CSV file and outputs a list containing data in file            #
 # * reversePairings     - Reverse a list of pairings (made by selim)                                #
 # * usdValue            - Output USD value of some quantity of asset                                #
 #####################################################################################################
@@ -274,15 +274,12 @@ def quoteValue(asset, quantity, exchange=None):
             value = quantity / float(price)
             return value
 
-# FUNCTION: mutualAsset
+# FUNCTION: mutualAssets
 # INPUT: exchange_list
 # OUTPUT: list
 # DESCRIPTION:
-#    Runs through a list of exchanges, finds mutual assets
+#    Runs through a list of exchanges, finds mutual assets.
 def mutalAssets(exchange_list):
-
-    # TODO: change this
-    connect, cursor = ArbitrageDatabase.connect()
 
     # Initialize/declare variables
     num = len(exchange_list)

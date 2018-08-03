@@ -1,7 +1,14 @@
+# DatabaseTests.py
+#  BlueTitan Trading System
+#  Testing Suite for Database-Manager component
+#  Carson Packer
+# DESCRIPTION:
+#    TODO
+
 # External-Imports
-import sys
 import os
 import sqlite3
+import sys
 import time
 
 # Relative path for imports

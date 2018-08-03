@@ -26,7 +26,8 @@ import Helpers
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string
 # OUTPUT: N/A
-#   Wrapper function to ensure that the table exists before performing an operation.
+#   Wrapper function to ensure that the t
+able exists before performing an operation.
 # TODO: TRY/CATCH block in case database doesn't have default table or something like that.
 def checkTableNameExists(database_path, table_name):
     table_names = GenDatabaseLibrary.listTables(database_path)

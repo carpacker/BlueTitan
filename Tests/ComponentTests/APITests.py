@@ -1,21 +1,27 @@
 # APITests.py
-# Carson Packer
-# BlueTitan Testing System
+#  Carson Packer
+#  BlueTitan Trading System
+#  Testing Suite for API
 # DESCRIPTION:
-# Each function contains a series of tests for the respective exchange. There is also a test for  
-#  the generic calls to each exchange. This testing suite is a bit long and parts may be commented
-#  out for convenience. For instance, it may not make sense to test sells or buys over and over.
+#    Each function contains a series of tests for the respective exchange. There is also a test for  
+#     the generic calls to each exchange. This testing suite is a bit long and parts may be
+#     commented out for convenience. For instance, it may not make sense to test sells or buys over
+#     and over.
 
 # External-Imports
-import time
+import os
 import sys
-sys.path.append('U:/Directory/Projects/WorkBlueTitan/Components/Crypto-API/Exchange-APIs')
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Main')
-sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Mining-APIs")
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
+import time
+
+# Relative path for imports
+sys.path.append(os.path.realpath('../../Components/Crypto-API/Exchange-APIs/'))
+sys.path.append(os.path.realpath('../../Components/Crypto-API/Mining-APIs/'))
+sys.path.append(os.path.realpath('../../Components/Libraries'))
+sys.path.append(os.path.realpath('../../Components/Database-Manager'))
 
 # Internal-Imports
 from PrintLibrary import PrintLibrary
+
 # Exchanges
 from API import ExchangeAPI
 import Bittrex
@@ -26,37 +32,18 @@ import Cryptopia
 import Gdax
 import Kucoin
 import Poloniex
+
 # Mining
 from API import MiningAPI
 import Ethermine
 import Siamining
 
-# MINING TESTS
-class MiningTesters(object):
-
-    # Call all the testers here
-    def main():
-        ethermineTests()
-        siaminingTests()
-        genericTests()
-
-    # TESTERS: Generic implementation
-    def genericTests():
-        pass
-
-    # TESTERS: Ethermine.com
-    def ethermineTests():
-        pass
-
-    # TESTERS: Siamining.com
-    def siaminingTests():
-        pass
-
-# EXCHANGE TESTS
+# Exchange Tests
 # DESCRIPTION:
-#    
+#    TODO
 class ExchangeTesters(object):
 
+    # MAIN
     def main():
         # BinanceTesters()
         # BittrexTesters()
@@ -197,5 +184,25 @@ class ExchangeTesters(object):
     def genericTests():
 	    pass
 
+# MINING TESTS
+class MiningTesters(object):
+
+    # Call all the testers here
+    def main():
+        ethermineTests()
+        siaminingTests()
+        genericTests()
+
+    # TESTERS: Generic implementation
+    def genericTests():
+        pass
+
+    # TESTERS: Ethermine.com
+    def ethermineTests():
+        pass
+
+    # TESTERS: Siamining.com
+    def siaminingTests():
+        pass
 if __name__ == "__main__": 
 

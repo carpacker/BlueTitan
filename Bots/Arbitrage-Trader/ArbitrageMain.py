@@ -11,16 +11,6 @@ import sys
 import threading
 import time
 
-# WINDOWS main-desktop, LINUX main-server
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
-
-# WINDOWS laptop
-#sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/DatabaseManager')
-#sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Libraries')
-#sys.path.append('C:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange-APIs')
-
 # Internal-Imports
 from API import ExchangeAPI
 from ArbitrageLibrary import ArbitrageLibrary, LimitArbitrage
