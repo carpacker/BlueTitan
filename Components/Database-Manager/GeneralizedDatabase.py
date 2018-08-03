@@ -1,6 +1,11 @@
+# GeneralizedDatabase.py
+#  BlueTitan Trading System
+#  Database-Manager
+#  Carson Packer
+# DESCRIPTION:
+#    TODO
+
 # External-Imports
-import sys
-import os
 import sqlite3
 import time
 import uuid
@@ -10,13 +15,14 @@ from PrintLibrary import PrintLibrary
 import Helpers
 
 ##################################### HELPERS ######################################################
-# * checkTableNameExists -
-# * commitWrite          -
-# * connect              -
-# * createUUID           -
-# * disconnect           -
-# * generalQuery         -
+# * checkTableNameExists - Check that a table exists in the given database                         #
+# * commitWrite          - Commit a general write (wrapper)                                        #
+# * connect              - Connect a database given a path (wrapper)                               #
+# * createUUID           - Create a unique identifier based on database/table                      #
+# * disconnect           - Disconnect from a database (wrapper)                                    #
+# * generalQuery         - Perform a generic query (based on input string, no error checking)      #
 ####################################################################################################
+
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string
 # OUTPUT: N/A
@@ -50,44 +56,6 @@ def connect(path=DEFAULT_PATH):
     except Error as e:
         print(e)
     return None
-
-#
-def listColumns(cursor, table_name):
-    sql_s = "PRAGMA table_info('%s')" % table_name
-    cols_list = []
-    cursor.execute(sql_s)
-    col_tups = cursor.fetchall()
-    for tup in col_tups:
-        cols_list.append(tup[1])
-    return cols_list
-
-# HELPER: buildStringStore
-# INPUT: cursor     - *
-#        table_name - string
-#        columns    - TODO
-# OUTPUT: string
-# DESCRIPTION:
-#    Builds SQL string to store an entry. 
-def buildStringStore(cursor, table_name, columns="all"):
-    
-    # 1. List columns
-    columns = listColumns(cursor, table_name)
-    num_columns = len(columns)
-
-    # 2. Build string based on column names and number of columns
-    sql_q = "("
-    for value in range(0, num_columns):
-        sql_q += "?,"
-        sql_q = sql_q[:-1]
-        sql_q += ")"
-
-    # 3. (?, ...) where number of elements is equal to number of columns.
-    sql_s = "INSERT INTO %s(" % table_name
-    for column in columns:
-        sql_s += column + ","
-        sql_s = sql_s[:-1]
-        sql_s += ") VALUES " + sql_q
-    return sql_s
  
 # FUNCTION: createUuid
 # INPUT: table_name    - string
@@ -127,6 +95,52 @@ def generalQuery(cursor, query):
     cursor.execute(query)
     return cursor.fetchall()
 
+# FUNCTION: listColumns
+# INPUT: cursor     - *
+#        table_name - string
+# OUTPUT: TODO
+# DESCRIPTION:
+#    List the columns of a given database & table using an input cursor.
+def listColumns(cursor, table_name):
+    sql_s = "PRAGMA table_info('%s')" % table_name
+    cols_list = []
+    cursor.execute(sql_s)
+    col_tups = cursor.fetchall()
+    for tup in col_tups:
+        cols_list.append(tup[1])
+    return cols_list
+
+
+########################################## String Builders #########################################
+
+# HELPER: buildStringStore
+# INPUT: cursor     - *
+#        table_name - string
+#        columns    - TODO
+# OUTPUT: string
+# DESCRIPTION:
+#    Builds SQL string to store an entry. 
+def buildStringStore(cursor, table_name, columns="all"):
+    
+    # 1. List columns
+    columns = listColumns(cursor, table_name)
+    num_columns = len(columns)
+
+    # 2. Build string based on column names and number of columns
+    sql_q = "("
+    for value in range(0, num_columns):
+        sql_q += "?,"
+        sql_q = sql_q[:-1]
+        sql_q += ")"
+
+    # 3. (?, ...) where number of elements is equal to number of columns.
+    sql_s = "INSERT INTO %s(" % table_name
+    for column in columns:
+        sql_s += column + ","
+        sql_s = sql_s[:-1]
+        sql_s += ") VALUES " + sql_q
+    return sql_s
+
 # CLASS: GenDatabaseLibrary
 # DESCRIPTION:
 #   Library of generic functions for interacting with any database (and tables). Takes databases
@@ -142,7 +156,8 @@ class GenDatabaseLibrary(object):
     def __init__(self, paths):
         for path in paths:
             self.database_paths[path] = paths[path]
-            
+
+    # FUNCTION: buildInitTuple
     # INPUT: database_name - string
     #        table_name    - string
     # OUTPUT: tuple
@@ -225,7 +240,8 @@ class GenDatabaseLibrary(object):
         disconnect(connection)
 
     # FUNCTION: cleanDatabase
-    # INPUT: tables     - [string, ...]
+    # INPUT: database_path - *
+    #        tables     - [string, ...]
     #        exceptions - [string, ...] 
     # OUTPUT: list of tables cleaned in database
     # DESCRIPTION
@@ -237,18 +253,16 @@ class GenDatabaseLibrary(object):
         list_clean = list(set(tables).difference(set(exceptions)))
         for table in list_clean:
             try:
-                GenDatabaseLibrary.deleteTable(cursor, table)
+                self.deleteTable(cursor, table)
             except sqlite3.OperationalError:
                 pass
             database.createTable(cursor, table)
             disconnect(connection)
         return list_clean
     
-
-
     # FUNCTION: storeEntry
-    # INPUT: database_path -
-    #        table_name    -
+    # INPUT: database_path - *
+    #        table_name    - string
     #        data          - tuple, (item, ...)
     # OUTPUT: N/A
     # DESCRIPTION:
@@ -256,21 +270,19 @@ class GenDatabaseLibrary(object):
     def storeEntry(self, database_path, table_name, data):
         
         # Set database, initializes variables, check table exists
-
-        #timestamp = int(time.time() * 1000)
-        #uuid = createUuid(table_name, database_name)
-
+        # TODO: Timestamp/uuid stuff
         connection, cursor = connect(database_path) 
         checkTableNameExists(cursor, database_name, table_name)
-
         # Build SQL execution string, execute and then disconnect
         sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
         PrintLibrary.displayVariable(sql_s, "SQL string")
-        cursor.execute(sql_s,data)
+        cursor.execute(sql_s, data)
         disconnect(connection)
 
     # FUNCTION: storeEntries
-    # INPUT: data - list [(data, ...), ...]
+    # INPUT: database_path - *
+    #        table_name    - string
+    #        data          - list [(data, ...), ...]
     # OUTPUT: N/A
     # DESCRIPTION:
     #   Generic function for storing multiple entries into a table in a database.
@@ -282,9 +294,8 @@ class GenDatabaseLibrary(object):
 
         # For each tuple in data, build SQL execution string, execute and then disconnect
         for value in data:
-            sql_s = GenDatabaseLibrary.buildStringStore(cursor, table_name)
-            PrintLibrary.displayVariable(sql_s, "SQL string")
-            PrintLibrary.displayVariable(value, "Value")
+            sql_s = buildStringStore(cursor, table_name)
+            PrintLibrary.displayVariables((sql_s, "SQL string"),(value, "Value"))
             cursor.execute(sql_s,value)
             
         disconnect(connection)
