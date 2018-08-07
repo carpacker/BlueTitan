@@ -40,43 +40,55 @@ import Siamining
 
 # Exchange Tests
 # DESCRIPTION:
-#    TODO
+#    Tests exchange calls.
 class ExchangeTesters(object):
 
     # MAIN
+    # DESCRIPTION:
+    #    Calls each suite of exchange testers and then the generic testers.
     def main():
-        # BinanceTesters()
-        # BittrexTesters()
-        # CoinMarketCapTesters()
-        # CryptopiaTesters()
-        # GdaxTesters()
-        # KucoinTesters()
+        BinanceTesters()
+        BittrexTesters()
+        CoinMarketCapTesters()
+        CryptopiaTesters()
+        GdaxTesters()
+        KucoinTesters()
         PoloniexTesters()
         CoinbaseTesters()
-        # GenericTesters(
-        )
+        GenericTesters()
+        
     # TESTERS: Binance
     def BinanceTesters():
         PrintLibrary.header("Binance Tests")
         PrintLibrary.delimiter()
         PrintLibrary.header("Public calls")
-    
-        # Standardize the below two
-        Binance.checkServertime()
-        Binance.getCurrencies()
-        # Figure out what to do with this guy (getCurrencies uses it)
-        Binance.getExchangeInfo()
-    
-        # Test (2 right, 1 wrong)
-        Binance.getInfoPairing("BTC-ETH")
-        Binance.getInfoPairing("BTC-FUN")
-        Binance.getInfoPairing("BTC-SMT")
-        
-        Binance.getInfoPairings()
-        Binance.getInfoPairings()
-        Binance.getInfoPairings()
 
-        Binance.testConnectivity()
+        PrintLibrary.delimiter()
+        PrintLibrary.header("checkServerTime")
+        PrintLibrary.displayDictionary(Binance.checkServertime())
+        PrintLibrary.delimiter()
+
+        PrintLibrary.header("getCurrencies")
+        PrintLibrary.displayDictionary(Binance.getCurrencies())
+        PrintLibrary.delimiter()
+
+        PrintLibrary.header("getExchangeInfo")
+        Binance.getExchangeInfo()
+        PrintLibrary.delimiter()
+
+        PrintLibrary.header("getInfoPairing, getInfoPairings")
+        # Test (2 right, 1 wrong)
+        PrintLibrary.displayDictionary(Binance.getInfoPairing("BTC-ETH"))
+        PrintLibrary.displayDictionary(Binance.getInfoPairing("BTC-FUN"))
+        PrintLibrary.displayDictionary(Binance.getInfoPairing("BTC-SMT"))
+        
+        PrintLibrary.displayDictionary(Binance.getInfoPairings())
+        PrintLibrary.displayDictionary(Binance.getInfoPairings())
+        PrintLibrary.displayDictionary(Binance.getInfoPairings())
+        PrintLibrary.delimiter()
+
+        PrintLibrary.header("testConnectivity")
+        PrintLibrary.displayDictionary(Binance.testConnectivity())
         PrintLibrary.header("Market Calls")
         
         PrintLibrary.header("Order Calls")

@@ -1,12 +1,19 @@
-xx# External Imports
+# CoinCatTests.py
+#  BlueTitan Trading System
+#  Carson Packer
+#  Paq ltd.
+# DESCRIPTION:
+#    Testing suite for individual and combined calls for the coin categorizer system.
+
+# External Imports
+import osmnnw
 import sys
 import time
 
-# Windows Main Desktop
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/Crypto-API/Exchange_APIs')
-sys.path.append('U:/Directory/Projects/BlueTitan/Components/DatabaseManager')
-
-# Linux Main Server
+# Relative path for imports
+sys.path.append(os.path.realpath('../../Components/Crypto-API/Exchange-APIs/'))
+sys.path.append(os.path.realpath('../../Components/Libraries'))
+sys.path.append(os.path.realpath('../../Components/Database-Manager'))
 
 # Internal Imports
 from API import ExchangeAPI
@@ -14,12 +21,14 @@ import Helpers
 from GeneralizedDatabase import GenDatabaseLibrary
 from PrintLibrary import PrintLibrary
 
-# Test run file for Fund manager. Currently contains code to test metrics. 
+# TESTER: AssetMetricsTests
+def AssetMetricsTests():
+    pass
 
-# TESTER: testRun
+# TESTER: MetricsTests
 #   Used to fill up database with initial values to do some stress testing without running
 #    the main program.
-def testRun():
+def MetricsTests():
     pairing = "BTC-BAT"
     buy_exchange = 'binance'
     sell_exchange = 'bittrex'

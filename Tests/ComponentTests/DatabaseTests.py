@@ -3,7 +3,8 @@
 #  Testing Suite for Database-Manager component
 #  Carson Packer
 # DESCRIPTION:
-#    TODO
+#    Performs individual and combined test for the GeneralizedDatabase library. Also includes
+#     auxillary tests for specialized database calls.
 
 # External-Imports
 import os

@@ -1,13 +1,13 @@
 # ArbitrageMain.py
 # Carson Packer
 # DESCRIPTION:
-#    Top level file for arbitrage, automatically handles and executes arbitrage trading.
+#    Top level file for arbitrage, automatically handles and executes arbitrage trading. This
+#     trader executes two types of arbitrage: limit and market. These are interweaved.
 
 # External-Imports
 from copy import deepcopy
 import math 
 import schedule
-import sys
 import threading
 import time
 

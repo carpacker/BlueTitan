@@ -10,11 +10,11 @@ import sys
 import threading
 import time
 
-# WINDOWS main-desktop, LINUX main-server
-sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/Libraries")
-sys.path.append("U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager")
-sys.path.append("U:/Directory/Projects/Work/BlueTitan/Bots/Fund-Manager")
-sys.path.append("U:/Directory/Projects/Work/BlueTitan/Bots/Arbitrage-Trader")
+# Relative path for imports
+sys.path.append(os.path.realpath('../Arbitrage-Trader'))
+sys.path.append(os.path.realpath('../Fund-Manager'))
+sys.path.append(os.path.realpath('../../Components/Database-Manager'))
+sys.path.append(os.path.realpath('../../Components/Libraries'))
 
 # Internal-Imports
 from FundAllocator import FundAllocator
@@ -23,7 +23,9 @@ import Helpers
 from ArbitrageMain import ArbitrageTrader
 from GeneralizedDatabase import GenDatabaseLibrary
 
-# 
+# CLASS: BlueTitan
+# DESCRIPTION:
+#    Top level object for BlueTitan trading system
 class BlueTitan(object):
 
 	# CLASS VARIABLES

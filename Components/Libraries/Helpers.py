@@ -467,7 +467,7 @@ def convertAssetDict(balances):
 def readCSV(csv_name):
     return_csv = []
     script_dir = os.path.dirname(__file__)
-    full_path = os.path.join('U:/Directory/Projects/Work/BlueTitan/resources/CSV/' + csv_name)
+    full_path = os.path.join('U:/Directory/Projects/paq/BlueTitan/resources/CSV/' + csv_name)
     with open(full_path, 'r') as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
