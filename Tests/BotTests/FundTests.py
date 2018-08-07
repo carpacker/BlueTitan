@@ -6,7 +6,7 @@
 #    Testing suite for individual and combined calls for the coin categorizer system.
 
 # External Imports
-import osmnnw
+import os
 import sys
 import time
 

@@ -1,19 +1,12 @@
 # BalancingLibrary.py
-# Carson Packer
+#  BlueTitan Trading System
+#  Carson Packer
+#  Paq ltd.wwww
 # DESCRIPTION:
 #     File containing all the functions relevant to the balancing component of the Arbitrage system.
 
 # External-Imports
-import sys
 import time
-
-# WINDOWS main-desktop, LINUX main-server
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange_APIs')
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Database-Manager')
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Libraries')
-
-# WINDOWS laptop
-#sys.path.append
 
 # Internal-Imports
 from API import ExchangeAPI
@@ -28,13 +21,13 @@ from PrintLibrary import PrintLibrary
 #    balancing component.
 class BalancingLibrary(object):
 
-    # FUNCTION: rebalance
+    # FUNCTION: rebalance[P]ost[A]Arbitrage
     # INPUT: arbitrage_tuple - [arbitrage_info, ...]
     # OUTPUT: withdraw information
     # DESCRIPTION:
     #    Used after an arbitrage event in oredr to attempt to rebalance a specific pairing's
 	#     balances.
-    def rebalance(arbitrage_tuple):
+    def rebalancePA(arbitrage_tuple):
 		
 		# Unpack whats needed from the arbitrage tuple
         asset = arbitrage_tuple[0]
