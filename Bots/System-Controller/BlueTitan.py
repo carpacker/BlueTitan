@@ -127,9 +127,15 @@ class BlueTitan(object):
                 # Each algorithm object is initialized with necessary variables; just calls main
                 algorithm[0].main()
 
+                # Future would potentially update algorithm local variables
                 
 if __name__ == "__main__":
 	algorithms = []
+    
     # ArbitrageTrader: market_exchanges, market_pairings, limit_exchanges, limit_pairings, assets
-	algorithms.append(ArbitrageTrader())
+	algorithms.append(ArbitrageTrader(["Bittrex", "Binance"],
+                                      ["BTC-KMD", "BTC-LTC", "BTC-ARK", "BTC-ADA", "BTC-XVG"],
+                                      ["Bittrex", "Binance"],
+                                      ["BTC-ETH"],
+                                      ["ETH", "KMD", "BTC", "ARK", "ADA", "XVG"]))
 	testbt = BlueTitan(algorithms).main()

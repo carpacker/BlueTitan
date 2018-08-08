@@ -19,12 +19,12 @@ from GeneralizedDatabase import GenDatabaseLibrary
 import Helpers
 from PrintLibrary import PrintLibrary
 
-# CLASS: [B]lue[T]itanArbitrage
+# CLASS: ArbitrageTrader
 # DESCRIPTION:
 #    Container arbitrage for the low-liquidity arbitrage component. This is the main loop for
 #     arbitrage and can be considered the top-level. Manages all arbitrage events and activities,
 #     which includes both market and limit arbitrage.
-class BTArbitrage(object):
+class ArbitrageTrader(object):
 
     # Class Variables [Exchanges, Pairings, Assets, Balances]
     cl_market_exchanges = []
