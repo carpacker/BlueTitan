@@ -22,10 +22,11 @@ from PrintLibrary import PrintLibrary
 import Helpers
 from ArbitrageMain import ArbitrageTrader
 from GeneralizedDatabase import GenDatabaseLibrary
+import DatabaseLibrary
 
 # CLASS: BlueTitan
 # DESCRIPTION:
-#    Top level object for BlueTitan trading system
+#    Top level object for BlueTitan trading system.
 class BlueTitan(object):
 
 	# CLASS VARIABLES
@@ -45,13 +46,19 @@ class BlueTitan(object):
 		PrintLibrary.header("BlueTitan Initialization")
 
         # Initialize databases for base functionalities
-        # - Runtime database
-        # - FundAllocator database
-        # - All metrics database
         
+        # Runtime database
+        DatabaseLibrary.initializeRuntimeDB()
+        
+        # FundAllocator database
+        FundAllocator.initializeDatabase()
+        
+        # All metrics database
+        PerformanceAnalysis.initializeDatabase()
+
         # Initialize databases for algorithms
 		for algorithm in algorithms:
-			print(algorithm)
+            PrintLibrary.displayVariables(algorithm)
 			self.running_algos.append(algorithm)
 
             pairings = algorithm[1]
@@ -104,30 +111,25 @@ class BlueTitan(object):
     #     continuous cycle of checking for scheduled events, rebalancing the fund when needed
     #     and otherwise running algorithms.
 	def main(self):
+        # Set algorithms
         algorithms = self.running_algos
-        fund_allocator = FundAllocator()
+        # Initialize fund allocator
+        fund_allocator = FundAllocator(False)
+        
 		while 1:
-            # 0. Check for events
-			# 1. Call fundAllocator
+            schedule.run_pending()
+            
+			# 1. Call fundAllocator to check for any changes
+            fund_allocator.update()
+
             # 2. Run algorithms
             for algorithm in algorithms:
-                # Run each algorithm
-			    # NOTE: only running algorithm for now
+                # Each algorithm object is initialized with necessary variables; just calls main
+                algorithm[0].main()
 
-            
-`
-
+                
 if __name__ == "__main__":
-	algorithms = {}
-	algorithm["Arbitrage"] = [("pairing1", ("exchange1", "exchange2"))]
-
-    arbitrage_tables = ["AccountBalances", "BalancingHistory", "AssetInformation", "FailureTrades",
-                            "IntendedFAE"]
-    metrics_tables = ["Metrics", "FailureMetrics"]
-    assetmetrics_tables = ["AssetMetrics", "AssetFailureMetrics"]
-    databases = [("ArbitrageDatabase", ArbitrageDatabase, arbitrage_tables),
-                 ("MetricsDatabase", MetricsDatabase, metrics_tables),
-                 ("AssetMetricsDatabase", AssetMetricsDatabase, assetmetrics_tables)]
-    orig_exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
-    exceptions = ["ArbitrageTrades", "Metrics", "AssetInformation", "FailureTrades", "BalancingHistory"]
+	algorithms = []
+    # ArbitrageTrader: market_exchanges, market_pairings, limit_exchanges, limit_pairings, assets
+	algorithms.append(ArbitrageTrader())
 	testbt = BlueTitan(algorithms).main()

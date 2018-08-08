@@ -7,16 +7,33 @@
 import sys
 import threading
 
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Libraries')
-
 # Internal-Imports
 from PrintLibrary import PrintLibrary
 
 # CLASS: FundAllocator
 # DESCRIPTION:
-#    TODO
+#    Primary operator over fund attribution. Divides up and manages the value of the fund among
+#     the various patrons in the system.
 class FundAllocator(object):
 	
-	# Initialize 
-    def __init__(self):
+	# INITIALIZATION
+    # DESCRIPTION:
+    #    TODO
+    def __init__(self, database_init=True):
 		pass
+
+    # FUNCTION: initializeDatabase
+    # INPUT:
+    # OUTPUT:
+    # DESCRIPTION:
+    #    
+    def initializeDatabase():
+        pass
+
+    # FUNCTION: update
+    # INPUT:
+    # OUTPUT:
+    # DESCRIPTION:
+    #    Main runtime function, checks for changes. TODO
+    def update():
+        pass

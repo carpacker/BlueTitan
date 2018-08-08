@@ -61,10 +61,10 @@ class BTArbitrage(object):
         cl_balance_dict = DatabaseLibrary.getAllBalances(exchanges)
         PrintLibrary.displayDictionary("Initialized balances", cl_balance_dict)
 
-    # FUNCTION: Arbitrage [Top Level]
+    # FUNCTION: main [Top Level]
     # DESCRIPTION:
     #   Main function for arbitrage that acts as the top level. Performs limit and market arbitrage.
-    def Arbitrage(self):
+    def main(self):
 
         # Local Variable initialization
         market_exchanges = self.cl_market_exchanges
