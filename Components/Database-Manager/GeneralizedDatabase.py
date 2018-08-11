@@ -1,9 +1,10 @@
 # GeneralizedDatabase.py
 #  BlueTitan Trading System
-#  Database-Manager
+#  Paq Ltd.
 #  Carson Packer
+#  Database-Manager
 # DESCRIPTION:
-#    TODO
+#    Library for making generic database calls.
 
 # External-Imports
 import sqlite3
@@ -26,8 +27,7 @@ import Helpers
 # FUNCTION: checkTableNameExists
 # INPUT: table_name - string
 # OUTPUT: N/A
-#   Wrapper function to ensure that the t
-able exists before performing an operation.
+#   Wrapper function to ensure that the table exists before performing an operation.
 # TODO: TRY/CATCH block in case database doesn't have default table or something like that.
 def checkTableNameExists(database_path, table_name):
     table_names = GenDatabaseLibrary.listTables(database_path)
@@ -49,7 +49,6 @@ def commitWrite(connect):
 #   Wrapper function used to easily connect to the desired database.
 DEFAULT_PATH = os.path.join(os.path.dirname(__file__), 'MiscDatabase.sqlite3')
 def connect(path=DEFAULT_PATH):
-    print("booga", path)
     try:
         connection = sqlite3.connect(path)
         cursor = connection.cursor()
@@ -80,7 +79,7 @@ def createUuid(table_name, database_name):
 # INPUT: connect - *
 # OUTPUT: N/A
 # DESCRIPTION:
-#   Wrapper for disconnecting from a database
+#   Wrapper for disconnecting from a database.
 def disconnect(connection):
     connection.commit()
     connection.close()
@@ -95,6 +94,8 @@ def disconnect(connection):
 def generalQuery(cursor, query):
     cursor.execute(query)
     return cursor.fetchall()
+
+##################################### COULMN HELPERS ###############################################
 
 # FUNCTION: listColumns
 # INPUT: cursor     - *
@@ -111,6 +112,17 @@ def listColumns(cursor, table_name):
         cols_list.append(tup[1])
     return cols_list
 
+# FUNCTION: numColumns
+# INPUT: cursor     - *
+#        table_name - string
+# OUTPUT: int
+# DESCRIPTION:
+#    Outputs the number of columns in a table of a database.
+def numColumns(cursor, table_name):
+    sql_s = "" % table_name
+    cursor.execute(sql_s)
+    num_columns = cursor.fetchall()
+    return num_columns
 
 ########################################## String Builders #########################################
 
@@ -148,6 +160,7 @@ def buildStringStore(cursor, table_name, columns="all"):
 #    (and tables, if required) as inputs.
 class GenDatabaseLibrary(object):
 
+    # Paths are initialized by the program using the database and stored locally at runtime.
     database_paths = {}
 
     # INITIALIZATION:
@@ -172,7 +185,7 @@ class GenDatabaseLibrary(object):
 
         # Below isn't written yet... instead of getcolumns, it should be getcolumn names or
         #  something
-        num_columns = GenDatabaseLibraries.getColumns()
+        num_columns = GenDatabaseLibraries.numColumns()
         
         init_list = []
         for x in range (0, num_columns):

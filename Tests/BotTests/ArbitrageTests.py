@@ -10,7 +10,10 @@
 import sys
 import time
 
-# Relative Imports
+# Relative path for imports
+sys.path.append(os.path.realpath('../../Components/Crypto-API/Exchange-APIs/'))
+sys.path.append(os.path.realpath('../../Components/Libraries'))
+sys.path.append(os.path.realpath('../../Components/Database-Manager'))
 
 # Internal Imports
 from PrintLibrary import PrintLibrary

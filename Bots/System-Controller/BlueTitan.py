@@ -17,12 +17,12 @@ sys.path.append(os.path.realpath('../../Components/Database-Manager'))
 sys.path.append(os.path.realpath('../../Components/Libraries'))
 
 # Internal-Imports
-from FundAllocator import FundAllocator
-from PrintLibrary import PrintLibrary
-import Helpers
 from ArbitrageMain import ArbitrageTrader
-from GeneralizedDatabase import GenDatabaseLibrary
 import DatabaseLibrary
+from FundAllocator import FundAllocator
+from GeneralizedDatabase import GenDatabaseLibrary
+import Helpers
+from PrintLibrary import PrintLibrary
 
 # CLASS: BlueTitan
 # DESCRIPTION:

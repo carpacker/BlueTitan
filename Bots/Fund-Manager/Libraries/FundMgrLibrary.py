@@ -1,16 +1,12 @@
+# FundMgrLibrary.py
+#  BlueTitan Trading System
+#  Paq Ltd.
+#  Carson Packer
+# DESCRIPTION:
+#    Library for functions related to the automated fund management sub-system.
+
 # External Imports
-import sys
 import time
-
-# WINDOWS main-desktop
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/Crypto-API/Exchange_APIs')
-sys.path.append('U:/Directory/Projects/Work/BlueTitan/Components/DatabaseManager')
-
-# WINDOWS laptop
-# sys.path.append()
-
-# LINUX main-server
-# sys.path.append()
 
 # Internal Imports
 from API import ExchangeAPI
@@ -18,12 +14,35 @@ import Helpers
 from GeneralizedDatabase import GenDatabaseLibrary
 from PrintLibrary import PrintLibrary
 
+# FUNCTION: convertToAsset
+# INPUT: assets_ratios    - [(string, float), ...] NOTE: floats must sum up to 1
+#        exchanges        - [string, ...]
+# OUTPUT: N/A
+# DESCRIPTION:
+#    Iterates through an input list of exchanges and converts the current funds values using the
+#     input assets/ratio list of tuples as a guideline. It will check if funds are already available
+#     on those exchanges and then sell whatever there is excess of in order to buy the given assets
+#     in the given ratios. As is noted in the input, the ratios must sum up to 1 in order for this
+#     function to operate properly. 
+def convertToAsset(assets_ratios, exchanges):
+
+    # 1. Ensure ratios sum up to 1
+    # 2. 
+    pass
+
 # CLASS: MetricsCalculator
 # DESCRIPTION:
 #   Function library for the profit tracking components.
 class MetricsCalculator(object):
 
-    def calculateMiningMetrics
+    # FUNCTION: calculateMiningMetrics
+    # INPUT:
+    # OUTPUT:
+    # DESCRIPTION:
+    #    TODO
+    def calculateMiningMetrics():
+        pass
+    
     # FUNCTION: calculateMetrics
     # INPUTS: period              - int
     #         balances            - TODO
